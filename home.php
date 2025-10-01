@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -130,3 +132,7 @@
 </body>
 </html>
 
+<?php
+// Inclure le fichier de configuration pour la connexion à la base de données
+require_once 'includes/config.php';
+</php>
