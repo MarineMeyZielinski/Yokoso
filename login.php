@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
+<<<<<<< HEAD
     <style>
         
     </style>
+=======
+    <link rel="stylesheet" href="style.css">
+    
+>>>>>>> Développement
 </head>
 <body>
     <div class ="fondvilla">
