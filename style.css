@@ -1,0 +1,10 @@
+/* Page d'accueil pour entrer sur l'app */
+body {
+  /* position: absolute;
+  width: 1687px;
+  height: 1071px;
+  left: -135px;
+  top: -31px; */
+  background-image: url(/assets/maison-traditionelle-japonaise.jpg);
+  backdrop-filter: blur(12.5px);
+}
