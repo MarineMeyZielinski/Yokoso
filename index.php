@@ -2,29 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=Y, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-</head>
-<body>
-  <div class="image-container">
-  <img src="assets/yokoso.png" alt="Yokoso" class="Yokoso">
-  <a href="home.php" ><img src="assets/logo.png" alt="Logo" class="logo" width="150px" height="150px"> </a>
-</div>
-
   <style>
-
     * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-    h1 {
-      color: black;
-      text-align: center;
-      font-size: 100px;
-      font-family: 'Arial', sans-serif;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
@@ -46,5 +30,44 @@
       align-items: center;
     }
 
+    .logo {
+      width: 150px;
+      height: 150px;
+      cursor: pointer;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+    }
+
+    .logo.clicked {
+      transform: scale(2);
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="image-container">
+    <img src="assets/yokoso.png" alt="Yokoso" class="Yokoso">
+    <a href="home.php" id="logo-link">
+      <img src="assets/logo.png" alt="Logo" class="logo">
+    </a>
+  </div>
+
+  <!-- Son -->
+  <audio id="click-sound" src="assets/Yokoso.mp3" preload="auto"></audio>
+
+  <script>
+    const logo = document.querySelector(".logo");
+    const link = document.getElementById("logo-link");
+    const sound = document.getElementById("click-sound");
+
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      logo.classList.add("clicked");e
+      sound.play();
+
+      setTimeout(() => {
+        window.location.href = link.href;
+      }, 1600);
+    });
+  </script>
 </body>
 </html>
