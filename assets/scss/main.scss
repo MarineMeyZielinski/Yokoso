@@ -1,24 +1,24 @@
 //Abstracts
-@import 'abstracts/variables';
-@import 'abstracts/mixins';
-@import 'abstracts/functions';
+@use 'abstracts/variables';
+@use 'abstracts/mixins';
+@use 'abstracts/functions';
 
 //Base 
-@import 'base/reset';
-@import 'base/typography';
-@import 'base/global';
+@use 'base/reset';
+@use 'base/typography';
+@use 'base/global';
 
 //Layout 
-@import 'layout/grid';
-@import 'layout/header';
-@import 'layout/footer';
+@use 'layout/grid';
+@use 'layout/header';
+@use 'layout/footer';
 
 //Components
-@import 'components/buttons';
-@import 'components/cards';
-@import 'components/forms';
+@use 'components/buttons';
+@use 'components/cards';
+@use 'components/forms';
 
 //Pages
-@import 'pages/home';
-@import 'pages/contact';
+@use 'pages/home';
+@use 'pages/contact';
 
