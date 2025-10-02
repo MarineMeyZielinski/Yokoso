@@ -52,7 +52,7 @@
   </div>
 
   <!-- Son -->
-  <audio id="click-sound" src="assets/Yokoso.mp3" preload="auto"></audio>
+  <audio id="click-sound" src="assets/Yokoso-2.mp3" preload="auto"></audio>
 
   <script>
     const logo = document.querySelector(".logo");
@@ -66,7 +66,7 @@
 
       setTimeout(() => {
         window.location.href = link.href;
-      }, 1600);
+      }, 1000);
     });
   </script>
 </body>
