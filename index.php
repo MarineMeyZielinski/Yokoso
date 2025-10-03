@@ -2,13 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=Y, initial-scale=1.0">
   <title>Document</title>
+</head>
+<body>
+  <di class="image-container">
+  <img src="assets/yokoso.png" alt="Yokoso" class="Yokoso">
+  <a href="home.php" ><img src="assets/logo.png" alt="Logo" class="logo" width="150px" height="150px"> </a>
+</div>
+
   <style>
+
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+    h1 {
+      color: black;
+      text-align: center;
+      font-size: 100px;
+      font-family: 'Arial', sans-serif;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     }
 
     body {
