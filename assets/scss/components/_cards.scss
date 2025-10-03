@@ -1,0 +1,18 @@
+.cards{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: $card-gap;
+    margin-top: 10px;
+}
+.card{
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: 10px;
+}
+.card .thumb{
+    width: 75%;
+    height: 180px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #d9d9de;
+}
