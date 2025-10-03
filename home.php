@@ -23,7 +23,7 @@
       </div>
       <nav class="menu">
         <a href="#">Accueil</a>
-        <a href="#">Nos logements</a>
+        <a href= 'logement.php'>Nos logements</a>
         <a href="#">Mes reservations</a>
         <a href="#">Devenir hôte</a>
         <a href="#">Publier une annonce</a>
