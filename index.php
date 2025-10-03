@@ -52,7 +52,7 @@
   </div>
 
   <!-- Son -->
-  <audio id="click-sound" src="assets/Yokoso-2.mp3" preload="auto"></audio>
+  <audio id="click-sound" src="sound/Yokoso.mp3" preload="auto"></audio>
 
   <script>
     const logo = document.querySelector(".logo");
