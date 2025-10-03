@@ -18,7 +18,7 @@
         <img src="images/yokoso-blanc.png" alt="Yokoso" class="logo-yokoso">
       </div>
       <nav class="menu">
-        <a href="#">Accueil</a>
+        <a href="home.php">Accueil</a>
         <a href="#">Nos logements</a>
         <a href="#">Mes reservations</a>
         <a href="#">Devenir hôte</a>
