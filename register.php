@@ -18,7 +18,7 @@ require_once 'includes/config.php';
 
     /* Fond + overlay */
     .page { position: relative; min-height: 100vh; display: flex; align-items: center; gap: 56px; padding: 40px; }
-    .bg { position: fixed; inset: 0; background: center/cover no-repeat url('assets/register-fond.png'); backdrop-filter: contrast(0.3); z-index: -2; }
+    .bg { position: fixed; inset: 0; background: center/cover no-repeat url('images/register-fond.png'); backdrop-filter: contrast(0.3); z-index: -2; }
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
 
     /* Colonne gauche: logo texte */
@@ -45,12 +45,12 @@ require_once 'includes/config.php';
   <div class="overlay"></div>
   <div class="page">
     <div class="brand">
-      <img src="assets/yokoso-blanc.png" alt="YOKOSO">
+      <img src="images/yokoso-blanc.png" alt="YOKOSO">
     </div>
 
     <div class="card">
       <div class="badge">
-        <img src="assets/logo-blanc-seul-removebg-preview.png" alt="Logo YOKOSO">
+        <img src="images/logo-blanc-seul-removebg-preview.png" alt="Logo YOKOSO">
       </div>
       <h1>S'inscrire</h1>
       <form action="register.php" method="post" autocomplete="on">

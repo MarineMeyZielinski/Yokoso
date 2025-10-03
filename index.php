@@ -12,7 +12,7 @@
     }
 
     body {
-      background-image: url('assets/maison-traditionelle-japonaise.jpg');
+      background-image: url('images/maison-traditionelle-japonaise.jpg');
       background-size: auto;
       background-position: center;
       background-repeat: no-repeat;
@@ -45,9 +45,9 @@
 </head>
 <body>
   <div class="image-container">
-    <img src="assets/yokoso.png" alt="Yokoso" class="Yokoso">
+    <img src="images/yokoso.png" alt="Yokoso" class="Yokoso">
     <a href="home.php" id="logo-link">
-      <img src="assets/logo.png" alt="Logo" class="logo">
+      <img src="images/logo.png" alt="Logo" class="logo">
     </a>
   </div>
 
