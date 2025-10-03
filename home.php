@@ -45,7 +45,9 @@ require_once 'includes/config.php';
         <button class="icon-btn" title="Notifications"><i class="fa-solid fa-bell" style="color: #000000;"></i></button>
         <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
         <button class="icon-btn" title="Favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></button>
-        <button class="connexion">S'inscrire</button>
+        <!-- <button class="connexion">S'inscrire</button> -->
+         <a href="register.php" class="connexion">S'inscrire</a>
+
         <button class="connexion">Connexion</button>
         <button class="icon-btn" title="Profil"><i class="fa-solid fa-user" style="color: #000000;"></i></button>
       </div>

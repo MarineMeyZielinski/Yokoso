@@ -77,7 +77,7 @@
 
       setTimeout(() => {
         window.location.href = link.href;
-      }, 1000);
+      }, 1200);
     });
   </script>
 </body>
