@@ -1,0 +1,23 @@
+.card {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    margin: 5px;
+    padding: 5px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card .thumb {
+    width: 75%;
+    height: 180px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #d9d9de;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+

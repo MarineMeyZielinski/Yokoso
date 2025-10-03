@@ -1,0 +1,28 @@
+.content {
+  padding: 22px 28px 40px;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: flex-end;
+}
+.search {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #eaecef;
+  border: 1px solid #ddd;
+  border-radius: 22px;
+  padding: 10px 14px;
+  width: 520px;
+  max-width: 58vw;
+
+  input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+  }
+}

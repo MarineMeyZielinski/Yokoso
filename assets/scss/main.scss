@@ -1,0 +1,27 @@
+//Abstracts
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+@import 'abstracts/functions';
+
+//Base 
+@import 'base/reset';
+@import 'base/typography';
+@import 'base/global';
+
+//Layout 
+@import 'layout/grid';
+@import 'layout/header';
+@import'layout/footer';
+@import 'layout/sidebar';
+
+//Components
+@import 'components/buttons';
+@import 'components/cards';
+@import 'components/forms';
+@import 'components/navbar';
+@import 'components/caroussels';
+
+//Pages
+@import 'pages/home';
+@import 'pages/contact';
+

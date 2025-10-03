@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+<<<<<<< HEAD
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
@@ -29,6 +30,16 @@
       flex-direction: column;
       align-items: center;
     }
+=======
+  <meta name="viewport" content="width=Y, initial-scale=1.0">
+  <title></title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="image-container">
+  <img src="assets/yokoso.png" alt="Yokoso" class="Yokoso">
+  <a href="home.php" ><img src="assets/logo.png" alt="Logo" class="logo" width="150px" height="150px"> </a>
+>>>>>>> brumee
 
     .logo {
       width: 150px;
