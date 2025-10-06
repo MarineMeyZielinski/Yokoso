@@ -102,17 +102,18 @@ body {
   cursor: pointer;
 }
 
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-  margin-top: 10px;
-}
-
 .card {
   display: grid;
   grid-template-rows: auto auto 1fr;
   gap: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  margin: 5px;
+  padding: 5px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
 
 .card .thumb {
@@ -122,6 +123,7 @@ body {
   -o-object-fit: cover;
      object-fit: cover;
   border: 1px solid #d9d9de;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .content {

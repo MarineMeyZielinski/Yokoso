@@ -1,6 +1,58 @@
+<<<<<<< HEAD
+=======
 <?php
 // Inclure le fichier de configuration pour la connexion à la base de données
 require_once 'includes/config.php';
+
+$errors = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
+    $prenom   = trim($_POST['prenom'] ?? '');
+    $nom      = trim($_POST['nom'] ?? '');
+    $email    = trim($_POST['email'] ?? ''); 
+    $mot_de_passe = $_POST['mot_de_passe'] ?? '';
+    $telephone    = trim($_POST['telephone'] ?? '');
+
+    // Vérifications de base
+    if ($prenom === '' || $nom === '') {
+        $errors[] = "Le prénom et le nom sont requis.";
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "L'adresse email n'est pas valide.";
+    }
+
+    if (strlen($mot_de_passe) < 8) {
+        $errors[] = "Le mot de passe doit contenir au moins 8 caractères.";
+    }
+
+    if (!$errors) {  // seulement s'il n'y a PAS d'erreurs
+        try {
+            // Vérifier que l'adresse e-mail est unique
+            $stmt = $pdo->prepare('SELECT id_user FROM users WHERE email = ? LIMIT 1');
+            $stmt->execute([$email]); 
+
+            if ($stmt->fetch()) { 
+                $errors[] = "Cet e-mail est déjà utilisé.";
+            } else {
+                $hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+
+                // Insertion de l'utilisateur
+                $stmt = $pdo->prepare(
+                    'INSERT INTO users (prenom, nom, email, mot_de_passe, telephone, date_inscription) 
+                     VALUES (?, ?, ?, ?, ?, NOW())'
+                );
+                $stmt->execute([$prenom, $nom, $email, $hash, $telephone]); 
+
+                // Redirection après succès
+                header('Location: login.php?registered=1'); 
+                exit;
+            }
+        } catch (PDOException $e) { 
+            $errors[] = "Erreur SQL : " . $e->getMessage();
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -54,26 +106,36 @@ require_once 'includes/config.php';
         <img src="images/logo-blanc-seul-removebg-preview.png" alt="Logo YOKOSO">
       </div>
       <h1>S'inscrire</h1>
+
+      <!-- Affichage des erreurs -->
+      <?php if ($errors): ?>
+        <div style="background:#ff4444; padding:10px; border-radius:8px; margin-bottom:10px;">
+          <?php foreach ($errors as $error): ?>
+            <p><?= htmlspecialchars($error) ?></p>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+
       <form action="register.php" method="post" autocomplete="on">
         <div>
-          <label for="last_name">Nom</label>
-          <input type="text" id="last_name" name="last_name" placeholder="Nom" required>
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" placeholder="Nom" required>
         </div>
         <div>
-          <label for="first_name">Prénom</label>
-          <input type="text" id="first_name" name="first_name" placeholder="Prénom" required>
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" placeholder="Prénom" required>
         </div>
         <div>
           <label for="email">Adresse mail</label>
           <input type="email" id="email" name="email" placeholder="Adresse mail" inputmode="email" autocomplete="email" required>
         </div>
         <div>
-          <label for="password">Mot de passe</label>
-          <input type="password" id="password" name="password" placeholder="Mot de passe" minlength="6" required>
+          <label for="mot_de_passe">Mot de passe</label>
+          <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Mot de passe" minlength="8" required>
         </div>
         <div>
-          <label for="phone">Numéro de téléphone (optionnel)</label>
-          <input type="tel" id="phone" name="phone" placeholder="Numéro de téléphone" inputmode="tel">
+          <label for="telephone">Numéro de téléphone (optionnel)</label>
+          <input type="tel" id="telephone" name="telephone" placeholder="Numéro de téléphone" inputmode="tel">
         </div>
         <button type="submit" class="submit">Terminé</button>
       </form>
@@ -81,3 +143,4 @@ require_once 'includes/config.php';
   </div>
 </body>
 </html>
+>>>>>>> Mey
