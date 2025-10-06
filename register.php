@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <?php
 // Inclure le fichier de configuration pour la connexion à la base de données
 require_once 'includes/config.php';
@@ -143,4 +141,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </body>
 </html>
->>>>>>> Mey
