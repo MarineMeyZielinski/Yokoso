@@ -3,51 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background-image: url('images/maison-traditionelle-japonaise.jpg');
-      background-size: auto;
-      background-position: center;
-      background-repeat: no-repeat;
-      backdrop-filter: contrast(0.3);
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center; 
-    }
-
-    .image-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .logo {
-      width: 150px;
-      height: 150px;
-      cursor: pointer;
-      transition: transform 0.6s ease, opacity 0.6s ease;
-    }
-
-    .logo.clicked {
-      transform: scale(2);
-      opacity: 0;
-    }
-  </style>
+  <title>Introduction - YOKOSO</title>
+  <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body>
-  <div class="image-container">
+<body class="bodyyokoso">
+  <div class="image-container-introsite">
     <img src="images/yokoso.png" alt="Yokoso" class="Yokoso">
     <a href="home.php" id="logo-link">
-      <img src="images/logo.png" alt="Logo" class="logo">
+      <img src="images/logo.png" alt="Logo" class="logo-intro-site">
     </a>
   </div>
 
@@ -55,7 +18,7 @@
   <audio id="click-sound" src="sound/Yokoso.mp3" preload="auto"></audio>
 
   <script>
-    const logo = document.querySelector(".logo");
+    const logo = document.querySelector(".logo-intro-site");
     const link = document.getElementById("logo-link");
     const sound = document.getElementById("click-sound");
 

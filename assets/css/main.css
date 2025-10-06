@@ -59,8 +59,7 @@ body {
   width: 120px;
   height: 120px;
   border-radius: 999px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .page .logo-yokoso {
   width: 140px;
@@ -120,8 +119,7 @@ body {
   width: 75%;
   height: 180px;
   border-radius: 4px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   border: 1px solid #d9d9de;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -237,8 +235,7 @@ body {
   width: 75%;
   height: 180px;
   border-radius: 4px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   border: 1px solid #d9d9de;
 }
 
@@ -263,8 +260,7 @@ body {
 .hero img {
   width: 100%;
   height: 320px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   opacity: 0.9;
   display: block;
   filter: contrast(0.5);
@@ -325,12 +321,11 @@ body {
 }
 
 .bodyyokoso {
-  background-image: url("https://i.postimg.cc/xd1HdPPx/maison-traditionelle-japonaise.jpg");
+  background-image: url("../../images/maison-traditionelle-japonaise.jpg");
   background-size: auto;
   background-position: center;
   background-repeat: no-repeat;
-  -webkit-backdrop-filter: contrast(0.3);
-          backdrop-filter: contrast(0.3);
+  backdrop-filter: contrast(0.3);
   height: 100vh;
   margin: 0;
   display: flex;
@@ -354,4 +349,6 @@ body {
 .logo-intro-site.clicked {
   transform: scale(2);
   opacity: 0;
-}/*# sourceMappingURL=main.css.map */
+}
+
+/*# sourceMappingURL=main.css.map */
