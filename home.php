@@ -30,9 +30,10 @@ require_once 'includes/config.php';
       <nav class="menu">
         <a href="home.php">Accueil</a>
         <a href= 'logement.php'>Nos logements</a>
-        <a href="#">Mes reservations</a>
-        <a href="#">Devenir hôte</a>
         <a href="#">Publier une annonce</a>
+        <a href="#">Compléter le profil</a>
+        <a href="#">Mes réservations</a>
+        <a href="#">Mes annonces</a>
       </nav>
     </aside>
 
