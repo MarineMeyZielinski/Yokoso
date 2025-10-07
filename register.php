@@ -20,7 +20,7 @@ require_once 'includes/config.php';
   <div class="overlay-register"></div>
   <div class="page-register">
     <div class="brand-register">
-      <img src="images/yokoso-blanc.png" alt="YOKOSO">
+      <a href = "home.php"><img src="images/yokoso-blanc.png" alt="YOKOSO"></a>
     </div>
 
     <div class="card-register">
