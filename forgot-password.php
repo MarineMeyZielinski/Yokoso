@@ -146,8 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <!-- Message de succès avec le lien -->
       <?php if ($success): ?>
         <div class="success">
-          <p>✓ Lien de réinitialisation généré avec succès !</p>
-          <strong>🔗 Copiez ce lien (valable 1 heure) :</strong>
+          <strong>Copiez ce lien (valable 1 heure) :</strong>
           <div class="reset-link" id="resetLink"><?= htmlspecialchars($reset_link) ?></div>
           <button class="copy-btn" onclick="copyLink()">📋 Copier le lien</button>
         </div>
@@ -186,9 +185,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       navigator.clipboard.writeText(linkText).then(() => {
         const btn = document.querySelector('.copy-btn');
         btn.textContent = '✓ Copié !';
-        btn.style.background = '#22aa22';
+        btn.style.background = '#679c67ff';
         setTimeout(() => {
-          btn.textContent = '📋 Copier le lien';
+          btn.textContent = 'Copier le lien';
           btn.style.background = '#000';
         }, 2000);
       });
