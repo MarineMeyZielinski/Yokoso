@@ -1,5 +1,4 @@
 <?php
-// Inclure le fichier de configuration pour la connexion à la base de données
 require_once 'includes/config.php';
 ?>
 
@@ -47,7 +46,7 @@ require_once 'includes/config.php';
         <button class="icon-btn" title="Notifications"><i class="fa-solid fa-bell" style="color: #000000;"></i></button>
         <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
         <button class="icon-btn" title="Favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></button>
-        
+
          <a href="register.php" class="connexion">S'inscrire</a>
          <a href="login.php" class="connexion">Connexion</a>
 
