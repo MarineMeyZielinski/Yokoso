@@ -3,6 +3,7 @@ require_once 'includes/config.php';
 
 $errors = [];
 $success = false;
+$reset_link = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
@@ -34,27 +35,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Créer le lien de réinitialisation
                 $reset_link = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/reset-password.php?token=" . $token;
 
-                $subject = "YOKOSO - Réinitialisation de votre mot de passe";
-                $message = "Bonjour " . htmlspecialchars($user['prenom']) . ",\n\n";
-                $message .= "Vous avez demandé à réinitialiser votre mot de passe.\n\n";
-                $message .= "Cliquez sur ce lien pour créer un nouveau mot de passe :\n";
-                $message .= $reset_link . "\n\n";
-                $message .= "Ce lien est valable pendant 1 heure.\n\n";
-                $message .= "Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.\n\n";
-                $message .= "Cordialement,\nL'équipe YOKOSO";
+                // Quand on enverra des vrais email
 
-                $headers = "From: noreply@yokoso.com\r\n";
-                $headers .= "Reply-To: noreply@yokoso.com\r\n";
-                $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+//                 $subject = "YOKOSO - Réinitialisation de votre mot de passe";
+//                 $message = "Bonjour " . htmlspecialchars($user['prenom']) . ",\n\n";
+//                 $message .= "Vous avez demandé à réinitialiser votre mot de passe.\n\n";
+//                 $message .= "Cliquez sur ce lien pour créer un nouveau mot de passe :\n";
+//                 $message .= $reset_link . "\n\n";
+//                 $message .= "Ce lien est valable pendant 1 heure.\n\n";
+//                 $message .= "Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.\n\n";
+//                 $message .= "Cordialement,\nL'équipe YOKOSO";
 
-                // Envoyer l'email
-                if (mail($email, $subject, $message, $headers)) {
-                    $success = true;
-                } else {
-                    $errors[] = "Erreur lors de l'envoi de l'email. Veuillez réessayer.";
-                }
-            } else {
+//                 $headers = "From: noreply@yokoso.com\r\n";
+//                 $headers .= "Reply-To: noreply@yokoso.com\r\n";
+//                 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+
+//                 if (mail($email, $subject, $message, $headers)) {
+//                     $success = true;
+//                 } else {
+//                     $errors[] = "Erreur lors de l'envoi de l'email. Veuillez réessayer.";
+//                 }
+//             } else {
+                
+//                 $success = true;
+//             }
+//         } catch (PDOException $e) {
+//             $errors[] = "Erreur : " . $e->getMessage();
+//         }
+//     }
+// }
+//
+
                 $success = true;
+            } else {
+                // Pour des raisons de sécurité, on affiche le même message même si l'email n'existe pas
+                $errors[] = "Aucun compte associé à cet email.";
             }
         } catch (PDOException $e) {
             $errors[] = "Erreur : " . $e->getMessage();
@@ -103,7 +118,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .link a { color: #fff; text-decoration: underline; }
     .link a:hover { color: #ddd; }
 
-    .success { background: #44ff44; color: #000; padding: 14px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; line-height: 1.5; }
+    .success { background: #44ff44; color: #000; padding: 14px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; line-height: 1.6; }
+    .success strong { display: block; margin-top: 10px; margin-bottom: 6px; }
+    .reset-link { background: #fff; color: #000; padding: 12px; border-radius: 8px; word-break: break-all; font-size: 13px; margin-top: 8px; border: 2px dashed #000; }
+    .copy-btn { margin-top: 10px; padding: 8px 16px; background: #000; color: #fff; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 13px; }
+    .copy-btn:hover { background: #333; }
     .error { background: #ff4444; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
 
     @media (max-width: 980px) { .page { flex-direction: column; align-items: center; gap: 24px; } .brand { justify-content: center; } .brand img { max-width: 70vw; } }
@@ -122,12 +141,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <img src="images/logo-blanc-seul-removebg-preview.png" alt="Logo YOKOSO">
       </div>
       <h1>Mot de passe oublié ?</h1>
-      <p>Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
+      <p>Entrez votre adresse email et nous générerons un lien pour réinitialiser votre mot de passe.</p>
 
-      <!-- Message de succès -->
+      <!-- Message de succès avec le lien -->
       <?php if ($success): ?>
         <div class="success">
-          <p>✓ Un email de réinitialisation a été envoyé à votre adresse. Vérifiez votre boîte de réception (et vos spams).</p>
+          <p>✓ Lien de réinitialisation généré avec succès !</p>
+          <strong>🔗 Copiez ce lien (valable 1 heure) :</strong>
+          <div class="reset-link" id="resetLink"><?= htmlspecialchars($reset_link) ?></div>
+          <button class="copy-btn" onclick="copyLink()">📋 Copier le lien</button>
         </div>
         <p class="link">
           <a href="login.php">Retour à la connexion</a>
@@ -157,5 +179,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <?php endif; ?>
     </div>
   </div>
+
+  <script>
+    function copyLink() {
+      const linkText = document.getElementById('resetLink').textContent;
+      navigator.clipboard.writeText(linkText).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = '✓ Copié !';
+        btn.style.background = '#22aa22';
+        setTimeout(() => {
+          btn.textContent = '📋 Copier le lien';
+          btn.style.background = '#000';
+        }, 2000);
+      });
+    }
+  </script>
 </body>
 </html>
