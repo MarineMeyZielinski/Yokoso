@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YOKOSO - Nos logements</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="assets/scss/main.css">
    <link
       rel="stylesheet"
@@ -19,10 +20,11 @@
       </div>
       <nav class="menu">
         <a href="home.php">Accueil</a>
-        <a href="#">Nos logements</a>
-        <a href="#">Mes reservations</a>
-        <a href="#">Devenir hôte</a>
+        <a href= 'logement.php'>Nos logements</a>
         <a href="#">Publier une annonce</a>
+        <a href="#">Compléter le profil</a>
+        <a href="#">Mes réservations</a>
+        <a href="#">Mes annonces</a>
       </nav>
     </aside>
 
@@ -36,7 +38,7 @@
         <button class="icon-btn" title="Notifications"><i class="fa-solid fa-bell" style="color: #000000;"></i></button>
         <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
         <button class="icon-btn" title="Favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></button>
-        <button class="connexion">S'inscrire</button>
+        <a href="register.php" class="connexion">S'inscrire</a>
         <button class="connexion">Connexion</button>
         <button class="icon-btn" title="Profil"><i class="fa-solid fa-user" style="color: #000000;"></i></button>
       </div>
