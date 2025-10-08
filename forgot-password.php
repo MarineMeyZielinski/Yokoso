@@ -88,7 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: #fff; min-height: 100vh; }
 
@@ -126,59 +127,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .error { background: #ff4444; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
 
     @media (max-width: 980px) { .page { flex-direction: column; align-items: center; gap: 24px; } .brand { justify-content: center; } .brand img { max-width: 70vw; } }
-  </style>
+  </style> -->
 </head>
 <body>
-  <div class="bg"></div>
-  <div class="overlay"></div>
-  <div class="page">
-    <div class="brand">
-      <img src="images/yokoso-blanc.png" alt="YOKOSO">
-    </div>
-
-    <div class="card">
-      <div class="badge">
-        <img src="images/logo-blanc-seul-removebg-preview.png" alt="Logo YOKOSO">
-      </div>
-      <h1>Mot de passe oublié ?</h1>
-      <p>Entrez votre adresse email et nous générerons un lien pour réinitialiser votre mot de passe.</p>
-
-      <!-- Message de succès avec le lien -->
-      <?php if ($success): ?>
-        <div class="success">
-          <strong>Copiez ce lien (valable 1 heure) :</strong>
-          <div class="reset-link" id="resetLink"><?= htmlspecialchars($reset_link) ?></div>
-          <button class="copy-btn" onclick="copyLink()">📋 Copier le lien</button>
+  <div class="bg-forget-pwd">
+    <!-- <img src="images/register-fond.png" alt=""> -->
+    <div class="overlay-forget-pwd">
+      <div class="page-forget-pwd">
+        <div class="brand-forget-pwd">
+          <img src="images/yokoso-blanc.png" alt="YOKOSO">
         </div>
-        <p class="link">
-          <a href="login.php">Retour à la connexion</a>
-        </p>
-      <?php else: ?>
 
-        <!-- Affichage des erreurs -->
-        <?php if ($errors): ?>
-          <div class="error">
-            <?php foreach ($errors as $error): ?>
-              <p><?= htmlspecialchars($error) ?></p>
-            <?php endforeach; ?>
+        <div class="card-forget-pwd">
+          <div class="badge">
+            <img src="images/logo-blanc-seul-removebg-preview.png" alt="Logo YOKOSO">
           </div>
-        <?php endif; ?>
+          <h1>Mot de passe oublié ?</h1>
+          <p>Entrez votre adresse email et nous générerons un lien pour réinitialiser votre mot de passe.</p>
 
-        <form action="forgot-password.php" method="post" autocomplete="on">
-          <div>
-            <label for="email">Adresse mail</label>
-            <input type="email" id="email" name="email" placeholder="Adresse mail" inputmode="email" autocomplete="email" required>
-          </div>
-          <button type="submit" class="submit">Envoyer le lien</button>
-        </form>
+          <!-- Message de succès avec le lien -->
+          <?php if ($success): ?>
+            <div class="success">
+              <strong>Copiez ce lien (valable 1 heure) :</strong>
+              <div class="reset-link" id="resetLink"><?= htmlspecialchars($reset_link) ?></div>
+              <button class="copy-btn" onclick="copyLink()">📋 Copier le lien</button>
+            </div>
+            <p class="link">
+              <a href="login.php">Retour à la connexion</a>
+            </p>
+          <?php else: ?>
 
-        <p class="link">
-          <a href="login.php">Retour à la connexion</a>
-        </p>
-      <?php endif; ?>
+            <!-- Affichage des erreurs -->
+            <?php if ($errors): ?>
+              <div class="error">
+                <?php foreach ($errors as $error): ?>
+                  <p><?= htmlspecialchars($error) ?></p>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
+
+            <form action="forgot-password.php" method="post" autocomplete="on">
+              <div>
+                <label for="email">Adresse mail</label>
+                <input type="email" id="email" name="email" placeholder="Adresse mail" inputmode="email" autocomplete="email" required>
+              </div>
+              <button type="submit" class="submit">Envoyer le lien</button>
+            </form>
+
+            <p class="link">
+              <a href="login.php">Retour à la connexion</a>
+            </p>
+          <?php endif; ?>
+        </div>
+      </div>
     </div>
   </div>
-
   <script>
     function copyLink() {
       const linkText = document.getElementById('resetLink').textContent;

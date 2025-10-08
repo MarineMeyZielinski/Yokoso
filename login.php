@@ -55,23 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: #fff; min-height: 100vh; }
-
     /* Fond + overlay */
-    .page { position: relative; min-height: 100vh; display: flex; align-items: center; gap: 56px; padding: 40px; }
-    .bg { position: fixed; inset: 0; background: center/cover no-repeat url('images/register-fond.png'); backdrop-filter: contrast(0.3); z-index: -2; }
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
+    .page-login { position: relative; min-height: 100vh; display: flex; align-items: center; gap: 56px; padding: 40px; }
+    .bg-login { position: fixed; inset: 0; background: center/cover no-repeat url('images/register-fond.png'); backdrop-filter: contrast(0.3); z-index: -2; }
+    .overlay-login { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
 
     /* Colonne gauche: logo texte */
-    .brand { flex: 1; display: flex; justify-content: flex-start; }
-    .brand img { width: 520px; max-width: 40vw; height: auto; margin-left: 200px; }
+    .brand-login { flex: 1; display: flex; justify-content: flex-start; }
+    .brand-login img { width: 520px; max-width: 40vw; height: auto; margin-left: 200px; }
 
     /* Carte formulaire */
-    .card { position: relative; width: 520px; max-width: 92vw; padding: 28px; padding-top: 90px; border-radius: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); backdrop-filter: blur(6px); box-shadow: 0 10px 30px rgba(0,0,0,0.25); margin-left: auto; }
-    .badge { position: absolute; left: 50%; top: -60px; transform: translateX(-50%); display: grid; place-items: center; }
-    .badge img { width: 115px; margin-top:30px; object-fit: contain; }
-    .card h1 { text-align: left; font-size: 28px; margin-bottom: 12px; }
+    .card-login { position: relative; width: 520px; max-width: 92vw; padding: 28px; padding-top: 90px; border-radius: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); backdrop-filter: blur(6px); box-shadow: 0 10px 30px rgba(0,0,0,0.25); margin-left: auto; }
+    .badge-login { position: absolute; left: 50%; top: -60px; transform: translateX(-50%); display: grid; place-items: center; }
+    .badge-login img { width: 115px; margin-top:30px; object-fit: contain; }
+    .card-login h1 { text-align: left; font-size: 28px; margin-bottom: 12px; }
 
     form { display: grid; gap: 12px; }
     label { font-size: 13px; color: #eaeaea; margin-left: 8px; }
@@ -93,15 +90,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </style>
 </head>
 <body>
-  <div class="bg"></div>
-  <div class="overlay"></div>
-  <div class="page">
-    <div class="brand">
+  <div class="bg-login"></div>
+  <div class="overlay-login"></div>
+  <div class="page-login">
+    <div class="brand-login">
       <img src="images/yokoso-blanc.png" alt="YOKOSO">
     </div>
 
-    <div class="card">
-      <div class="badge">
+    <div class="card-login">
+      <div class="badge-login">
         <img src="images/logo-blanc-seul-removebg-preview.png" alt="Logo YOKOSO">
       </div>
       <h1>Se connecter</h1>

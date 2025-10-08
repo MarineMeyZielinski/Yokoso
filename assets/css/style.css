@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   margin: 0;
   padding: 0;
@@ -5,9 +6,7 @@
 }
 
 body {
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: #111;
-  background: #f5f5f7;
+  font-family: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif";
 }
 
 a {
@@ -15,13 +14,21 @@ a {
   color: inherit;
 }
 
+.footer {
+  margin-top: 34px;
+  padding: 16px 0;
+  border-top: 1px solid #e3c3e7;
+  color: #555;
+  font-size: 12px;
+  text-align: center;
+}
+
 .page {
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
 }
-
-.sidebar {
+.page .sidebar {
   background: #0e0e0f;
   color: #eee;
   padding: 24px 20px;
@@ -29,47 +36,93 @@ a {
   flex-direction: column;
   gap: 28px;
 }
-.sidebar .logo {
+.page .logo {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
 }
-.sidebar .logo .logo-blanc {
+.page .logo-blanc {
   width: 120px;
   height: 120px;
   border-radius: 999px;
   object-fit: cover;
 }
-.sidebar .logo .logo-yokoso {
+.page .logo-yokoso {
   width: 140px;
   height: auto;
 }
-.sidebar .menu {
+.page .menu {
   display: flex;
   flex-direction: column;
   gap: 18px;
   margin-top: 10px;
 }
-.sidebar .menu a {
+.page .menu a {
   padding: 10px 14px;
   border-radius: 8px;
   color: #e7e7e7;
+  text-decoration: none;
 }
-.sidebar .menu a:hover {
+.page .menu a:hover {
   background: #1a1a1d;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.connexion {
+  padding: 8px 12px;
+  border-radius: 18px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  margin: 5px;
+  padding: 5px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card .thumb {
+  width: 75%;
+  height: 180px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid #d9d9de;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .content {
   padding: 22px 28px 40px;
 }
-.content .topbar {
+
+.topbar {
   display: flex;
   align-items: center;
   gap: 14px;
   justify-content: flex-end;
 }
-.content .topbar .search {
+
+.search {
   margin-right: auto;
   display: flex;
   align-items: center;
@@ -81,29 +134,106 @@ a {
   width: 520px;
   max-width: 58vw;
 }
-.content .topbar .search input {
+.search input {
   border: none;
   outline: none;
   background: transparent;
   width: 100%;
 }
-.content .topbar .icon-btn {
-  width: 36px;
-  height: 36px;
+
+.carousel {
+  position: relative;
+}
+
+.carousel .slides {
+  display: flex;
+  width: 100%;
+  transition: transform 0.5s ease;
+}
+
+.carousel .slide {
+  min-width: 100%;
+}
+
+.dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.6);
   border: none;
   cursor: pointer;
 }
-.content .topbar .connexion {
-  padding: 8px 12px;
-  border-radius: 18px;
-  border: 1px solid #ddd;
+
+.dot.active {
   background: #fff;
-  font-size: 14px;
+}
+
+.carousel-btn {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #000000;
+  background-color: transparent;
+  color: #000000;
+  border-radius: 50%;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Effet au survol des boutons de carrousel */
+.carousel-btn:hover {
+  background-color: #000000;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+/* Section logements */
+.section-title {
+  font-weight: 600;
+  margin: 8px 0 14px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 10px;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 10px;
+}
+
+.card .thumb {
+  width: 75%;
+  height: 180px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid #d9d9de;
+}
+
+.card .name {
+  font-weight: 600;
+}
+
+.card .desc {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.5;
 }
 
 .hero {
@@ -140,27 +270,22 @@ a {
   text-align: center;
   z-index: 2;
 }
-.hero .centered p {
-  background-color: white;
-  font-weight: bold;
-}
-.hero .centered .kicker {
+.hero .kicker {
   font-size: 14px;
   margin-bottom: 6px;
 }
-.hero .centered .title {
+.hero .title {
   font-size: 64px;
   font-weight: 700;
   letter-spacing: 1px;
 }
-.hero .centered .subtitle {
+.hero .subtitle {
   font-style: italic;
   margin-top: 6px;
   font-size: 25px;
   font-weight: bold;
 }
-.hero .prev-btn,
-.hero .next-btn {
+.hero .prev-btn, .hero .next-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-10%);
@@ -182,95 +307,186 @@ a {
   right: 10px;
 }
 
-.carousel {
+.bg-forget-pwd {
+  position: fixed;
+  inset: 0;
+  background: center/cover no-repeat url("../../images/register-fond.png");
+  backdrop-filter: contrast(0.3);
+  z-index: -2;
+}
+.bg-forget-pwd .overlay-forget-pwd {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: -1;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd {
   position: relative;
-}
-.carousel .slides {
+  min-height: 100vh;
   display: flex;
-  width: 100%;
-  transition: transform 0.5s ease;
-}
-.carousel .slide {
-  min-width: 100%;
-}
-.carousel .dots {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 2;
-}
-.carousel .dots .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  border: none;
-  cursor: pointer;
-}
-.carousel .dots .dot.active {
-  background: #fff;
-}
-.carousel .carousel-btn {
-  width: 50px;
-  height: 50px;
-  border: 2px solid #000000;
-  background-color: transparent;
-  color: #000000;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  justify-content: center;
   align-items: center;
+  gap: 56px;
+  padding: 40px;
+  z-index: 1;
+  /* Colonne gauche: logo */
+  /* Carte du formulaire */
 }
-.carousel .carousel-btn:hover {
-  background-color: #000000;
-  color: #ffffff;
-  transform: scale(1.1);
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .brand-forget-pwd {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
 }
-
-.section-title {
-  font-weight: 600;
-  margin: 8px 0 14px;
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .brand-forget-pwd img {
+  width: 520px;
+  max-width: 40vw;
+  height: auto;
+  margin-left: 200px;
 }
-
-.cards {
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
+  position: relative;
+  width: 520px;
+  max-width: 92vw;
+  padding: 28px;
+  padding-top: 90px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  margin-left: auto;
+  /* Formulaire */
+  /* Liens */
+  /* Message de succès */
+  /* Message d'erreur */
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .badge {
+  position: absolute;
+  left: 50%;
+  top: -60px;
+  transform: translateX(-50%);
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-  margin-top: 10px;
+  place-items: center;
 }
-.cards .card {
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  gap: 10px;
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .badge img {
+  width: 115px;
+  margin-top: 30px;
+  object-fit: contain;
 }
-.cards .card .thumb {
-  width: 75%;
-  height: 180px;
-  border-radius: 4px;
-  object-fit: cover;
-  border: 1px solid #d9d9de;
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd h1 {
+  text-align: left;
+  font-size: 28px;
+  margin-bottom: 8px;
 }
-.cards .card .name {
-  font-weight: 600;
-}
-.cards .card .desc {
-  font-size: 13px;
-  color: #333;
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd p {
+  font-size: 14px;
+  color: #ddd;
+  margin-bottom: 16px;
   line-height: 1.5;
 }
-
-.footer {
-  margin-top: 34px;
-  padding: 16px 0;
-  border-top: 1px solid #e3e3e7;
-  color: #555;
-  font-size: 12px;
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd form {
+  display: grid;
+  gap: 12px;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd form label {
+  font-size: 13px;
+  color: #eaeaea;
+  margin-left: 8px;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd form input {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 24px;
+  border: none;
+  outline: none;
+  background: #fff;
+  color: #111;
+  width: 100%;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd form .submit {
+  margin-top: 4px;
+  height: 44px;
+  border-radius: 24px;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd form .submit:hover {
+  background: #3b3b3b;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .link {
   text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #eaeaea;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .link a {
+  color: #fff;
+  text-decoration: underline;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .link a:hover {
+  color: #ddd;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .success {
+  background: #44ff44;
+  color: #000;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .success strong {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .success .reset-link {
+  background: #fff;
+  color: #000;
+  padding: 12px;
+  border-radius: 8px;
+  word-break: break-all;
+  font-size: 13px;
+  margin-top: 8px;
+  border: 2px dashed #000;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .success .copy-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .success .copy-btn:hover {
+  background: #333;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .error {
+  background: #ff4444;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .brand-forget-pwd {
+    justify-content: center;
+  }
+  .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .brand-forget-pwd img {
+    max-width: 70vw;
+    margin-left: 0;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */
