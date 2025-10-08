@@ -56,7 +56,7 @@
           <article class="cards">
             <img src="images/appartement-lucas.jpg" alt="Appartement de Luca" class="thumb" style="width:260px">
             <div class="textlike">
-            <div class="name">Appartement de Luca :</div>
+            <div class="name">Appartements de Luca :</div>
             <p class="desc">Charmant studio au cœur de Paris, alliant confort moderne et authenticité. À deux pas des cafés typiques et des monuments emblématiques, idéal pour découvrir la Ville Lumière.</p>
             <i class="fa-solid fa-heart heart-btn active"></i>
             </div>
