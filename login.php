@@ -54,40 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* Fond + overlay */
-    .page-login { position: relative; min-height: 100vh; display: flex; align-items: center; gap: 56px; padding: 40px; }
-    .bg-login { position: fixed; inset: 0; background: center/cover no-repeat url('images/register-fond.png'); backdrop-filter: contrast(0.3); z-index: -2; }
-    .overlay-login { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
-
-    /* Colonne gauche: logo texte */
-    .brand-login { flex: 1; display: flex; justify-content: flex-start; }
-    .brand-login img { width: 520px; max-width: 40vw; height: auto; margin-left: 200px; }
-
-    /* Carte formulaire */
-    .card-login { position: relative; width: 520px; max-width: 92vw; padding: 28px; padding-top: 90px; border-radius: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); backdrop-filter: blur(6px); box-shadow: 0 10px 30px rgba(0,0,0,0.25); margin-left: auto; }
-    .badge-login { position: absolute; left: 50%; top: -60px; transform: translateX(-50%); display: grid; place-items: center; }
-    .badge-login img { width: 115px; margin-top:30px; object-fit: contain; }
-    .card-login h1 { text-align: left; font-size: 28px; margin-bottom: 12px; }
-
-    form { display: grid; gap: 12px; }
-    label { font-size: 13px; color: #eaeaea; margin-left: 8px; }
-    input { height: 44px; padding: 0 16px; border-radius: 24px; border: none; outline: none; background: #fff; color: #111; width: 100%; }
-    .submit { margin-top: 4px; height: 44px; border-radius: 24px; border: none; background: #000000ff; color: #fff; font-weight: 600; cursor: pointer; }
-    .submit:hover { background: #3b3b3bff; }
-
-    .link { text-align: center; margin-top: 16px; font-size: 14px; color: #eaeaea; }
-    .link a { color: #fff; text-decoration: underline; }
-    .link a:hover { color: #ddd; }
-
-    .forgot { display: block; text-align: center; margin-top: 12px; font-size: 13px; color: #ddd; text-decoration: none; }
-    .forgot:hover { color: #fff; text-decoration: underline; }
-
-    .success { background: #44ff44; color: #000; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-weight: 600; }
-    .error { background: #ff4444; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-
-    @media (max-width: 980px) { .page { flex-direction: column; align-items: center; gap: 24px; } .brand { justify-content: center; } .brand img { max-width: 70vw; } }
-  </style>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
   <div class="bg-login"></div>
