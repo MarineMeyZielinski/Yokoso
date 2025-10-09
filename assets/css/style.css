@@ -331,7 +331,6 @@ a {
   padding: 40px;
   z-index: 1;
   /* Colonne gauche: logo */
-  /* Carte du formulaire */
 }
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .brand-forget-pwd {
   flex: 1;
@@ -343,6 +342,9 @@ a {
   max-width: 40vw;
   height: auto;
   margin-left: 200px;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd {
+  /* Carte du formulaire */
 }
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
   position: relative;
@@ -356,10 +358,6 @@ a {
   backdrop-filter: blur(6px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   margin-left: auto;
-  /* Formulaire */
-  /* Liens */
-  /* Message de succès */
-  /* Message d'erreur */
 }
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .badge {
   position: absolute;
@@ -384,6 +382,9 @@ a {
   color: #ddd;
   margin-bottom: 16px;
   line-height: 1.5;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
+  /* Formulaire */
 }
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd form {
   display: grid;
@@ -417,6 +418,9 @@ a {
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd form .submit:hover {
   background: #3b3b3b;
 }
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
+  /* Liens */
+}
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .link {
   text-align: center;
   margin-top: 16px;
@@ -429,6 +433,9 @@ a {
 }
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .link a:hover {
   color: #ddd;
+}
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
+  /* Message de succès */
 }
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .success {
   background: #44ff44;
@@ -468,6 +475,9 @@ a {
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .success .copy-btn:hover {
   background: #333;
 }
+.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
+  /* Message d'erreur */
+}
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .error {
   background: #ff4444;
   padding: 10px;
@@ -486,6 +496,157 @@ a {
     justify-content: center;
   }
   .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .brand-forget-pwd img {
+    max-width: 70vw;
+    margin-left: 0;
+  }
+}
+.bg-reset-password {
+  position: fixed;
+  inset: 0;
+  background: center/cover no-repeat url("../../images/register-fond.png");
+  backdrop-filter: contrast(0.3);
+  z-index: -2;
+}
+
+.overlay-reset-password {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: -1;
+}
+
+.page-reset-password {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  padding: 40px;
+}
+
+/* Colonne gauche : logo texte */
+.brand-reset-password {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+.brand-reset-password img {
+  width: 520px;
+  max-width: 40vw;
+  height: auto;
+  margin-left: 200px;
+}
+
+/* Carte formulaire */
+.card-reset-password {
+  position: relative;
+  width: 520px;
+  max-width: 92vw;
+  padding: 28px;
+  padding-top: 90px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  margin-left: auto;
+}
+.card-reset-password h1 {
+  text-align: left;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.card-reset-password p {
+  font-size: 14px;
+  color: #ddd;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.badge-reset-password {
+  position: absolute;
+  left: 50%;
+  top: -60px;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+}
+.badge-reset-password img {
+  width: 115px;
+  margin-top: 30px;
+  object-fit: contain;
+}
+
+/* Formulaire */
+form {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  font-size: 13px;
+  color: #eaeaea;
+  margin-left: 8px;
+}
+
+input {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 24px;
+  border: none;
+  outline: none;
+  background: #fff;
+  color: #111;
+  width: 100%;
+}
+
+.submit-reset-password {
+  margin-top: 4px;
+  height: 44px;
+  border-radius: 24px;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.submit-reset-password:hover {
+  background: #3b3b3b;
+}
+
+/* Messages et liens */
+.error-reset-password {
+  background: #ff4444;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.link-reset-password {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #eaeaea;
+}
+.link-reset-password a {
+  color: #fff;
+  text-decoration: underline;
+}
+.link-reset-password a:hover {
+  color: #ddd;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .page-reset-password {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .brand-reset-password {
+    justify-content: center;
+  }
+  .brand-reset-password img {
     max-width: 70vw;
     margin-left: 0;
   }

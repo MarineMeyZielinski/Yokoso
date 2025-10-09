@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="success">
               <strong>Copiez ce lien (valable 1 heure) :</strong>
               <div class="reset-link" id="resetLink"><?= htmlspecialchars($reset_link) ?></div>
-              <button class="copy-btn" onclick="copyLink()">📋 Copier le lien</button>
+              <button class="copy-btn" onclick="copyLink()">Copier le lien</button>
             </div>
             <p class="link">
               <a href="login.php">Retour à la connexion</a>

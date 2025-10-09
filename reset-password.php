@@ -10,7 +10,7 @@ if ($token) {
     try {
         $stmt = $pdo->prepare('
             SELECT email 
-            FROM password_resets 
+            FROM password_resets
             WHERE token = ? 
             AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
             LIMIT 1
@@ -55,11 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valid) {
             $stmt->execute([$hash, $email]);
 
             // Supprimer le token utilisé
-            $stmt = $pdo->prepare('DELETE FROM password_resets WHERE token = ?');
+            $stmt = $pdo->prepare('DELETE FROM password_reset-passwords WHERE token = ?');
             $stmt->execute([$token]);
 
             // Redirection vers login avec message de succès
-            header('Location: login.php?password_reset=1');
+            header('Location: login.php?password_reset-password=1');
             exit;
         } catch (PDOException $e) {
             $errors[] = "Erreur lors de la mise à jour : " . $e->getMessage();
@@ -78,13 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valid) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: #fff; min-height: 100vh; }
 
     /* Fond + overlay */
     .page { position: relative; min-height: 100vh; display: flex; align-items: center; gap: 56px; padding: 40px; }
-    .bg { position: fixed; inset: 0; background: center/cover no-repeat url('images/register-fond.png'); backdrop-filter: contrast(0.3); z-index: -2; }
+    .bg { position: fixed; inset: 0; background: center/cover no-repeat url('images/reset-password-fond.png'); backdrop-filter: contrast(0.3); z-index: -2; }
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
 
     /* Colonne gauche: logo texte */
@@ -111,38 +112,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valid) {
     .error { background: #ff4444; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
 
     @media (max-width: 980px) { .page { flex-direction: column; align-items: center; gap: 24px; } .brand { justify-content: center; } .brand img { max-width: 70vw; } }
-  </style>
+  </style> -->
 </head>
 <body>
-  <div class="bg"></div>
-  <div class="overlay"></div>
-  <div class="page">
-    <div class="brand">
+  <div class="bg-reset-password"></div>
+  <div class="overlay-reset-password"></div>
+  <div class="page-reset-password">
+    <div class="brand-reset-password">
       <img src="images/yokoso-blanc.png" alt="YOKOSO">
     </div>
 
-    <div class="card">
-      <div class="badge">
+    <div class="card-reset-password">
+      <div class="badge-reset-password">
         <img src="images/logo-blanc-seul-removebg-preview.png" alt="Logo YOKOSO">
       </div>
       <h1>Nouveau mot de passe</h1>
       <p>Choisissez un nouveau mot de passe sécurisé pour votre compte.</p>
 
-      <!-- Affichage des erreurs -->
       <?php if ($errors): ?>
-        <div class="error">
+        <div class="error-reset-password">
           <?php foreach ($errors as $error): ?>
             <p><?= htmlspecialchars($error) ?></p>
           <?php endforeach; ?>
         </div>
-        <p class="link">
+        <p class="link-reset-password">
           <a href="forgot-password.php">Demander un nouveau lien</a>
         </p>
       <?php endif; ?>
 
-      <!-- Formulaire uniquement si token est valide -->
       <?php if ($token_valid && !$errors): ?>
-        <form action="reset-password.php?token=<?= htmlspecialchars($token) ?>" method="post" autocomplete="off">
+        <form action="reset-password-password.php?token=<?= htmlspecialchars($token) ?>" method="post" autocomplete="off">
           <div>
             <label for="mot_de_passe">Nouveau mot de passe</label>
             <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Minimum 8 caractères" minlength="8" required>
@@ -151,10 +150,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valid) {
             <label for="mot_de_passe_confirm">Confirmer le mot de passe</label>
             <input type="password" id="mot_de_passe_confirm" name="mot_de_passe_confirm" placeholder="Retapez votre mot de passe" minlength="8" required>
           </div>
-          <button type="submit" class="submit">Réinitialiser</button>
+          <button type="submit" class="submit-reset-password">Réinitialiser</button>
         </form>
 
-        <p class="link">
+        <p class="link-reset-password">
           <a href="login.php">Retour à la connexion</a>
         </p>
       <?php endif; ?>
