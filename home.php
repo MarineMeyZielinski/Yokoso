@@ -1,5 +1,24 @@
 <?php
+session_start();
 require_once 'includes/config.php';
+
+// Vérifier si l'utilisateur est connecté
+$is_logged_in = isset($_SESSION['user_id']);
+$user_data = null;
+
+if ($is_logged_in) {
+    // Récupérer les données complètes de l'utilisateur
+    try {
+        $stmt = $pdo->prepare('SELECT prenom, nom, email, telephone FROM users WHERE id_user = ? LIMIT 1');
+        $stmt->execute([$_SESSION['user_id']]);
+        $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // En cas d'erreur, on déconnecte l'utilisateur
+        session_destroy();
+        header('Location: login.php');
+        exit;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,11 +32,7 @@ require_once 'includes/config.php';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/scss/main.css">
-   <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body>
   <div class="page">
@@ -28,7 +43,7 @@ require_once 'includes/config.php';
       </div>
       <nav class="menu">
         <a href="home.php">Accueil</a>
-        <a href= 'logement.php'>Nos logements</a>
+        <a href='logement.php'>Nos logements</a>
         <a href="#">Publier une annonce</a>
         <a href="#">Compléter le profil</a>
         <a href="#">Mes réservations</a>
@@ -47,10 +62,17 @@ require_once 'includes/config.php';
         <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
         <button class="icon-btn" title="Favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></button>
 
-         <a href="register.php" class="connexion">S'inscrire</a>
-         <a href="login.php" class="connexion">Connexion</a>
-
-        <button class="icon-btn" title="Profil"><i class="fa-solid fa-user" style="color: #000000;"></i></button>
+        <?php if ($is_logged_in): ?>
+          <div class="user-greeting">
+            Bonjour, <?= htmlspecialchars($user_data['prenom']) ?>
+          </div>
+          <button class="icon-btn" title="Mon profil" onclick="openProfileModal()">
+            <i class="fa-solid fa-user" style="color: #000000;"></i>
+          </button>
+        <?php else: ?>
+          <a href="register.php" class="connexion">S'inscrire</a>
+          <a href="login.php" class="connexion">Connexion</a>
+        <?php endif; ?>
       </div>
 
       <section class="hero" aria-label="Carousel Pays Disponibles">
@@ -103,7 +125,73 @@ require_once 'includes/config.php';
     </main>
   </div>
 
+  <?php if ($is_logged_in): ?>
+  <!-- Modale de profil -->
+  <div class="modal-overlay" id="profileModal" onclick="closeModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Mon profil</h2>
+        <button class="modal-close" onclick="closeProfileModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('info')">Informations</button>
+          <button class="tab" onclick="switchTab('password')">Mot de passe</button>
+        </div>
+
+        <!-- Onglet Informations -->
+        <div class="tab-content active" id="info-tab">
+          <div id="info-messages"></div>
+          <form id="infoForm">
+            <div class="form-group">
+              <label for="prenom">Prénom</label>
+              <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($user_data['prenom']) ?>" required>
+            </div>
+            <div class="form-group">
+              <label for="nom">Nom</label>
+              <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user_data['nom']) ?>" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="<?= htmlspecialchars($user_data['email']) ?>" required>
+            </div>
+            <div class="form-group">
+              <label for="telephone">Téléphone</label>
+              <input type="tel" id="telephone" name="telephone" value="<?= htmlspecialchars($user_data['telephone'] ?? '') ?>">
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+          </form>
+        </div>
+
+        <!-- Onglet Mot de passe -->
+        <div class="tab-content" id="password-tab">
+          <div id="password-messages"></div>
+          <form id="passwordForm">
+            <div class="form-group">
+              <label for="current_password">Mot de passe actuel</label>
+              <input type="password" id="current_password" name="current_password" required>
+            </div>
+            <div class="form-group">
+              <label for="new_password">Nouveau mot de passe</label>
+              <input type="password" id="new_password" name="new_password" minlength="8" required>
+            </div>
+            <div class="form-group">
+              <label for="confirm_password">Confirmer le mot de passe</label>
+              <input type="password" id="confirm_password" name="confirm_password" minlength="8" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+          </form>
+        </div>
+
+        <!-- Bouton de déconnexion -->
+        <a href="logout.php" class="btn btn-danger">Se déconnecter</a>
+      </div>
+    </div>
+  </div>
+  <?php endif; ?>
+
   <script>
+    // Carousel
     (function(){
       const root = document.querySelector('.carousel');
       if(!root) return;
@@ -116,7 +204,7 @@ require_once 'includes/config.php';
       const countryEl = document.getElementById('hero-country');
 
       let index = 0;
-      function update(fromDot){
+      function update(){
         slides.style.transform = `translateX(${-index * 100}%)`;
         dots.forEach((d,i)=>d.classList.toggle('active', i===index));
         const s = slideEls[index];
@@ -134,7 +222,83 @@ require_once 'includes/config.php';
       root.addEventListener('mouseleave', ()=>{ timer = setInterval(()=>go(index+1), 5000); });
       update();
     })();
+
+    // Modale de profil
+    function openProfileModal() {
+      document.getElementById('profileModal').classList.add('active');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.remove('active');
+    }
+
+    function closeModalOnOverlay(event) {
+      if (event.target.id === 'profileModal') {
+        closeProfileModal();
+      }
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      if (tab === 'info') {
+        document.querySelector('.tab:nth-child(1)').classList.add('active');
+        document.getElementById('info-tab').classList.add('active');
+      } else {
+        document.querySelector('.tab:nth-child(2)').classList.add('active');
+        document.getElementById('password-tab').classList.add('active');
+      }
+    }
+
+    // Formulaire des informations
+    document.getElementById('infoForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      
+      try {
+        const response = await fetch('update-profile.php', {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.json();
+        
+        const msgDiv = document.getElementById('info-messages');
+        if (result.success) {
+          msgDiv.innerHTML = '<div class="success-msg">' + result.message + '</div>';
+          // Mettre à jour le prénom affiché
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          msgDiv.innerHTML = '<div class="error-msg">' + result.message + '</div>';
+        }
+      } catch (error) {
+        document.getElementById('info-messages').innerHTML = '<div class="error-msg">Erreur de connexion</div>';
+      }
+    });
+
+    // Formulaire du mot de passe
+    document.getElementById('passwordForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      
+      try {
+        const response = await fetch('update-password.php', {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.json();
+        
+        const msgDiv = document.getElementById('password-messages');
+        if (result.success) {
+          msgDiv.innerHTML = '<div class="success-msg">' + result.message + '</div>';
+          e.target.reset();
+        } else {
+          msgDiv.innerHTML = '<div class="error-msg">' + result.message + '</div>';
+        }
+      } catch (error) {
+        document.getElementById('password-messages').innerHTML = '<div class="error-msg">Erreur de connexion</div>';
+      }
+    });
   </script>
 </body>
 </html>
-
