@@ -456,6 +456,7 @@ a {
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease;
+  margin-bottom: 15px;
 }
 .modal .modal-body .btn.btn-primary {
   background: #000;

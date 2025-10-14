@@ -136,7 +136,6 @@ if ($is_logged_in) {
       <div class="modal-body">
         <div class="tabs">
           <button class="tab active" onclick="switchTab('info')">Informations</button>
-          <button class="tab" onclick="switchTab('password')">Mot de passe</button>
         </div>
 
         <!-- Onglet Informations -->
@@ -160,26 +159,6 @@ if ($is_logged_in) {
               <input type="tel" id="telephone" name="telephone" value="<?= htmlspecialchars($user_data['telephone'] ?? '') ?>">
             </div>
             <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-          </form>
-        </div>
-
-        <!-- Onglet Mot de passe -->
-        <div class="tab-content" id="password-tab">
-          <div id="password-messages"></div>
-          <form id="passwordForm">
-            <div class="form-group">
-              <label for="current_password">Mot de passe actuel</label>
-              <input type="password" id="current_password" name="current_password" required>
-            </div>
-            <div class="form-group">
-              <label for="new_password">Nouveau mot de passe</label>
-              <input type="password" id="new_password" name="new_password" minlength="8" required>
-            </div>
-            <div class="form-group">
-              <label for="confirm_password">Confirmer le mot de passe</label>
-              <input type="password" id="confirm_password" name="confirm_password" minlength="8" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
           </form>
         </div>
 
