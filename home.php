@@ -42,10 +42,10 @@ if ($is_logged_in) {
         <img src="images/yokoso-blanc.png" alt="Yokoso" class="logo-yokoso">
       </div>
       <nav class="menu">
-        <a href="home.php">Accueil</a>
+        <a href='home.php'>Accueil</a>
         <a href='logement.php'>Nos logements</a>
         <a href="#">Publier une annonce</a>
-        <a href="#">Compléter le profil</a>
+        <a href='edit-profile.php'>Compléter le profil</a>
         <a href="#">Mes réservations</a>
         <a href="#">Mes annonces</a>
       </nav>
