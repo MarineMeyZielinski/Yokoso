@@ -48,8 +48,7 @@ a {
   width: 120px;
   height: 120px;
   border-radius: 999px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .page .logo-yokoso {
   width: 140px;
@@ -109,8 +108,7 @@ a {
   width: 75%;
   height: 180px;
   border-radius: 4px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   border: 1px solid #d9d9de;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -226,8 +224,7 @@ a {
   width: 75%;
   height: 180px;
   border-radius: 4px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   border: 1px solid #d9d9de;
 }
 
@@ -252,8 +249,7 @@ a {
 .hero img {
   width: 100%;
   height: 320px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   opacity: 0.9;
   display: block;
   filter: contrast(0.5);
@@ -409,8 +405,7 @@ a {
   position: fixed;
   inset: 0;
   background: center/cover no-repeat url("../../images/register-fond.png");
-  -webkit-backdrop-filter: contrast(0.3);
-          backdrop-filter: contrast(0.3);
+  backdrop-filter: contrast(0.3);
   z-index: -2;
 }
 .bg-forget-pwd .overlay-forget-pwd {
@@ -450,8 +445,7 @@ a {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  -webkit-backdrop-filter: blur(6px);
-          backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   margin-left: auto;
   /* Formulaire */
@@ -470,8 +464,7 @@ a {
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .badge img {
   width: 115px;
   margin-top: 30px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd h1 {
   text-align: left;
@@ -593,8 +586,7 @@ a {
   position: fixed;
   inset: 0;
   background: center/cover no-repeat url("../../images/register-fond.png");
-  -webkit-backdrop-filter: contrast(0.3);
-          backdrop-filter: contrast(0.3);
+  backdrop-filter: contrast(0.3);
   z-index: -2;
 }
 
@@ -637,8 +629,7 @@ a {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  -webkit-backdrop-filter: blur(6px);
-          backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   margin-left: auto;
 }
@@ -665,8 +656,7 @@ a {
 .badge-reset-password img {
   width: 115px;
   margin-top: 30px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 
 /* Formulaire */
@@ -747,8 +737,7 @@ input {
   position: fixed;
   inset: 0;
   background: center/cover no-repeat url("../../images/register-fond.png");
-  -webkit-backdrop-filter: contrast(0.3);
-          backdrop-filter: contrast(0.3);
+  backdrop-filter: contrast(0.3);
   z-index: -2;
 }
 
@@ -802,8 +791,7 @@ input {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  -webkit-backdrop-filter: blur(6px);
-          backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   margin-left: auto;
 }
@@ -823,8 +811,7 @@ input {
 .card-login .badge-login img {
   width: 115px;
   margin-top: 30px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .card-login form {
   display: grid;
@@ -901,8 +888,7 @@ input {
   position: fixed;
   inset: 0;
   background: center/cover no-repeat url("../../images/register-fond.png");
-  -webkit-backdrop-filter: contrast(0.3);
-          backdrop-filter: contrast(0.3);
+  backdrop-filter: contrast(0.3);
   z-index: -2;
 }
 
@@ -956,8 +942,7 @@ input {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  -webkit-backdrop-filter: blur(6px);
-          backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   margin-left: auto;
 }
@@ -977,8 +962,7 @@ input {
 .card-register .badge-register img {
   width: 115px;
   margin-top: 30px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .card-register form {
   display: grid;
@@ -1068,8 +1052,7 @@ input {
 .profile-container .profile-header .profile-avatar img {
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .profile-container .profile-header .profile-info h1 {
   font-size: 32px;
@@ -1100,7 +1083,6 @@ input {
   color: #666;
   font-style: italic;
   white-space: nowrap;
-  min-width: -moz-fit-content;
   min-width: fit-content;
 }
 .profile-container .profile-form .form-field input {
@@ -1111,9 +1093,6 @@ input {
   font-size: 15px;
   color: #111;
   font-family: Inter, sans-serif;
-}
-.profile-container .profile-form .form-field input::-moz-placeholder {
-  color: #999;
 }
 .profile-container .profile-form .form-field input::placeholder {
   color: #999;
@@ -1302,8 +1281,7 @@ input {
   width: 200px;
   height: 150px;
   border-radius: 8px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   flex-shrink: 0;
 }
 .profile-container .listing-item .listing-content {
@@ -1387,4 +1365,6 @@ input {
   .profile-container .listing-item .listing-image {
     width: 100%;
   }
-}/*# sourceMappingURL=main.css.map */
+}
+
+/*# sourceMappingURL=main.css.map */
