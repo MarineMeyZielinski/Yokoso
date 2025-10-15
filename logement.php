@@ -48,7 +48,7 @@ if ($is_logged_in) {
         <a href='home.php'>Accueil</a>
         <a href= 'logement.php'>Nos logements</a>
         <a href="#">Publier une annonce</a>
-        <a href='edit-profile.php'>Compléter le profil</a>
+        <a href='edit-profile.php'>Mon profil</a>
         <a href="#">Mes réservations</a>
         <a href="#">Mes annonces</a>
       </nav>
