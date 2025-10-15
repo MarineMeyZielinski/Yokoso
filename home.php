@@ -66,9 +66,42 @@ if ($is_logged_in) {
           <div class="user-greeting">
             Bonjour, <?= htmlspecialchars($user_data['prenom']) ?>
           </div>
-          <button class="icon-btn" title="Mon profil" onclick="openProfileModal()">
-            <i class="fa-solid fa-user" style="color: #000000;"></i>
-          </button>
+          <div class="profile-menu-wrapper">
+            <button class="icon-btn" title="Mon profil" onclick="toggleProfileMenu(event)">
+              <i class="fa-solid fa-user" style="color: #000000;"></i>
+            </button>
+            
+            <!-- Menu déroulant -->
+            <div class="profile-dropdown" id="profileDropdown">
+              <div class="profile-dropdown-header">
+                <strong><?= htmlspecialchars($user_data['prenom'] . ' ' . $user_data['nom']) ?></strong>
+                <span><?= htmlspecialchars($user_data['email']) ?></span>
+              </div>
+              <div class="profile-dropdown-menu">
+                <a href="edit-profile.php" class="profile-dropdown-item">
+                  <i class="fa-solid fa-user-pen"></i>
+                  <span>Modifier le profil</span>
+                </a>
+                <a href="settings.php" class="profile-dropdown-item">
+                  <i class="fa-solid fa-gear"></i>
+                  <span>Paramètres</span>
+                </a>
+                <a href="my-listings.php" class="profile-dropdown-item">
+                  <i class="fa-solid fa-house"></i>
+                  <span>Mes annonces</span>
+                </a>
+                <a href="my-bookings.php" class="profile-dropdown-item">
+                  <i class="fa-solid fa-calendar-check"></i>
+                  <span>Mes réservations</span>
+                </a>
+                <div class="profile-dropdown-divider"></div>
+                <a href="logout.php" class="profile-dropdown-item logout">
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                  <span>Se déconnecter</span>
+                </a>
+              </div>
+            </div>
+          </div>
         <?php else: ?>
           <a href="register.php" class="connexion">S'inscrire</a>
           <a href="login.php" class="connexion">Connexion</a>
@@ -125,50 +158,6 @@ if ($is_logged_in) {
     </main>
   </div>
 
-  <?php if ($is_logged_in): ?>
-  <!-- Modale de profil -->
-  <div class="modal-overlay" id="profileModal" onclick="closeModalOnOverlay(event)">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Mon profil</h2>
-        <button class="modal-close" onclick="closeProfileModal()">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="tabs">
-          <button class="tab active" onclick="switchTab('info')">Informations</button>
-        </div>
-
-        <!-- Onglet Informations -->
-        <div class="tab-content active" id="info-tab">
-          <div id="info-messages"></div>
-          <form id="infoForm">
-            <div class="form-group">
-              <label for="prenom">Prénom</label>
-              <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($user_data['prenom']) ?>" required>
-            </div>
-            <div class="form-group">
-              <label for="nom">Nom</label>
-              <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user_data['nom']) ?>" required>
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" value="<?= htmlspecialchars($user_data['email']) ?>" required>
-            </div>
-            <div class="form-group">
-              <label for="telephone">Téléphone</label>
-              <input type="tel" id="telephone" name="telephone" value="<?= htmlspecialchars($user_data['telephone'] ?? '') ?>">
-            </div>
-            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-          </form>
-        </div>
-
-        <!-- Bouton de déconnexion -->
-        <a href="logout.php" class="btn btn-danger">Se déconnecter</a>
-      </div>
-    </div>
-  </div>
-  <?php endif; ?>
-
   <script>
     // Carousel
     (function(){
@@ -202,81 +191,26 @@ if ($is_logged_in) {
       update();
     })();
 
-    // Modale de profil
-    function openProfileModal() {
-      document.getElementById('profileModal').classList.add('active');
+    // Menu déroulant profil
+    function toggleProfileMenu(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('profileDropdown');
+      dropdown.classList.toggle('active');
     }
 
-    function closeProfileModal() {
-      document.getElementById('profileModal').classList.remove('active');
-    }
-
-    function closeModalOnOverlay(event) {
-      if (event.target.id === 'profileModal') {
-        closeProfileModal();
-      }
-    }
-
-    function switchTab(tab) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    // Fermer le menu en cliquant ailleurs
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('profileDropdown');
+      const wrapper = document.querySelector('.profile-menu-wrapper');
       
-      if (tab === 'info') {
-        document.querySelector('.tab:nth-child(1)').classList.add('active');
-        document.getElementById('info-tab').classList.add('active');
-      } else {
-        document.querySelector('.tab:nth-child(2)').classList.add('active');
-        document.getElementById('password-tab').classList.add('active');
-      }
-    }
-
-    // Formulaire des informations
-    document.getElementById('infoForm')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      
-      try {
-        const response = await fetch('update-profile.php', {
-          method: 'POST',
-          body: formData
-        });
-        const result = await response.json();
-        
-        const msgDiv = document.getElementById('info-messages');
-        if (result.success) {
-          msgDiv.innerHTML = '<div class="success-msg">' + result.message + '</div>';
-          // Mettre à jour le prénom affiché
-          setTimeout(() => location.reload(), 1500);
-        } else {
-          msgDiv.innerHTML = '<div class="error-msg">' + result.message + '</div>';
-        }
-      } catch (error) {
-        document.getElementById('info-messages').innerHTML = '<div class="error-msg">Erreur de connexion</div>';
+      if (dropdown && !wrapper.contains(event.target)) {
+        dropdown.classList.remove('active');
       }
     });
 
-    // Formulaire du mot de passe
-    document.getElementById('passwordForm')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      
-      try {
-        const response = await fetch('update-password.php', {
-          method: 'POST',
-          body: formData
-        });
-        const result = await response.json();
-        
-        const msgDiv = document.getElementById('password-messages');
-        if (result.success) {
-          msgDiv.innerHTML = '<div class="success-msg">' + result.message + '</div>';
-          e.target.reset();
-        } else {
-          msgDiv.innerHTML = '<div class="error-msg">' + result.message + '</div>';
-        }
-      } catch (error) {
-        document.getElementById('password-messages').innerHTML = '<div class="error-msg">Erreur de connexion</div>';
-      }
+    // Empêcher la fermeture quand on clique dans le menu
+    document.getElementById('profileDropdown')?.addEventListener('click', function(event) {
+      event.stopPropagation();
     });
   </script>
 </body>
