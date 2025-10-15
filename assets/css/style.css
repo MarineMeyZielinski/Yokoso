@@ -435,9 +435,7 @@ a {
   height: auto;
   margin-left: 200px;
 }
-.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd {
-  /* Carte du formulaire */
-}
+
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
   position: relative;
   width: 520px;
@@ -475,9 +473,7 @@ a {
   margin-bottom: 16px;
   line-height: 1.5;
 }
-.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
-  /* Formulaire */
-}
+
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd form {
   display: grid;
   gap: 12px;
@@ -510,9 +506,7 @@ a {
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd form .submit:hover {
   background: #3b3b3b;
 }
-.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
-  /* Liens */
-}
+
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .link {
   text-align: center;
   margin-top: 16px;
@@ -526,9 +520,7 @@ a {
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .link a:hover {
   color: #ddd;
 }
-.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
-  /* Message de succès */
-}
+
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .success {
   background: #44ff44;
   color: #000;
@@ -567,9 +559,7 @@ a {
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .success .copy-btn:hover {
   background: #333;
 }
-.bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd {
-  /* Message d'erreur */
-}
+
 .bg-forget-pwd .overlay-forget-pwd .page-forget-pwd .card-forget-pwd .error {
   background: #ff4444;
   padding: 10px;
