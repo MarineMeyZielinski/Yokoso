@@ -106,12 +106,12 @@ $annee_inscription = date('Y', strtotime($user['date_inscription']));
         <img src="images/yokoso-blanc.png" alt="Yokoso" class="logo-yokoso">
       </div>
       <nav class="menu">
-        <a href="home.php">Accueil</a>
+        <a href='home.php'>Accueil</a>
         <a href='logement.php'>Nos logements</a>
         <a href="#">Publier une annonce</a>
         <a href="edit-profile.php">Mon profil</a>
-        <a href="#">Mes réservations</a>
-        <a href="#">Mes annonces</a>
+        <a href='my-bookings.php'>Mes réservations</a>
+        <a href='my-listings.php'>Mes annonces</a>
       </nav>
     </aside>
 
