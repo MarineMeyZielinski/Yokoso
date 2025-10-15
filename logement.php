@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'includes/config.php';
 ?>
 
@@ -26,30 +27,17 @@ require_once 'includes/config.php';
         <img src="images/yokoso-blanc.png" alt="Yokoso" class="logo-yokoso">
       </div>
       <nav class="menu">
-        <a href="home.php">Accueil</a>
+        <a href='home.php'>Accueil</a>
         <a href= 'logement.php'>Nos logements</a>
         <a href="#">Publier une annonce</a>
-        <a href="#">Compléter le profil</a>
+        <a href='edit-profile.php'>Mon profil</a>
         <a href="#">Mes réservations</a>
         <a href="#">Mes annonces</a>
       </nav>
     </aside>
 
     <main class="content">
-      <div class="topbar">
-        <div class="search">
-          <span><i class="fa-solid fa-magnifying-glass" style="color: #000000;"></i></span>
-          <input type="text" placeholder="Rechercher">
-          <button class="icon-btn" title="Filtres"><i class="fa-solid fa-filter" style="color: #000000;"></i></button>
-        </div>
-        <button class="icon-btn" title="Notifications"><i class="fa-solid fa-bell" style="color: #000000;"></i></button>
-        <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
-        <button class="icon-btn" title="Favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></button>
-        <a href="register.php" class="connexion">S'inscrire</a>
-         <a href="login.php" class="connexion">Connexion</a>
-        <button class="icon-btn" title="Profil"><i class="fa-solid fa-user" style="color: #000000;"></i></button>
-      </div>
-
+      <?php include 'includes/header.php'; ?>
 
       <section>
         <h3 class="section-title">Nos logements :</h3>
@@ -72,7 +60,6 @@ require_once 'includes/config.php';
         </div>
       </section>
 
-
       <section>
         <div class="cards">
           <article class="card">
@@ -92,10 +79,6 @@ require_once 'includes/config.php';
           </article>
         </div>
       </section>
-
-
-
-
 
       <section>
         <div class="cards">
@@ -117,12 +100,7 @@ require_once 'includes/config.php';
         </div>
       </section>
 
-
-
-
-
       <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>
     </main>
-  </div>
 </body>
 </html>
