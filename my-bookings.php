@@ -1,25 +1,6 @@
 <?php
 session_start();
 require_once 'includes/config.php';
-
-// Vérifier que l'utilisateur est connecté
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
-$user_id = $_SESSION['user_id'];
-
-// Récupérer les données de l'utilisateur
-try {
-    $stmt = $pdo->prepare('SELECT prenom, nom, email FROM users WHERE id_user = ? LIMIT 1');
-    $stmt->execute([$user_id]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    session_destroy();
-    header('Location: login.php');
-    exit;
-}
 ?>
 
 <!DOCTYPE html>
@@ -53,51 +34,7 @@ try {
     </aside>
 
     <main class="content">
-      <div class="topbar">
-        <div class="search">
-          <span><i class="fa-solid fa-magnifying-glass" style="color: #000000;"></i></span>
-          <input type="text" placeholder="Rechercher">
-          <button class="icon-btn" title="Filtres"><i class="fa-solid fa-filter" style="color: #000000;"></i></button>
-        </div>
-        <button class="icon-btn" title="Notifications"><i class="fa-solid fa-bell" style="color: #000000;"></i></button>
-        <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
-        <button class="icon-btn" title="Favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></button>
-
-        <div class="user-greeting">
-          Bonjour, <?= htmlspecialchars($user['prenom']) ?>
-        </div>
-        <div class="profile-menu-wrapper">
-          <button class="icon-btn" title="Mon profil" onclick="toggleProfileMenu(event)">
-            <i class="fa-solid fa-user" style="color: #000000;"></i>
-          </button>
-          
-          <div class="profile-dropdown" id="profileDropdown">
-            <div class="profile-dropdown-header">
-              <strong><?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']) ?></strong>
-              <span><?= htmlspecialchars($user['email']) ?></span>
-            </div>
-            <div class="profile-dropdown-menu">
-              <a href="edit-profile.php" class="profile-dropdown-item">
-                <i class="fa-solid fa-user-pen"></i>
-                <span>Mon profil</span>
-              </a>
-              <a href="my-listings.php" class="profile-dropdown-item">
-                <i class="fa-solid fa-house"></i>
-                <span>Mes annonces</span>
-              </a>
-              <a href="my-bookings.php" class="profile-dropdown-item">
-                <i class="fa-solid fa-calendar-check"></i>
-                <span>Mes réservations</span>
-              </a>
-              <div class="profile-dropdown-divider"></div>
-              <a href="logout.php" class="profile-dropdown-item logout">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Se déconnecter</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <?php include 'includes/header.php'; ?>
 
       <div class="profile-container">
         <!-- Onglets -->
@@ -119,25 +56,5 @@ try {
     </main>
   </div>
 
-  <script>
-    function toggleProfileMenu(event) {
-      event.stopPropagation();
-      const dropdown = document.getElementById('profileDropdown');
-      dropdown.classList.toggle('active');
-    }
-
-    document.addEventListener('click', function(event) {
-      const dropdown = document.getElementById('profileDropdown');
-      const wrapper = document.querySelector('.profile-menu-wrapper');
-      
-      if (dropdown && wrapper && !wrapper.contains(event.target)) {
-        dropdown.classList.remove('active');
-      }
-    });
-
-    document.getElementById('profileDropdown')?.addEventListener('click', function(event) {
-      event.stopPropagation();
-    });
-  </script>
 </body>
 </html>
