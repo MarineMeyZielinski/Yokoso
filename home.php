@@ -80,11 +80,7 @@ if ($is_logged_in) {
               <div class="profile-dropdown-menu">
                 <a href="edit-profile.php" class="profile-dropdown-item">
                   <i class="fa-solid fa-user-pen"></i>
-                  <span>Modifier le profil</span>
-                </a>
-                <a href="settings.php" class="profile-dropdown-item">
-                  <i class="fa-solid fa-gear"></i>
-                  <span>Paramètres</span>
+                  <span>Mon profil</span>
                 </a>
                 <a href="my-listings.php" class="profile-dropdown-item">
                   <i class="fa-solid fa-house"></i>
