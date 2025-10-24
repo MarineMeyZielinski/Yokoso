@@ -59,8 +59,26 @@ if ($is_logged_in) {
       <!-- Menu déroulant -->
       <div class="profile-dropdown" id="profileDropdown">
         <div class="profile-dropdown-header">
-          <strong><?= htmlspecialchars($user_data['prenom'] . ' ' . $user_data['nom']) ?></strong>
-          <span><?= htmlspecialchars($user_data['email']) ?></span>
+          <?php
+          // Récupérer la photo de profil si elle existe
+          $photo_profil = null;
+          if ($is_logged_in) {
+              try {
+                  require_once __DIR__ . '/config.php';
+                  $stmt = $pdo->prepare('SELECT photo_profil FROM users WHERE id_user = ? LIMIT 1');
+                  $stmt->execute([$_SESSION['user_id']]);
+                  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                  $photo_profil = $result['photo_profil'] ?? null;
+              } catch (PDOException $e) {}
+          }
+          ?>
+          <?php if (!empty($photo_profil) && file_exists($photo_profil)): ?>
+            <img src="<?= htmlspecialchars($photo_profil) ?>" alt="Photo" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+          <?php endif; ?>
+          <div>
+            <strong><?= htmlspecialchars($user_data['prenom'] . ' ' . $user_data['nom']) ?></strong>
+            <span><?= htmlspecialchars($user_data['email']) ?></span>
+          </div>
         </div>
         <div class="profile-dropdown-menu">
           <a href="edit-profile.php" class="profile-dropdown-item">
