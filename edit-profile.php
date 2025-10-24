@@ -14,7 +14,7 @@ $user_id = $_SESSION['user_id'];
 
 // Récupérer les données actuelles de l'utilisateur
 try {
-    $stmt = $pdo->prepare('SELECT prenom, nom, email, telephone, date_inscription FROM users WHERE id_user = ? LIMIT 1');
+    $stmt = $pdo->prepare('SELECT prenom, nom, email, telephone, date_inscription, photo_profil, date_naissance FROM users WHERE id_user = ? LIMIT 1');
     $stmt->execute([$user_id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
@@ -97,6 +97,80 @@ $annee_inscription = date('Y', strtotime($user['date_inscription']));
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    .profile-avatar {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .profile-avatar:hover {
+      transform: scale(1.05);
+    }
+
+    .profile-avatar:hover .avatar-overlay {
+      opacity: 1;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .avatar-overlay i {
+      color: #fff;
+      font-size: 24px;
+    }
+
+    #photoInput {
+      display: none;
+    }
+
+    .avatar-loading {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: none;
+      place-items: center;
+      z-index: 10;
+    }
+
+    .avatar-loading.active {
+      display: grid;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #333;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
   <div class="page">
@@ -143,9 +217,21 @@ $annee_inscription = date('Y', strtotime($user['date_inscription']));
 
         <!-- Header profil -->
         <div class="profile-header">
-          <div class="profile-avatar">
-            <i class="fa-solid fa-user" style="font-size: 48px; color: #999;"></i>
+          <div class="profile-avatar" onclick="document.getElementById('photoInput').click()">
+            <?php if (!empty($user['photo_profil']) && file_exists($user['photo_profil'])): ?>
+              <img src="<?= htmlspecialchars($user['photo_profil']) ?>" alt="Photo de profil" id="avatarPreview">
+            <?php else: ?>
+              <i class="fa-solid fa-user" style="font-size: 48px; color: #999;" id="avatarIcon"></i>
+            <?php endif; ?>
+            <div class="avatar-overlay">
+              <i class="fa-solid fa-camera"></i>
+            </div>
+            <div class="avatar-loading" id="avatarLoading">
+              <div class="spinner"></div>
+            </div>
           </div>
+          <input type="file" id="photoInput" accept="image/*" style="display: none;">
+          
           <div class="profile-info">
             <h1><?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']) ?></h1>
             <p>Inscrit depuis <?= htmlspecialchars($annee_inscription) ?></p>
@@ -193,6 +279,72 @@ $annee_inscription = date('Y', strtotime($user['date_inscription']));
       <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>
     </main>
   </div>
-  
+
+  <script>
+    const photoInput = document.getElementById('photoInput');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const avatarIcon = document.getElementById('avatarIcon');
+    const avatarLoading = document.getElementById('avatarLoading');
+    const profileAvatar = document.querySelector('.profile-avatar');
+
+    photoInput.addEventListener('change', async function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Vérifier le type de fichier
+      if (!file.type.match('image.*')) {
+        alert('Veuillez sélectionner une image');
+        return;
+      }
+
+      // Vérifier la taille (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('L\'image est trop volumineuse (max 5MB)');
+        return;
+      }
+
+      // Afficher le loader
+      avatarLoading.classList.add('active');
+
+      // Créer un FormData pour l'upload
+      const formData = new FormData();
+      formData.append('photo', file);
+
+      try {
+        const response = await fetch('upload-avatar.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Mettre à jour l'aperçu
+          if (avatarPreview) {
+            avatarPreview.src = result.photo_url + '?' + new Date().getTime();
+          } else {
+            // Créer l'image si elle n'existe pas
+            if (avatarIcon) avatarIcon.remove();
+            const img = document.createElement('img');
+            img.id = 'avatarPreview';
+            img.src = result.photo_url + '?' + new Date().getTime();
+            img.alt = 'Photo de profil';
+            profileAvatar.insertBefore(img, profileAvatar.firstChild);
+          }
+
+          // Recharger la page pour mettre à jour partout
+          setTimeout(() => {
+            location.reload();
+          }, 500);
+        } else {
+          alert('Erreur : ' + result.message);
+        }
+      } catch (error) {
+        alert('Erreur lors de l\'upload : ' + error.message);
+      } finally {
+        avatarLoading.classList.remove('active');
+      }
+    });
+  </script>
 </body>
 </html>
