@@ -97,80 +97,6 @@ $annee_inscription = date('Y', strtotime($user['date_inscription']));
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-  <style>
-    .profile-avatar {
-      position: relative;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: #e0e0e0;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .profile-avatar:hover {
-      transform: scale(1.05);
-    }
-
-    .profile-avatar:hover .avatar-overlay {
-      opacity: 1;
-    }
-
-    .profile-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .avatar-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      display: grid;
-      place-items: center;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .avatar-overlay i {
-      color: #fff;
-      font-size: 24px;
-    }
-
-    #photoInput {
-      display: none;
-    }
-
-    .avatar-loading {
-      position: absolute;
-      inset: 0;
-      background: rgba(255, 255, 255, 0.9);
-      display: none;
-      place-items: center;
-      z-index: 10;
-    }
-
-    .avatar-loading.active {
-      display: grid;
-    }
-
-    .spinner {
-      width: 30px;
-      height: 30px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #333;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
 </head>
 <body>
   <div class="page">
@@ -291,13 +217,13 @@ $annee_inscription = date('Y', strtotime($user['date_inscription']));
       const file = e.target.files[0];
       if (!file) return;
 
-      // Vérifier le type de fichier
+      // Type de fichier
       if (!file.type.match('image.*')) {
         alert('Veuillez sélectionner une image');
         return;
       }
 
-      // Vérifier la taille (5MB max)
+      // Taille (5MB max)
       if (file.size > 5 * 1024 * 1024) {
         alert('L\'image est trop volumineuse (max 5MB)');
         return;
