@@ -1,5 +1,0 @@
-# uploads/profiles/.htaccess
-# Autoriser uniquement les images
-<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
-    Allow from all
-</FilesMatch>
