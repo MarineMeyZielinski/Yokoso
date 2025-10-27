@@ -38,10 +38,14 @@ if ($is_logged_in) {
 
 <!-- Topbar -->
 <div class="topbar">
-  <div class="search">
-    <span><i class="fa-solid fa-magnifying-glass" style="color: #000000;"></i></span>
-    <input type="text" placeholder="Rechercher">
-    <button class="icon-btn" title="Filtres"><i class="fa-solid fa-filter" style="color: #000000;"></i></button>
+  <div class="search-container">
+    <div class="search">
+      <span><i class="fa-solid fa-magnifying-glass" style="color: #000000;"></i></span>
+      <input type="text" id="searchInput" placeholder="Rechercher un logement..." autocomplete="off">
+      <button class="icon-btn" title="Filtres" onclick="openFiltersModal()"><i class="fa-solid fa-filter" style="color: #000000;"></i></button>
+    </div>
+    <!-- Dropdown des résultats -->
+    <div class="search-dropdown" id="searchDropdown"></div>
   </div>
   <button class="icon-btn" title="Notifications"><i class="fa-solid fa-bell" style="color: #000000;"></i></button>
   <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
@@ -109,6 +113,7 @@ if ($is_logged_in) {
 
 <!-- Script pour le menu déroulant -->
 <script>
+  // Menu profil
   function toggleProfileMenu(event) {
     event.stopPropagation();
     const dropdown = document.getElementById('profileDropdown');
@@ -127,4 +132,78 @@ if ($is_logged_in) {
   document.getElementById('profileDropdown')?.addEventListener('click', function(event) {
     event.stopPropagation();
   });
+
+  // Recherche en temps réel
+  let searchTimeout;
+  const searchInput = document.getElementById('searchInput');
+  const searchDropdown = document.getElementById('searchDropdown');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      const query = this.value.trim();
+
+      if (query.length < 2) {
+        searchDropdown.classList.remove('active');
+        return;
+      }
+
+      searchTimeout = setTimeout(() => {
+        fetch(`search.php?q=${encodeURIComponent(query)}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.success && data.results.length > 0) {
+              displaySearchResults(data.results);
+            } else {
+              searchDropdown.innerHTML = '<div class="search-no-result">Aucun résultat trouvé</div>';
+              searchDropdown.classList.add('active');
+            }
+          })
+          .catch(error => {
+            console.error('Erreur de recherche:', error);
+          });
+      }, 300);
+    });
+
+    // Fermer le dropdown en cliquant ailleurs
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.search-container')) {
+        searchDropdown.classList.remove('active');
+      }
+    });
+  }
+
+  function displaySearchResults(results) {
+    let html = '';
+    
+    results.forEach(result => {
+      html += `
+        <a href="${result.url}" class="search-result-item">
+          <img src="${result.photo}" alt="${result.titre}" class="search-result-img">
+          <div class="search-result-info">
+            <div class="search-result-title">${result.titre}</div>
+            <div class="search-result-meta">
+              <span>📍 ${result.ville}, ${result.pays}</span>
+              <span>💰 ${result.prix}€/nuit</span>
+              <span>👥 ${result.capacite} pers.</span>
+            </div>
+          </div>
+        </a>
+      `;
+    });
+
+    html += `
+      <a href="logement.php?search=${encodeURIComponent(searchInput.value)}" class="search-view-all">
+        → Voir tous les résultats
+      </a>
+    `;
+
+    searchDropdown.innerHTML = html;
+    searchDropdown.classList.add('active');
+  }
+
+  function openFiltersModal() {
+    // TODO: Ouvrir la modale de filtres
+    window.location.href = 'logement.php';
+  }
 </script>
