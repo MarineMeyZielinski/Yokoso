@@ -4,8 +4,24 @@ require_once 'includes/config.php';
 
 header('Content-Type: application/json');
 
+// Mapping temporaire des photos
+$photos_map = [
+    1 => 'images/kioshi.jpg',
+    2 => 'images/appartement-lucas.jpg', 
+    3 => 'images/appartement-saitama.jpg',
+    4 => 'images/france-1.webp',
+    5 => 'images/france-2.jpg',
+    6 => 'images/france-3.jpg',
+    7 => 'images/apparttradionnel.jpg',
+    8 => 'images/kyoto-appart.jpg',
+    9 => 'images/kioshi.jpg',
+    10 => 'images/appartement-lucas.jpg',
+    11 => 'images/appartement-saitama.jpg',
+    12 => 'images/kyoto-appart.jpg'
+];
+
 $query = trim($_GET['q'] ?? '');
-$limit = 5; // Nombre de résultats dans le dropdown
+$limit = 5;
 
 if (strlen($query) < 2) {
     echo json_encode(['success' => false, 'message' => 'Requête trop courte']);
@@ -13,7 +29,6 @@ if (strlen($query) < 2) {
 }
 
 try {
-    // Recherche insensible à la casse avec LOWER()
     $searchTerm = "%" . strtolower($query) . "%";
     
     $sql = "SELECT 
@@ -23,10 +38,8 @@ try {
                 a.pays,
                 a.prix_nuit,
                 a.capacite_max,
-                a.type_logement,
-                p.nom_fichier as photo
+                a.type_logement
             FROM annonces a
-            LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
             WHERE a.disponible = 1
             AND (
                 LOWER(a.titre) LIKE ? 
@@ -49,25 +62,13 @@ try {
         $searchTerm, 
         $searchTerm, 
         $searchTerm,
-        $searchTerm, // Pour le ORDER BY
-        $searchTerm  // Pour le ORDER BY
+        $searchTerm,
+        $searchTerm
     ]);
     
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // Formater les résultats
-    $formatted = array_map(function($row) {
-        // Déterminer le chemin de la photo
-        $photoPath = 'images/placeholder.jpg'; // Image par défaut
-        if (!empty($row['photo'])) {
-            // Si nom_fichier contient déjà "uploads/", on l'utilise tel quel
-            if (strpos($row['photo'], 'uploads/') === 0) {
-                $photoPath = $row['photo'];
-            } else {
-                $photoPath = 'uploads/annonces/' . $row['photo'];
-            }
-        }
-        
+    $formatted = array_map(function($row) use ($photos_map) {
         return [
             'id' => $row['id_annonce'],
             'titre' => $row['titre'],
@@ -76,7 +77,7 @@ try {
             'prix' => number_format($row['prix_nuit'], 0, ',', ' '),
             'capacite' => $row['capacite_max'],
             'type' => ucfirst($row['type_logement']),
-            'photo' => $photoPath,
+            'photo' => $photos_map[$row['id_annonce']] ?? 'images/placeholder.jpg',
             'url' => 'annonce.php?id=' . $row['id_annonce']
         ];
     }, $results);
