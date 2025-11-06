@@ -1,6 +1,44 @@
 <?php
 session_start();
 require_once 'includes/config.php';
+
+// Mapping temporaire des photos
+$photos_map = [
+    1 => 'images/kioshi.jpg',
+    2 => 'images/appartement-lucas.jpg', 
+    3 => 'images/appartement-saitama.jpg',
+    4 => 'images/france-1.webp',
+    5 => 'images/france-2.jpg',
+    6 => 'images/france-3.jpg',
+    7 => 'images/apparttradionnel.jpg',
+    8 => 'images/kyoto-appart.jpg',
+    9 => 'images/kioshi.jpg',
+    10 => 'images/appartement-lucas.jpg',
+    11 => 'images/appartement-saitama.jpg',
+    12 => 'images/kyoto-appart.jpg'
+];
+
+// Récupérer les 3 logements les plus récents (ou mieux notés)
+try {
+    $sql = "SELECT 
+                id_annonce,
+                titre,
+                description,
+                ville,
+                pays,
+                prix_nuit,
+                capacite_max,
+                type_logement
+            FROM annonces
+            WHERE disponible = 1
+            ORDER BY date_creation DESC
+            LIMIT 3";
+    
+    $stmt = $pdo->query($sql);
+    $annonces_featured = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $annonces_featured = [];
+}
 ?>
 
 <!DOCTYPE html>
@@ -35,6 +73,7 @@ require_once 'includes/config.php';
 
     <main class="content">
       <?php include 'includes/header.php'; ?>
+      
       <section class="hero" aria-label="Carousel Pays Disponibles">
         <p>YOKOSO est disponible dans ces pays :</p>
         <div class="carousel" data-index="0">
@@ -61,24 +100,51 @@ require_once 'includes/config.php';
       </section>
 
       <section>
-        <h3 class="section-title">Nos logements les mieux notés :</h3>
-        <div class="cards">
-          <article class="card">
-            <img src="images/kioshi.jpg" alt="Appartement de Kioshi" class="thumb">
-            <div class="name">Appartement de Kioshi :</div>
-            <p class="desc">Studio moderne et lumineux à deux pas du célèbre carrefour, avec lit confortable, cuisine équipée et Wi‑Fi rapide. Profitez du calme d'une rue discrète tout en étant au cœur de l'énergie tokyoïte.</p>
-          </article>
-          <article class="card">
-            <img src="images/appartement-lucas.jpg" alt="Appartement de Luca" class="thumb">
-            <div class="name">Appartement de Luca :</div>
-            <p class="desc">Charmant studio au cœur de Paris, alliant confort moderne et authenticité. À deux pas des cafés typiques et des monuments emblématiques, idéal pour découvrir la Ville Lumière.</p>
-          </article>
-          <article class="card">
-            <img src="images/appartement-saitama.jpg" alt="Appartement de Saitama" class="thumb">
-            <div class="name">Appartement de Saitama :</div>
-            <p class="desc">Maison typique au toit rouge et tatamis, entourée de verdure et proche de la mer turquoise. Une immersion authentique dans la culture d'Okinawa, entre calme et nature.</p>
-          </article>
+        <div class="section-header">
+          <h3 class="section-title">Nos logements les plus récents :</h3>
+          <a href="logement.php" class="view-all">Voir tous les logements →</a>
         </div>
+        
+        <?php if (empty($annonces_featured)): ?>
+          <p style="text-align: center; padding: 40px; color: #666;">
+            Aucun logement disponible pour le moment.
+          </p>
+        <?php else: ?>
+          <div class="cards">
+            <?php foreach ($annonces_featured as $annonce): 
+              $photo = $photos_map[$annonce['id_annonce']] ?? 'images/placeholder.jpg';
+              
+              // Tronquer la description
+              $description = strlen($annonce['description']) > 150 
+                  ? substr($annonce['description'], 0, 150) . '...' 
+                  : $annonce['description'];
+            ?>
+              <article class="card" onclick="window.location.href='annonce.php?id=<?= $annonce['id_annonce'] ?>'">
+                <img src="<?= htmlspecialchars($photo) ?>" 
+                     alt="<?= htmlspecialchars($annonce['titre']) ?>" 
+                     class="thumb">
+                
+                <div class="card-header">
+                  <div class="name"><?= htmlspecialchars($annonce['titre']) ?></div>
+                  <div class="card-location">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <?= htmlspecialchars($annonce['ville']) ?>, <?= htmlspecialchars($annonce['pays']) ?>
+                  </div>
+                </div>
+                
+                <p class="desc"><?= htmlspecialchars($description) ?></p>
+                
+                <div class="card-footer">
+                  <span class="price"><?= number_format($annonce['prix_nuit'], 0, ',', ' ') ?>€<small>/nuit</small></span>
+                  <span class="capacity">
+                    <i class="fa-solid fa-user"></i> <?= $annonce['capacite_max'] ?> pers.
+                  </span>
+                  <span class="type"><?= ucfirst($annonce['type_logement']) ?></span>
+                </div>
+              </article>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
       </section>
 
       <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>

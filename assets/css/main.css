@@ -607,7 +607,8 @@ a {
   font-size: 25px;
   font-weight: bold;
 }
-.hero .prev-btn, .hero .next-btn {
+.hero .prev-btn,
+.hero .next-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-10%);
@@ -719,6 +720,22 @@ a {
 
 .profile-dropdown-item.logout i {
   color: #ff4444;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.section-header .view-all {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+.section-header .view-all:hover {
+  color: #000;
 }
 
 .bg-forget-pwd {
