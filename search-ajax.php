@@ -13,8 +13,8 @@ if (strlen($query) < 2) {
 }
 
 try {
-    // Recherche dans titre, description, ville, pays
-    $searchTerm = "%$query%";
+    // Recherche insensible à la casse avec LOWER()
+    $searchTerm = "%" . strtolower($query) . "%";
     
     $sql = "SELECT 
                 a.id_annonce,
@@ -29,19 +29,19 @@ try {
             LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
             WHERE a.disponible = 1
             AND (
-                a.titre LIKE ? 
-                OR a.description LIKE ?
-                OR a.ville LIKE ?
-                OR a.pays LIKE ?
+                LOWER(a.titre) LIKE ? 
+                OR LOWER(a.description) LIKE ?
+                OR LOWER(a.ville) LIKE ?
+                OR LOWER(a.pays) LIKE ?
             )
             ORDER BY 
                 CASE 
-                    WHEN a.titre LIKE ? THEN 1
-                    WHEN a.ville LIKE ? THEN 2
+                    WHEN LOWER(a.titre) LIKE ? THEN 1
+                    WHEN LOWER(a.ville) LIKE ? THEN 2
                     ELSE 3
                 END,
                 a.date_creation DESC
-            LIMIT ?";
+            LIMIT " . (int)$limit;
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -50,14 +50,24 @@ try {
         $searchTerm, 
         $searchTerm,
         $searchTerm, // Pour le ORDER BY
-        $searchTerm, // Pour le ORDER BY
-        $limit
+        $searchTerm  // Pour le ORDER BY
     ]);
     
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Formater les résultats
     $formatted = array_map(function($row) {
+        // Déterminer le chemin de la photo
+        $photoPath = 'images/placeholder.jpg'; // Image par défaut
+        if (!empty($row['photo'])) {
+            // Si nom_fichier contient déjà "uploads/", on l'utilise tel quel
+            if (strpos($row['photo'], 'uploads/') === 0) {
+                $photoPath = $row['photo'];
+            } else {
+                $photoPath = 'uploads/annonces/' . $row['photo'];
+            }
+        }
+        
         return [
             'id' => $row['id_annonce'],
             'titre' => $row['titre'],
@@ -66,7 +76,7 @@ try {
             'prix' => number_format($row['prix_nuit'], 0, ',', ' '),
             'capacite' => $row['capacite_max'],
             'type' => ucfirst($row['type_logement']),
-            'photo' => $row['photo'] ? 'uploads/annonces/' . $row['nom_fichier'] : 'images/placeholder.jpg',
+            'photo' => $photoPath,
             'url' => 'annonce.php?id=' . $row['id_annonce']
         ];
     }, $results);
@@ -81,7 +91,7 @@ try {
 } catch (PDOException $e) {
     echo json_encode([
         'success' => false,
-        'message' => 'Erreur de recherche'
+        'message' => 'Erreur de recherche: ' . $e->getMessage()
     ]);
 }
 ?>

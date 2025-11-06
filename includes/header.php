@@ -149,7 +149,7 @@ if ($is_logged_in) {
       }
 
       searchTimeout = setTimeout(() => {
-        fetch(`search.php?q=${encodeURIComponent(query)}`)
+        fetch(`search-ajax.php?q=${encodeURIComponent(query)}`)
           .then(response => response.json())
           .then(data => {
             if (data.success && data.results.length > 0) {
