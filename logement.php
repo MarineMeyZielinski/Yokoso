@@ -63,7 +63,7 @@ try {
             <nav class="menu">
                 <a href='home.php'>Accueil</a>
                 <a href='logement.php'>Nos logements</a>
-                <a href="#">Publier une annonce</a>
+                <a href="publier-annonce.php">Publier une annonce</a>
                 <a href="edit-profile.php">Mon profil</a>
                 <a href='my-bookings.php'>Mes réservations</a>
                 <a href='my-listings.php'>Mes annonces</a>
