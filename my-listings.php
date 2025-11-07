@@ -112,7 +112,7 @@ try {
             <h2>Aucune annonce</h2>
             <p>Vous n'avez pas encore publié d'annonce.</p>
             <a href="publier-annonce.php" class="btn-add-listing">
-              <i class="fa-solid fa-plus"></i> Publier une annonce
+              Publier une annonce
             </a>
           </div>
         <?php else: ?>
@@ -173,7 +173,7 @@ try {
 
           <div class="add-listing-btn-container">
             <a href="publier-annonce.php" class="btn-add-listing">
-              <i class="fa-solid fa-plus"></i> Publier une nouvelle annonce
+              Publier une nouvelle annonce
             </a>
           </div>
         <?php endif; ?>

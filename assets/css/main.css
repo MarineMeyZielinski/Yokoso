@@ -286,7 +286,7 @@ a {
   justify-content: center;
 }
 
-.btn-add-listing {
+.add-listing-btn-container {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -297,14 +297,10 @@ a {
   border-radius: 8px;
   font-weight: 600;
   transition: background 0.2s;
+  margin-top: 10px;
 }
-.btn-add-listing:hover {
+.add-listing-btn-container:hover {
   background: #333;
-}
-
-.add-listing-btn-container {
-  text-align: center;
-  margin-top: 32px;
 }
 
 @media (max-width: 768px) {
@@ -776,7 +772,7 @@ a {
   justify-content: center;
 }
 
-.btn-add-listing {
+.add-listing-btn-container {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -787,14 +783,10 @@ a {
   border-radius: 8px;
   font-weight: 600;
   transition: background 0.2s;
+  margin-top: 10px;
 }
-.btn-add-listing:hover {
+.add-listing-btn-container:hover {
   background: #333;
-}
-
-.add-listing-btn-container {
-  text-align: center;
-  margin-top: 32px;
 }
 
 @media (max-width: 768px) {
@@ -2030,9 +2022,19 @@ input {
   margin-bottom: 24px;
 }
 .profile-container .empty-state .btn-add-listing {
-  padding: 10px 20px;
-  font-size: 14px;
-  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.profile-container .empty-state .btn-add-listing:hover {
+  background: #333;
 }
 @media (max-width: 768px) {
   .profile-container .profile-tabs {
