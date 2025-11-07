@@ -120,9 +120,21 @@ if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => '
                 <div class="annonce-gallery">
                     <?php if (!empty($photos)): ?>
                         <div class="gallery-main">
-                            <img src="uploads/annonces/<?= htmlspecialchars($photos[0]['nom_fichier']) ?>"
+                            <img id="mainImage"
+                                 src="uploads/annonces/<?= htmlspecialchars($photos[0]['nom_fichier']) ?>"
                                  alt="Photo principale">
                         </div>
+
+                        <?php if (count($photos) > 1): ?>
+                            <div class="gallery-thumbnails">
+                                <?php foreach ($photos as $index => $photo): ?>
+                                    <img src="uploads/annonces/<?= htmlspecialchars($photo['nom_fichier']) ?>"
+                                         alt="Photo <?= $index + 1 ?>"
+                                         class="thumbnail <?= $index === 0 ? 'active' : '' ?>"
+                                         onclick="changeMainImage('uploads/annonces/<?= htmlspecialchars($photo['nom_fichier']) ?>', this)">
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                     <?php else: ?>
                         <div class="gallery-main">
                             <img src="images/placeholder.jpg" alt="Pas de photo disponible">
@@ -223,5 +235,20 @@ if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => '
             <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>
         </main>
     </div>
+
+    <script>
+        function changeMainImage(src, thumbnail) {
+            // Changer l'image principale
+            document.getElementById('mainImage').src = src;
+
+            // Retirer la classe active de toutes les miniatures
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+
+            // Ajouter la classe active à la miniature cliquée
+            thumbnail.classList.add('active');
+        }
+    </script>
 </body>
 </html>

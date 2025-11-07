@@ -316,8 +316,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="form-row">
                                 <div class="form-group full">
                                     <label>Ajouter des photos (5 max)</label>
-                                    <input type="file" name="photos[]" accept="image/*" multiple max="5">
-                                    <p class="form-hint">Formats acceptés : JPG, PNG, WebP (5 MB max par photo)</p>
+                                    <input type="file" name="photos[]" accept="image/*" multiple max="5" id="photoInput">
+                                    <p class="form-hint">
+                                        <strong>💡 Astuce :</strong> Pour sélectionner plusieurs photos, maintenez <kbd>Ctrl</kbd> (Windows) ou <kbd>Cmd</kbd> (Mac) en cliquant sur les fichiers.<br>
+                                        Formats acceptés : JPG, PNG, WebP (5 MB max par photo)
+                                    </p>
+                                    <div id="photoPreview" class="photo-preview"></div>
                                 </div>
                             </div>
                         </div>
@@ -330,5 +334,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>
         </main>
     </div>
+
+    <script>
+        // Prévisualisation des photos sélectionnées
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = '';
+
+            const files = Array.from(e.target.files);
+
+            if (files.length > 0) {
+                const countText = document.createElement('p');
+                countText.style.marginBottom = '12px';
+                countText.style.fontWeight = 'bold';
+                countText.innerHTML = `📸 ${files.length} photo(s) sélectionnée(s)`;
+                preview.appendChild(countText);
+
+                files.forEach((file, index) => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.style.width = '100px';
+                            img.style.height = '100px';
+                            img.style.objectFit = 'cover';
+                            img.style.borderRadius = '8px';
+                            img.style.marginRight = '8px';
+                            img.style.marginBottom = '8px';
+                            img.title = file.name;
+                            preview.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
