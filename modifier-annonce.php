@@ -254,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 <?php endif; ?>
 
-                <form action="modifier-annonce.php?id=<?= $id_annonce ?>" method="post" class="publish-form">
+                <form action="modifier-annonce.php?id=<?= $id_annonce ?>" method="post" enctype="multipart/form-data" class="publish-form">
                     <!-- Section 1 : Informations principales -->
                     <div class="form-section">
                         <h2>Informations principales</h2>
@@ -400,7 +400,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <!-- Section 6 : Photos -->
                     <div class="form-section">
-                        <h2>Photos</h2>
+                        <h2>Photos existantes</h2>
                         
                         <?php if (!empty($photos)): ?>
                             <div class="photos-grid">
@@ -425,11 +425,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <p style="color: #999; font-size: 14px; margin-bottom: 16px;">Aucune photo pour cette annonce.</p>
                         <?php endif; ?>
 
+                        <h2 style="margin-top: 32px;">Ajouter de nouvelles photos</h2>
                         <div class="form-row">
                             <div class="form-group full">
-                                <label>Ajouter de nouvelles photos</label>
-                                <input type="file" name="photos[]" accept="image/*" multiple>
-                                <p class="form-hint">Formats acceptés : JPG, PNG, WebP (5 MB max par photo)</p>
+                                <label>Sélectionner des photos (5 max)</label>
+                                <input type="file" name="photos[]" accept="image/*" multiple max="5" id="photoInput">
+                                <p class="form-hint">
+                                    <strong>💡 Astuce :</strong> Pour sélectionner plusieurs photos, maintenez <kbd>Ctrl</kbd> (Windows) ou <kbd>Cmd</kbd> (Mac) en cliquant sur les fichiers.<br>
+                                    Formats acceptés : JPG, PNG, WebP (5 MB max par photo)
+                                </p>
+                                <div id="photoPreview" class="photo-preview"></div>
                             </div>
                         </div>
                     </div>
@@ -451,6 +456,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 window.location.href = `modifier-annonce.php?id=${annonceId}&delete_photo=${photoId}`;
             }
         }
+
+        // Prévisualisation des nouvelles photos sélectionnées
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = '';
+
+            const files = Array.from(e.target.files);
+
+            if (files.length > 0) {
+                const countText = document.createElement('p');
+                countText.style.marginBottom = '12px';
+                countText.style.fontWeight = 'bold';
+                countText.innerHTML = `📸 ${files.length} nouvelle(s) photo(s) sélectionnée(s)`;
+                preview.appendChild(countText);
+
+                files.forEach((file, index) => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.style.width = '100px';
+                            img.style.height = '100px';
+                            img.style.objectFit = 'cover';
+                            img.style.borderRadius = '8px';
+                            img.style.marginRight = '8px';
+                            img.style.marginBottom = '8px';
+                            img.title = file.name;
+                            preview.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
