@@ -2027,6 +2027,12 @@ input {
 }
 .profile-container .empty-state p {
   font-size: 16px;
+  margin-bottom: 24px;
+}
+.profile-container .empty-state .btn-add-listing {
+  padding: 10px 20px;
+  font-size: 14px;
+  margin-top: 8px;
 }
 @media (max-width: 768px) {
   .profile-container .profile-tabs {

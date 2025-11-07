@@ -2,38 +2,24 @@
 session_start();
 require_once 'includes/config.php';
 
-// Mapping temporaire des photos
-$photos_map = [
-    1 => 'images/kioshi.jpg',
-    2 => 'images/appartement-lucas.jpg', 
-    3 => 'images/appartement-saitama.jpg',
-    4 => 'images/france-1.webp',
-    5 => 'images/france-2.jpg',
-    6 => 'images/france-3.jpg',
-    7 => 'images/apparttradionnel.jpg',
-    8 => 'images/kyoto-appart.jpg',
-    9 => 'images/kioshi.jpg',
-    10 => 'images/appartement-lucas.jpg',
-    11 => 'images/appartement-saitama.jpg',
-    12 => 'images/kyoto-appart.jpg'
-];
-
-// Récupérer les 3 logements les plus récents (ou mieux notés)
+// Récupérer les 3 logements les plus récents avec leur photo principale
 try {
-    $sql = "SELECT 
-                id_annonce,
-                titre,
-                description,
-                ville,
-                pays,
-                prix_nuit,
-                capacite_max,
-                type_logement
-            FROM annonces
-            WHERE disponible = 1
-            ORDER BY date_creation DESC
+    $sql = "SELECT
+                a.id_annonce,
+                a.titre,
+                a.description,
+                a.ville,
+                a.pays,
+                a.prix_nuit,
+                a.capacite_max,
+                a.type_logement,
+                p.nom_fichier as photo_principale
+            FROM annonces a
+            LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
+            WHERE a.disponible = 1
+            ORDER BY a.date_creation DESC
             LIMIT 3";
-    
+
     $stmt = $pdo->query($sql);
     $annonces_featured = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -111,17 +97,22 @@ try {
           </p>
         <?php else: ?>
           <div class="cards">
-            <?php foreach ($annonces_featured as $annonce): 
-              $photo = $photos_map[$annonce['id_annonce']] ?? 'images/placeholder.jpg';
-              
+            <?php foreach ($annonces_featured as $annonce):
+              // Déterminer le chemin de la photo
+              if (!empty($annonce['photo_principale'])) {
+                  $photo = 'uploads/annonces/' . $annonce['photo_principale'];
+              } else {
+                  $photo = 'images/placeholder.jpg';
+              }
+
               // Tronquer la description
-              $description = strlen($annonce['description']) > 150 
-                  ? substr($annonce['description'], 0, 150) . '...' 
+              $description = strlen($annonce['description']) > 150
+                  ? substr($annonce['description'], 0, 150) . '...'
                   : $annonce['description'];
             ?>
               <article class="card" onclick="window.location.href='annonce.php?id=<?= $annonce['id_annonce'] ?>'">
-                <img src="<?= htmlspecialchars($photo) ?>" 
-                     alt="<?= htmlspecialchars($annonce['titre']) ?>" 
+                <img src="<?= htmlspecialchars($photo) ?>"
+                     alt="<?= htmlspecialchars($annonce['titre']) ?>"
                      class="thumb">
                 
                 <div class="card-header">

@@ -119,26 +119,33 @@
   }
 
   .empty-state {
-    text-align: center;
-    padding: 80px 20px;
-    color: $color-muted;
+  text-align: center;
+  padding: 80px 20px;
+  color: $color-muted;
 
-    i {
-      font-size: 64px;
-      margin-bottom: 20px;
-      color: #ccc;
-    }
-
-    h2 {
-      font-size: 24px;
-      margin-bottom: 8px;
-      color: #333;
-    }
-
-    p {
-      font-size: 16px;
-    }
+  i {
+    font-size: 64px;
+    margin-bottom: 20px;
+    color: #ccc;
   }
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: #333;
+  }
+
+  p {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+
+  .btn-add-listing {
+    padding: 10px 20px;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+}
 
   @media (max-width: 768px) {
     .profile-tabs {

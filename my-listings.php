@@ -4,73 +4,62 @@ require_once 'includes/config.php';
 
 // Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-  header('Location: login.php');
-  exit;
+    header('Location: login.php');
+    exit;
 }
 
 $user_id = $_SESSION['user_id'];
 
 // Récupérer les annonces de l'utilisateur avec leur photo principale
-
 try {
-
-  $sql = "SELECT
-
+    $sql = "SELECT
                 a.*,
-
                 p.nom_fichier as photo_principale
-
             FROM annonces a
-
             LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
-
             WHERE a.id_proprietaire = ?
-
             ORDER BY a.date_creation DESC";
 
-
-
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute([$user_id]);
-  $annonces = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$user_id]);
+    $annonces = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-  $annonces = [];
+    $annonces = [];
 }
 
 // Gérer la suppression
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-  $id_annonce = (int)$_GET['delete'];
-  try {
-    // Vérifier que l'annonce appartient bien à l'utilisateur
-    $stmt = $pdo->prepare("DELETE FROM annonces WHERE id_annonce = ? AND id_proprietaire = ?");
-    $stmt->execute([$id_annonce, $user_id]);
-
-    // Supprimer aussi les photos associées
-    $stmt = $pdo->prepare("DELETE FROM photos WHERE id_annonce = ?");
-    $stmt->execute([$id_annonce]);
-
-    header('Location: my-listings.php?deleted=1');
-    exit;
-  } catch (PDOException $e) {
-    $error = "Erreur lors de la suppression";
-  }
+    $id_annonce = (int)$_GET['delete'];
+    try {
+        // Vérifier que l'annonce appartient bien à l'utilisateur
+        $stmt = $pdo->prepare("DELETE FROM annonces WHERE id_annonce = ? AND id_proprietaire = ?");
+        $stmt->execute([$id_annonce, $user_id]);
+        
+        // Supprimer aussi les photos associées
+        $stmt = $pdo->prepare("DELETE FROM photos WHERE id_annonce = ?");
+        $stmt->execute([$id_annonce]);
+        
+        header('Location: my-listings.php?deleted=1');
+        exit;
+    } catch (PDOException $e) {
+        $error = "Erreur lors de la suppression";
+    }
 }
 
 // Récupérer les données de l'utilisateur
 try {
-  $stmt = $pdo->prepare('SELECT prenom, nom, email FROM users WHERE id_user = ? LIMIT 1');
-  $stmt->execute([$user_id]);
-  $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare('SELECT prenom, nom, email FROM users WHERE id_user = ? LIMIT 1');
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-  session_destroy();
-  header('Location: login.php');
-  exit;
+    session_destroy();
+    header('Location: login.php');
+    exit;
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,7 +71,6 @@ try {
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
-
 <body>
   <div class="page">
     <aside class="sidebar">
@@ -133,27 +121,28 @@ try {
             <?php foreach ($annonces as $annonce):
               // Déterminer le chemin de la photo
               if (!empty($annonce['photo_principale'])) {
-                $photo = 'uploads/annonces/' . $annonce['photo_principale'];
+                  $photo = 'uploads/annonces/' . $annonce['photo_principale'];
               } else {
-                $photo = 'images/placeholder.jpg';
+                  $photo = 'images/placeholder.jpg';
               }
+
               $description_courte = strlen($annonce['description']) > 200
-                ? substr($annonce['description'], 0, 200) . '...'
-                : $annonce['description'];
+                  ? substr($annonce['description'], 0, 200) . '...'
+                  : $annonce['description'];
             ?>
               <div class="listing-item-card">
                 <img src="<?= htmlspecialchars($photo) ?>"
-                  alt="<?= htmlspecialchars($annonce['titre']) ?>"
-                  class="listing-image">
-
+                     alt="<?= htmlspecialchars($annonce['titre']) ?>"
+                     class="listing-image">
+                
                 <div class="listing-content">
                   <div class="listing-header">
                     <h3><?= htmlspecialchars($annonce['titre']) ?></h3>
                     <span class="listing-date">Publiée le <?= date('d/m/Y', strtotime($annonce['date_creation'])) ?></span>
                   </div>
-
+                  
                   <p class="listing-description"><?= htmlspecialchars($description_courte) ?></p>
-
+                  
                   <div class="listing-meta">
                     <span><i class="fa-solid fa-location-dot"></i> <?= htmlspecialchars($annonce['ville']) ?>, <?= htmlspecialchars($annonce['pays']) ?></span>
                     <span><i class="fa-solid fa-euro-sign"></i> <?= number_format($annonce['prix_nuit'], 0, ',', ' ') ?>€/nuit</span>
@@ -162,19 +151,19 @@ try {
                 </div>
 
                 <div class="listing-actions">
-                  <a href="annonce.php?id=<?= $annonce['id_annonce'] ?>"
-                    class="action-btn"
-                    title="Voir l'annonce">
+                  <a href="annonce.php?id=<?= $annonce['id_annonce'] ?>" 
+                     class="action-btn" 
+                     title="Voir l'annonce">
                     <i class="fa-solid fa-eye"></i>
                   </a>
-                  <a href="modifier-annonce.php?id=<?= $annonce['id_annonce'] ?>"
-                    class="action-btn"
-                    title="Modifier">
+                  <a href="modifier-annonce.php?id=<?= $annonce['id_annonce'] ?>" 
+                     class="action-btn" 
+                     title="Modifier">
                     <i class="fa-solid fa-pen"></i>
                   </a>
-                  <button onclick="confirmDelete(<?= $annonce['id_annonce'] ?>, '<?= htmlspecialchars($annonce['titre'], ENT_QUOTES) ?>')"
-                    class="action-btn delete"
-                    title="Supprimer">
+                  <button onclick="confirmDelete(<?= $annonce['id_annonce'] ?>, '<?= htmlspecialchars($annonce['titre'], ENT_QUOTES) ?>')" 
+                          class="action-btn delete" 
+                          title="Supprimer">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </div>
@@ -202,5 +191,4 @@ try {
     }
   </script>
 </body>
-
 </html>

@@ -3,81 +3,44 @@ session_start();
 require_once 'includes/config.php';
 
 // Récupérer l'ID de l'annonce
-
 $id_annonce = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
- 
-
 if ($id_annonce === 0) {
-
     header('Location: logement.php');
-
     exit;
-
 }
 
- 
-
 // Récupérer les détails de l'annonce
-
 try {
-
     $sql = "SELECT
-
                 a.*,
-
                 u.prenom as proprietaire_prenom,
-
                 u.nom as proprietaire_nom,
-
                 u.photo_profil as proprietaire_photo
-
             FROM annonces a
-
             LEFT JOIN users u ON a.id_proprietaire = u.id_user
-
             WHERE a.id_annonce = ? AND a.disponible = 1
-
             LIMIT 1";
 
- 
-
     $stmt = $pdo->prepare($sql);
-
     $stmt->execute([$id_annonce]);
-
     $annonce = $stmt->fetch(PDO::FETCH_ASSOC);
 
- 
-
     if (!$annonce) {
-
         header('Location: logement.php');
-
         exit;
-
     }
 
- 
-
     // Récupérer toutes les photos de l'annonce depuis la BDD
-
     $sql_photos = "SELECT nom_fichier, photo_principale, ordre_affichage
-
                    FROM photos
-
                    WHERE id_annonce = ?
-
                    ORDER BY photo_principale DESC, ordre_affichage ASC";
 
- 
-
     $stmt_photos = $pdo->prepare($sql_photos);
-
     $stmt_photos->execute([$id_annonce]);
-
     $photos = $stmt_photos->fetchAll(PDO::FETCH_ASSOC);
-    
+
 } catch (PDOException $e) {
     header('Location: logement.php');
     exit;
@@ -157,7 +120,7 @@ if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => '
                 <div class="annonce-gallery">
                     <?php if (!empty($photos)): ?>
                         <div class="gallery-main">
-                            <img src="uploads/annonces/<?= htmlspecialchars($photos[0]['nom_fichier']) ?>" 
+                            <img src="uploads/annonces/<?= htmlspecialchars($photos[0]['nom_fichier']) ?>"
                                  alt="Photo principale">
                         </div>
                     <?php else: ?>
