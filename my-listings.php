@@ -2,11 +2,68 @@
 session_start();
 require_once 'includes/config.php';
 
-// TODO: Récupérer les annonces de l'utilisateur depuis la base de données
-// $stmt = $pdo->prepare('SELECT * FROM annonces WHERE id_user = ? ORDER BY date_creation DESC');
-// $stmt->execute([$user_id]);
-// $annonces = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$annonces = []; // Pour l'instant vide
+// Vérifier que l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+
+// Mapping temporaire des photos
+$photos_map = [
+    1 => 'images/kioshi.jpg',
+    2 => 'images/appartement-lucas.jpg', 
+    3 => 'images/appartement-saitama.jpg',
+    4 => 'images/france-1.webp',
+    5 => 'images/france-2.jpg',
+    6 => 'images/france-3.jpg',
+    7 => 'images/apparttradionnel.jpg',
+    8 => 'images/kyoto-appart.jpg',
+    9 => 'images/kioshi.jpg',
+    10 => 'images/appartement-lucas.jpg',
+    11 => 'images/appartement-saitama.jpg',
+    12 => 'images/kyoto-appart.jpg'
+];
+
+// Récupérer les annonces de l'utilisateur
+try {
+    $stmt = $pdo->prepare("SELECT * FROM annonces WHERE id_proprietaire = ? ORDER BY date_creation DESC");
+    $stmt->execute([$user_id]);
+    $annonces = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $annonces = [];
+}
+
+// Gérer la suppression
+if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
+    $id_annonce = (int)$_GET['delete'];
+    try {
+        // Vérifier que l'annonce appartient bien à l'utilisateur
+        $stmt = $pdo->prepare("DELETE FROM annonces WHERE id_annonce = ? AND id_proprietaire = ?");
+        $stmt->execute([$id_annonce, $user_id]);
+        
+        // Supprimer aussi les photos associées
+        $stmt = $pdo->prepare("DELETE FROM photos WHERE id_annonce = ?");
+        $stmt->execute([$id_annonce]);
+        
+        header('Location: my-listings.php?deleted=1');
+        exit;
+    } catch (PDOException $e) {
+        $error = "Erreur lors de la suppression";
+    }
+}
+
+// Récupérer les données de l'utilisateur
+try {
+    $stmt = $pdo->prepare('SELECT prenom, nom, email FROM users WHERE id_user = ? LIMIT 1');
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    session_destroy();
+    header('Location: login.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -30,17 +87,17 @@ $annonces = []; // Pour l'instant vide
         <img src="images/yokoso-blanc.png" alt="Yokoso" class="logo-yokoso">
       </div>
       <nav class="menu">
-        <a href='home.php'>Accueil</a>
+        <a href="home.php">Accueil</a>
         <a href='logement.php'>Nos logements</a>
         <a href="publier-annonce.php">Publier une annonce</a>
         <a href="edit-profile.php">Mon profil</a>
-        <a href='my-bookings.php'>Mes réservations</a>
-        <a href='my-listings.php'>Mes annonces</a>
+        <a href="my-bookings.php">Mes réservations</a>
+        <a href="my-listings.php">Mes annonces</a>
       </nav>
     </aside>
 
     <main class="content">
-     <?php include 'includes/header.php'; ?>
+      <?php include 'includes/header.php'; ?>
 
       <div class="profile-container">
         <!-- Onglets -->
@@ -50,33 +107,77 @@ $annonces = []; // Pour l'instant vide
           <a href="my-listings.php" class="profile-tab active">Mes annonces</a>
         </div>
 
+        <?php if (isset($_GET['deleted'])): ?>
+          <div class="message success">
+            ✓ Annonce supprimée avec succès
+          </div>
+        <?php endif; ?>
+
         <?php if (empty($annonces)): ?>
           <!-- État vide -->
           <div class="empty-state">
             <i class="fa-solid fa-house-circle-xmark"></i>
             <h2>Aucune annonce</h2>
             <p>Vous n'avez pas encore publié d'annonce.</p>
+            <a href="publier-annonce.php" class="btn-add-listing">
+              <i class="fa-solid fa-plus"></i> Publier une annonce
+            </a>
           </div>
         <?php else: ?>
-          <!-- Liste des annonces (exemple pour quand il y aura des données) -->
-          <?php foreach ($annonces as $annonce): ?>
-            <div class="listing-item">
-              <img src="<?= htmlspecialchars($annonce['image']) ?>" alt="<?= htmlspecialchars($annonce['titre']) ?>" class="listing-image">
-              <div class="listing-content">
-                <div class="listing-title"><?= htmlspecialchars($annonce['titre']) ?></div>
-                <div class="listing-date">Publiée le <?= htmlspecialchars($annonce['date_publication']) ?></div>
-                <div class="listing-description"><?= htmlspecialchars($annonce['description']) ?></div>
+          <!-- Liste des annonces -->
+          <div class="listings-grid">
+            <?php foreach ($annonces as $annonce): 
+              $photo = $photos_map[$annonce['id_annonce']] ?? 'images/placeholder.jpg';
+              $description_courte = strlen($annonce['description']) > 200 
+                  ? substr($annonce['description'], 0, 200) . '...' 
+                  : $annonce['description'];
+            ?>
+              <div class="listing-item-card">
+                <img src="<?= htmlspecialchars($photo) ?>" 
+                     alt="<?= htmlspecialchars($annonce['titre']) ?>" 
+                     class="listing-image">
+                
+                <div class="listing-content">
+                  <div class="listing-header">
+                    <h3><?= htmlspecialchars($annonce['titre']) ?></h3>
+                    <span class="listing-date">Publiée le <?= date('d/m/Y', strtotime($annonce['date_creation'])) ?></span>
+                  </div>
+                  
+                  <p class="listing-description"><?= htmlspecialchars($description_courte) ?></p>
+                  
+                  <div class="listing-meta">
+                    <span><i class="fa-solid fa-location-dot"></i> <?= htmlspecialchars($annonce['ville']) ?>, <?= htmlspecialchars($annonce['pays']) ?></span>
+                    <span><i class="fa-solid fa-euro-sign"></i> <?= number_format($annonce['prix_nuit'], 0, ',', ' ') ?>€/nuit</span>
+                    <span><i class="fa-solid fa-user"></i> <?= $annonce['capacite_max'] ?> pers.</span>
+                  </div>
+                </div>
+
+                <div class="listing-actions">
+                  <a href="annonce.php?id=<?= $annonce['id_annonce'] ?>" 
+                     class="action-btn" 
+                     title="Voir l'annonce">
+                    <i class="fa-solid fa-eye"></i>
+                  </a>
+                  <a href="modifier-annonce.php?id=<?= $annonce['id_annonce'] ?>" 
+                     class="action-btn" 
+                     title="Modifier">
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
+                  <button onclick="confirmDelete(<?= $annonce['id_annonce'] ?>, '<?= htmlspecialchars($annonce['titre'], ENT_QUOTES) ?>')" 
+                          class="action-btn delete" 
+                          title="Supprimer">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
               </div>
-              <div class="listing-actions">
-                <button class="action-btn" title="Modifier">
-                  <i class="fa-solid fa-pen"></i>
-                </button>
-                <button class="action-btn delete" title="Supprimer">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-            </div>
-          <?php endforeach; ?>
+            <?php endforeach; ?>
+          </div>
+
+          <div class="add-listing-btn-container">
+            <a href="publier-annonce.php" class="btn-add-listing">
+              <i class="fa-solid fa-plus"></i> Publier une nouvelle annonce
+            </a>
+          </div>
         <?php endif; ?>
       </div>
 
@@ -84,5 +185,12 @@ $annonces = []; // Pour l'instant vide
     </main>
   </div>
 
+  <script>
+    function confirmDelete(id, titre) {
+      if (confirm(`Êtes-vous sûr de vouloir supprimer l'annonce "${titre}" ?\n\nCette action est irréversible.`)) {
+        window.location.href = `my-listings.php?delete=${id}`;
+      }
+    }
+  </script>
 </body>
 </html>
