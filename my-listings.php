@@ -13,11 +13,39 @@ $user_id = $_SESSION['user_id'];
 // Récupérer les annonces de l'utilisateur avec leur photo principale
 try {
     $sql = "SELECT
-                a.*,
+                a.id_annonce,
+                a.id_proprietaire,
+                a.titre,
+                a.description,
+                a.adresse,
+                a.ville,
+                a.code_postal,
+                a.pays,
+                a.prix_nuit,
+                a.nb_chambres,
+                a.nb_lits,
+                a.nb_sdb,
+                a.capacite_max,
+                a.type_logement,
+                a.wifi,
+                a.parking,
+                a.climatisation,
+                a.lave_linge,
+                a.television,
+                a.cuisine_equipee,
+                a.seche_cheveux,
+                a.animaux_accepte,
+                a.disponible,
+                a.date_creation,
                 p.nom_fichier as photo_principale
             FROM annonces a
             LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
             WHERE a.id_proprietaire = ?
+            GROUP BY a.id_annonce, a.id_proprietaire, a.titre, a.description, a.adresse, a.ville,
+                     a.code_postal, a.pays, a.prix_nuit, a.nb_chambres, a.nb_lits, a.nb_sdb,
+                     a.capacite_max, a.type_logement, a.wifi, a.parking, a.climatisation,
+                     a.lave_linge, a.television, a.cuisine_equipee, a.seche_cheveux,
+                     a.animaux_accepte, a.disponible, a.date_creation, p.nom_fichier
             ORDER BY a.date_creation DESC";
 
     $stmt = $pdo->prepare($sql);
@@ -112,7 +140,7 @@ try {
             <h2>Aucune annonce</h2>
             <p>Vous n'avez pas encore publié d'annonce.</p>
             <a href="publier-annonce.php" class="btn-add-listing">
-              Publier une annonce
+              <i class="fa-solid fa-plus"></i> Publier une annonce
             </a>
           </div>
         <?php else: ?>
@@ -173,7 +201,7 @@ try {
 
           <div class="add-listing-btn-container">
             <a href="publier-annonce.php" class="btn-add-listing">
-              Publier une nouvelle annonce
+              <i class="fa-solid fa-plus"></i> Publier une nouvelle annonce
             </a>
           </div>
         <?php endif; ?>

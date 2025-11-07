@@ -17,6 +17,7 @@ try {
             FROM annonces a
             LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
             WHERE a.disponible = 1
+            GROUP BY a.id_annonce
             ORDER BY a.date_creation DESC
             LIMIT 3";
 

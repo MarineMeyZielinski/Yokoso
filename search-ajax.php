@@ -33,6 +33,7 @@ try {
                 OR LOWER(a.ville) LIKE ?
                 OR LOWER(a.pays) LIKE ?
             )
+            GROUP BY a.id_annonce
             ORDER BY
                 CASE
                     WHEN LOWER(a.titre) LIKE ? THEN 1
