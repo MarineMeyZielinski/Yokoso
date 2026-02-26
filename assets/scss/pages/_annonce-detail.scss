@@ -277,6 +277,50 @@
   }
 }
 
+// Prompt connexion pour les visiteurs non connectés
+.booking-guest-prompt {
+  text-align: center;
+  padding: 8px 0 4px;
+
+  p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 14px;
+  }
+
+  .btn-guest-reserve {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    transition: background 0.2s;
+
+    &:hover { background: #333; }
+  }
+}
+
+// Notice pour le propriétaire
+.booking-owner-notice {
+  text-align: center;
+  padding: 20px 0;
+  color: #999;
+
+  i {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 10px;
+    color: #ccc;
+  }
+
+  p { font-size: 14px; }
+}
+
 .owner-info {
   margin-top: 24px;
   padding-top: 24px;

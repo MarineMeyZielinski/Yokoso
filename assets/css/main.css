@@ -3873,6 +3873,47 @@ main.content.chat-layout .topbar {
   background: #333;
 }
 
+.booking-guest-prompt {
+  text-align: center;
+  padding: 8px 0 4px;
+}
+.booking-guest-prompt p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 14px;
+}
+.booking-guest-prompt .btn-guest-reserve {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  transition: background 0.2s;
+}
+.booking-guest-prompt .btn-guest-reserve:hover {
+  background: #333;
+}
+
+.booking-owner-notice {
+  text-align: center;
+  padding: 20px 0;
+  color: #999;
+}
+.booking-owner-notice i {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 10px;
+  color: #ccc;
+}
+.booking-owner-notice p {
+  font-size: 14px;
+}
+
 .owner-info {
   margin-top: 24px;
   padding-top: 24px;

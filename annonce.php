@@ -54,6 +54,9 @@ if ($annonce['television']) $equipements[] = ['icon' => 'tv', 'label' => 'Télé
 if ($annonce['cuisine_equipee']) $equipements[] = ['icon' => 'utensils', 'label' => 'Cuisine équipée'];
 if ($annonce['seche_cheveux']) $equipements[] = ['icon' => 'wind', 'label' => 'Sèche-cheveux'];
 if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => 'Animaux acceptés'];
+
+$is_logged_in = isset($_SESSION['user_id']);
+$is_owner     = $is_logged_in && $_SESSION['user_id'] == $annonce['id_proprietaire'];
 ?>
 
 <!DOCTYPE html>
@@ -181,39 +184,58 @@ if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => '
                                 <span class="label">/nuit</span>
                             </div>
 
-                            <?php if (isset($_GET['booking_error']) && !empty($_SESSION['reservation_errors'])): ?>
-                                <div class="booking-errors">
-                                    <?php foreach ($_SESSION['reservation_errors'] as $err): ?>
-                                        <p><?= htmlspecialchars($err) ?></p>
-                                    <?php endforeach; ?>
+                            <?php if (!$is_logged_in): ?>
+                                <!-- Visiteur non connecté -->
+                                <div class="booking-guest-prompt">
+                                    <p>Connectez-vous pour réserver ce logement.</p>
+                                    <a href="login.php?redirect=<?= urlencode('annonce.php?id=' . $annonce['id_annonce']) ?>" class="btn-guest-reserve">
+                                        Se connecter pour réserver
+                                    </a>
                                 </div>
-                                <?php unset($_SESSION['reservation_errors']); ?>
-                            <?php endif; ?>
 
-                            <form action="reservation.php" method="post" class="booking-form">
-                                <input type="hidden" name="id_annonce" value="<?= $annonce['id_annonce'] ?>">
-                                
-                                <div class="form-group">
-                                    <label>Arrivée</label>
-                                    <input type="date" name="date_debut" required min="<?= date('Y-m-d') ?>">
+                            <?php elseif ($is_owner): ?>
+                                <!-- Propriétaire de l'annonce -->
+                                <div class="booking-owner-notice">
+                                    <i class="fa-solid fa-house-user"></i>
+                                    <p>Vous êtes l'hôte de ce logement.</p>
                                 </div>
-                                
-                                <div class="form-group">
-                                    <label>Départ</label>
-                                    <input type="date" name="date_fin" required min="<?= date('Y-m-d') ?>">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Voyageurs</label>
-                                    <select name="nb_voyageurs" required>
-                                        <?php for ($i = 1; $i <= $annonce['capacite_max']; $i++): ?>
-                                            <option value="<?= $i ?>"><?= $i ?> voyageur<?= $i > 1 ? 's' : '' ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                                
-                                <button type="submit" class="btn-reserve">Réserver</button>
-                            </form>
+
+                            <?php else: ?>
+                                <!-- Utilisateur connecté, pas le propriétaire -->
+                                <?php if (isset($_GET['booking_error']) && !empty($_SESSION['reservation_errors'])): ?>
+                                    <div class="booking-errors">
+                                        <?php foreach ($_SESSION['reservation_errors'] as $err): ?>
+                                            <p><?= htmlspecialchars($err) ?></p>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php unset($_SESSION['reservation_errors']); ?>
+                                <?php endif; ?>
+
+                                <form action="reservation.php" method="post" class="booking-form">
+                                    <input type="hidden" name="id_annonce" value="<?= $annonce['id_annonce'] ?>">
+
+                                    <div class="form-group">
+                                        <label>Arrivée</label>
+                                        <input type="date" name="date_debut" id="dateDebut" required min="<?= date('Y-m-d') ?>">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Départ</label>
+                                        <input type="date" name="date_fin" id="dateFin" required min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Voyageurs</label>
+                                        <select name="nb_voyageurs" required>
+                                            <?php for ($i = 1; $i <= $annonce['capacite_max']; $i++): ?>
+                                                <option value="<?= $i ?>"><?= $i ?> voyageur<?= $i > 1 ? 's' : '' ?></option>
+                                            <?php endfor; ?>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn-reserve">Réserver</button>
+                                </form>
+                            <?php endif; ?>
 
                             <!-- Propriétaire -->
                             <div class="owner-info">
@@ -244,6 +266,21 @@ if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => '
     </div>
 
     <script>
+        // Date départ liée dynamiquement à l'arrivée
+        const dateDebut = document.getElementById('dateDebut');
+        const dateFin   = document.getElementById('dateFin');
+        if (dateDebut && dateFin) {
+            dateDebut.addEventListener('change', function() {
+                const d = new Date(this.value);
+                d.setDate(d.getDate() + 1);
+                const minFin = d.toISOString().split('T')[0];
+                dateFin.min = minFin;
+                if (dateFin.value && dateFin.value <= this.value) {
+                    dateFin.value = minFin;
+                }
+            });
+        }
+
         function changeMainImage(src, thumbnail) {
             // Changer l'image principale
             document.getElementById('mainImage').src = src;

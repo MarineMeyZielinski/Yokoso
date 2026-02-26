@@ -4,7 +4,11 @@ require_once 'includes/config.php';
 
 $errors = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
+// Redirect après login (ex: depuis annonce.php)
+$redirect_raw = $_GET['redirect'] ?? ($_POST['redirect'] ?? '');
+$redirect = (preg_match('/^[a-zA-Z0-9_.\/\-?=&%]+$/', $redirect_raw)) ? $redirect_raw : '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $mot_de_passe = $_POST['mot_de_passe'] ?? '';
 
@@ -28,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_nom'] = $user['nom'];
                 $_SESSION['user_email'] = $user['email'];
 
-                header('Location: home.php');
+                header('Location: ' . ($redirect ?: 'home.php'));
                 exit;
             } else {
                 $errors[] = "Email ou mot de passe incorrect.";
@@ -88,7 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       <?php endif; ?>
 
-      <form action="login.php" method="post" autocomplete="on">
+      <form action="login.php<?= $redirect ? '?redirect=' . urlencode($redirect) : '' ?>" method="post" autocomplete="on">
+        <?php if ($redirect): ?><input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>"><?php endif; ?>
         <div>
           <label for="email">Adresse mail</label>
           <input type="email" id="email" name="email" placeholder="Adresse mail" inputmode="email" autocomplete="email" required>
