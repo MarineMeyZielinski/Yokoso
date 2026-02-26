@@ -2,7 +2,6 @@
 session_start();
 require_once 'includes/config.php';
 
-// Récupérer l'ID de l'annonce
 $id_annonce = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id_annonce === 0) {
@@ -10,7 +9,6 @@ if ($id_annonce === 0) {
     exit;
 }
 
-// Récupérer les détails de l'annonce
 try {
     $sql = "SELECT
                 a.*,

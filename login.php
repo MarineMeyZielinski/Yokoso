@@ -8,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $mot_de_passe = $_POST['mot_de_passe'] ?? '';
 
-    // Vérifications de base
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "L'adresse email n'est pas valide.";
     }
@@ -19,19 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
         try {
-            // Rechercher l'utilisateur par email
             $stmt = $pdo->prepare('SELECT id_user, prenom, nom, email, mot_de_passe FROM users WHERE email = ? LIMIT 1');
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
-                // Connexion réussie - créer la session
                 $_SESSION['user_id'] = $user['id_user'];
                 $_SESSION['user_prenom'] = $user['prenom'];
                 $_SESSION['user_nom'] = $user['nom'];
                 $_SESSION['user_email'] = $user['email'];
 
-                // Redirection vers la page d'accueil ou dashboard
                 header('Location: home.php');
                 exit;
             } else {

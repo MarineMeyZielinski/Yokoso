@@ -2,7 +2,6 @@
 session_start();
 require_once 'includes/config.php';
 
-// Doit être connecté
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -20,7 +19,6 @@ $date_fin      = $_POST['date_fin'] ?? '';
 $nb_voyageurs  = (int)($_POST['nb_voyageurs'] ?? 1);
 $id_voyageur   = $_SESSION['user_id'];
 
-// --- Validations ---
 if (!$id_annonce) {
     $errors[] = "Annonce introuvable.";
 }
@@ -42,7 +40,6 @@ if ($date_debut && $date_fin) {
 
 if (!$errors) {
     try {
-        // Récupérer l'annonce
         $stmt = $pdo->prepare('SELECT * FROM annonces WHERE id_annonce = ? AND disponible = 1 LIMIT 1');
         $stmt->execute([$id_annonce]);
         $annonce = $stmt->fetch(PDO::FETCH_ASSOC);

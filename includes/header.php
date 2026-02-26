@@ -1,17 +1,14 @@
 <?php
-// Démarrer la session si elle n'est pas déjà démarrée
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Vérifier si l'utilisateur est connecté
 $is_logged_in = isset($_SESSION['user_id']);
 $user_data = null;
 $notif_count = 0;
 $notifications_recentes = [];
 
 if ($is_logged_in) {
-    // Récupérer les données de l'utilisateur si pas déjà en session
     if (!isset($_SESSION['user_prenom']) || !isset($_SESSION['user_nom']) || !isset($_SESSION['user_email'])) {
         require_once __DIR__ . '/config.php';
         try {
@@ -25,11 +22,9 @@ if ($is_logged_in) {
                 $_SESSION['user_email'] = $user_data['email'];
             }
         } catch (PDOException $e) {
-            // En cas d'erreur, on ne fait rien
         }
     }
     
-    // Utiliser les données de session
     $user_data = [
         'prenom' => $_SESSION['user_prenom'] ?? '',
         'nom' => $_SESSION['user_nom'] ?? '',
@@ -426,7 +421,7 @@ if ($is_logged_in) {
   })();
   <?php endif; ?>
 
-  // ── Transitions de pages ────────────────────────────────────────────────────
+  // ── Transitions de pages
   (function() {
     let isLeaving = false;
     document.addEventListener('click', function(e) {
@@ -446,7 +441,7 @@ if ($is_logged_in) {
     });
   })();
 
-  // ── Animation d'apparition des cards au scroll ──────────────────────────────
+  // ── Animation d'apparition des cards au scroll
   (function() {
     if (!('IntersectionObserver' in window)) return;
     const els = document.querySelectorAll('.card, .listing-item, .booking-item, .conv-item');

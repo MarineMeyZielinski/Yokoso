@@ -4,7 +4,6 @@ require_once 'includes/config.php';
 
 header('Content-Type: application/json');
 
-// Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Non authentifié']);
     exit;

@@ -2,7 +2,6 @@
 session_start();
 require_once 'includes/config.php';
 
-// Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -10,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Récupérer les annonces de l'utilisateur avec leur photo principale
 try {
     $sql = "SELECT
                 a.id_annonce,
@@ -74,7 +72,6 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     }
 }
 
-// Récupérer les données de l'utilisateur
 try {
     $stmt = $pdo->prepare('SELECT prenom, nom, email FROM users WHERE id_user = ? LIMIT 1');
     $stmt->execute([$user_id]);

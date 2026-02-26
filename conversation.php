@@ -62,7 +62,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
-<body>
+<body class="chat-body">
   <div class="page">
     <aside class="sidebar">
       <div class="logo">

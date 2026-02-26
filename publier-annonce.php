@@ -2,7 +2,6 @@
 session_start();
 require_once 'includes/config.php';
 
-// Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;

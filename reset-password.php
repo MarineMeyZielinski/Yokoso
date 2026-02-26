@@ -31,12 +31,10 @@ if ($token) {
     $errors[] = "Aucun token de réinitialisation fourni.";
 }
 
-// Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valid) {
     $mot_de_passe = $_POST['mot_de_passe'] ?? '';
     $mot_de_passe_confirm = $_POST['mot_de_passe_confirm'] ?? '';
 
-    // Vérifications
     if (strlen($mot_de_passe) < 8) {
         $errors[] = "Le mot de passe doit contenir au moins 8 caractères.";
     }

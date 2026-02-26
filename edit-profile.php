@@ -2,7 +2,6 @@
 session_start();
 require_once 'includes/config.php';
 
-// Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -12,7 +11,6 @@ $errors = [];
 $success = false;
 $user_id = $_SESSION['user_id'];
 
-// Récupérer les données actuelles de l'utilisateur
 try {
     $stmt = $pdo->prepare('SELECT prenom, nom, email, telephone, date_inscription, photo_profil, date_naissance FROM users WHERE id_user = ? LIMIT 1');
     $stmt->execute([$user_id]);
@@ -27,7 +25,6 @@ try {
     $errors[] = "Erreur lors de la récupération des données.";
 }
 
-// Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom = trim($_POST['prenom'] ?? '');
     $nom = trim($_POST['nom'] ?? '');
@@ -35,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telephone = trim($_POST['telephone'] ?? '');
     $date_naissance = trim($_POST['date_naissance'] ?? '');
 
-    // Validations
     if (empty($prenom) || empty($nom)) {
         $errors[] = "Le prénom et le nom sont requis.";
     }
@@ -46,14 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
         try {
-            // Vérifier si l'email est déjà utilisé par un autre utilisateur
             $stmt = $pdo->prepare('SELECT id_user FROM users WHERE email = ? AND id_user != ? LIMIT 1');
             $stmt->execute([$email, $user_id]);
             
             if ($stmt->fetch()) {
                 $errors[] = "Cet email est déjà utilisé par un autre compte.";
             } else {
-                // Mettre à jour les informations
                 $stmt = $pdo->prepare('
                     UPDATE users 
                     SET prenom = ?, nom = ?, email = ?, telephone = ?, date_naissance = ?
@@ -61,12 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ');
                 $stmt->execute([$prenom, $nom, $email, $telephone, $date_naissance ?: null, $user_id]);
 
-                // Mettre à jour la session
                 $_SESSION['user_prenom'] = $prenom;
                 $_SESSION['user_nom'] = $nom;
                 $_SESSION['user_email'] = $email;
 
-                // Mettre à jour les données affichées
                 $user['prenom'] = $prenom;
                 $user['nom'] = $nom;
                 $user['email'] = $email;
@@ -81,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Calculer l'année d'inscription
 $annee_inscription = date('Y', strtotime($user['date_inscription']));
 ?>
 

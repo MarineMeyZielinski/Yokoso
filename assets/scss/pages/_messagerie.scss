@@ -168,6 +168,14 @@
 
 // ── LAYOUT FULL-HEIGHT POUR LA PAGE CHAT ─────────────────────────────────────
 
+// Supprime scroll body + bottom-nav sur la page conversation
+body.chat-body {
+  overflow: hidden;
+  padding-bottom: 0 !important;
+
+  .bottom-nav { display: none !important; }
+}
+
 main.content.chat-layout {
   padding: 0;
   display: flex;
@@ -179,12 +187,6 @@ main.content.chat-layout {
     padding: 10px 24px;
     flex-shrink: 0;
     border-bottom: 1px solid $color-border;
-  }
-}
-
-@media (max-width: 1024px) {
-  main.content.chat-layout {
-    height: calc(100vh - 58px); // 58px = bottom-nav mobile
   }
 }
 
@@ -362,6 +364,8 @@ main.content.chat-layout {
     line-height: 1.4;
     max-height: 120px;
     overflow-y: auto;
+    scrollbar-width: none; // Firefox
+    &::-webkit-scrollbar { display: none; } // Chrome/Safari
     transition: border-color 0.2s;
 
     &:focus {

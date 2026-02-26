@@ -16,6 +16,11 @@
   position: relative;
 }
 
+// Pousse tous les éléments après la search vers la droite
+.topbar > .search-container + div {
+  margin-left: auto;
+}
+
 // Notifications
 .notif-wrapper {
   position: relative;

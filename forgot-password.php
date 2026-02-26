@@ -8,14 +8,12 @@ $reset_link = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
 
-    // Vérification de base
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "L'adresse email n'est pas valide.";
     }
 
     if (!$errors) {
         try {
-            // Vérifier si l'email existe
             $stmt = $pdo->prepare('SELECT id_user, prenom FROM users WHERE email = ? LIMIT 1');
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -35,40 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Créer le lien de réinitialisation
                 $reset_link = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/reset-password.php?token=" . $token;
 
-                // Quand on enverra des vrais email
-
-//                 $subject = "YOKOSO - Réinitialisation de votre mot de passe";
-//                 $message = "Bonjour " . htmlspecialchars($user['prenom']) . ",\n\n";
-//                 $message .= "Vous avez demandé à réinitialiser votre mot de passe.\n\n";
-//                 $message .= "Cliquez sur ce lien pour créer un nouveau mot de passe :\n";
-//                 $message .= $reset_link . "\n\n";
-//                 $message .= "Ce lien est valable pendant 1 heure.\n\n";
-//                 $message .= "Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.\n\n";
-//                 $message .= "Cordialement,\nL'équipe YOKOSO";
-
-//                 $headers = "From: noreply@yokoso.com\r\n";
-//                 $headers .= "Reply-To: noreply@yokoso.com\r\n";
-//                 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-
-//                 if (mail($email, $subject, $message, $headers)) {
-//                     $success = true;
-//                 } else {
-//                     $errors[] = "Erreur lors de l'envoi de l'email. Veuillez réessayer.";
-//                 }
-//             } else {
-                
-//                 $success = true;
-//             }
-//         } catch (PDOException $e) {
-//             $errors[] = "Erreur : " . $e->getMessage();
-//         }
-//     }
-// }
-//
-
                 $success = true;
             } else {
-                // Pour des raisons de sécurité, on affiche le même message même si l'email n'existe pas
                 $errors[] = "Aucun compte associé à cet email.";
             }
         } catch (PDOException $e) {

@@ -2,7 +2,6 @@
 session_start();
 require_once 'includes/config.php';
 
-// Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -16,7 +15,6 @@ if ($id_annonce === 0) {
     exit;
 }
 
-// Récupérer l'annonce et vérifier qu'elle appartient à l'utilisateur
 try {
     $stmt = $pdo->prepare("SELECT * FROM annonces WHERE id_annonce = ? AND id_proprietaire = ? LIMIT 1");
     $stmt->execute([$id_annonce, $user_id]);
