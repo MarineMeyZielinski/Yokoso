@@ -79,7 +79,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </nav>
     </aside>
 
-    <main class="content">
+    <main class="content chat-layout">
       <?php include 'includes/header.php'; ?>
 
       <div class="chat-page">
@@ -105,6 +105,23 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <?= htmlspecialchars($conv['annonce_titre']) ?>
                 </a>
               <?php endif; ?>
+            </div>
+          </div>
+          <div class="chat-header-actions">
+            <button class="chat-delete-btn" onclick="openDeleteModal()" title="Supprimer la conversation">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal suppression -->
+        <div class="chat-delete-modal" id="deleteModal">
+          <div class="chat-delete-modal-box">
+            <h3>Supprimer la conversation ?</h3>
+            <p>Tous les messages seront supprimés définitivement. Cette action est irréversible.</p>
+            <div class="modal-actions">
+              <button class="btn-cancel-modal" onclick="closeDeleteModal()">Annuler</button>
+              <button class="btn-delete-modal" id="deleteConfirmBtn" onclick="deleteConversation()">Supprimer</button>
             </div>
           </div>
         </div>
@@ -145,8 +162,6 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </button>
         </div>
       </div>
-
-      <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés.</div>
     </main>
   </div>
 
@@ -198,6 +213,46 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
     document.getElementById('msgInput').addEventListener('input', function() {
       this.style.height = 'auto';
       this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    // Supprimer la conversation
+    function openDeleteModal() {
+      document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').classList.remove('active');
+    }
+
+    function deleteConversation() {
+      const btn = document.getElementById('deleteConfirmBtn');
+      btn.disabled = true;
+      btn.textContent = 'Suppression…';
+
+      fetch('delete-conversation.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id_conversation=' + convId
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          window.location.href = 'messages.php';
+        } else {
+          btn.disabled = false;
+          btn.textContent = 'Supprimer';
+          alert(data.error || 'Erreur lors de la suppression.');
+        }
+      })
+      .catch(() => {
+        btn.disabled = false;
+        btn.textContent = 'Supprimer';
+      });
+    }
+
+    // Fermer le modal en cliquant sur l'overlay
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+      if (e.target === this) closeDeleteModal();
     });
   </script>
 </body>

@@ -20,7 +20,6 @@
     align-items: flex-end;
   }
 
-  // Label commun au-dessus de chaque groupe
   .filter-group > label,
   .filter-group--checks > label {
     display: block;
@@ -32,7 +31,6 @@
     margin-bottom: 6px;
   }
 
-  // Champ select avec flèche custom
   .select-wrap {
     position: relative;
     display: inline-block;
@@ -80,14 +78,12 @@
     flex-shrink: 0;
   }
 
-  // Le select-wrap prend toute la largeur du groupe
   .select-wrap {
     width: 100%;
 
     select { width: 100%; }
   }
 
-  // Prix : champ number + symbole €
   .price-input-wrap {
     display: flex;
     align-items: center;
@@ -125,7 +121,6 @@
     }
   }
 
-  // Équipements checkboxes
   .filter-group--checks {
     display: flex;
     flex-direction: column;

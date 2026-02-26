@@ -9,7 +9,6 @@
   justify-content: flex-start;
 }
 
-// Search container : toujours flexible, capé à 520px sur desktop
 .search-container {
   flex: 1;
   min-width: 0;
@@ -137,7 +136,6 @@
   }
 }
 
-// Barre de recherche : width 100% du container, pas de largeur fixe
 .search {
   display: flex;
   align-items: center;
@@ -157,7 +155,6 @@
   }
 }
 
-// Burger button (caché sur desktop)
 .burger-btn {
   display: none;
   align-items: center;
@@ -177,13 +174,10 @@
   }
 }
 
-// Bottom nav (caché sur desktop)
 .bottom-nav {
   display: none;
 }
 
-// ─── Tablette + Mobile (≤ 1024px) ───────────────────────────────────────────
-// Sidebar devient un drawer, burger visible, bottom nav apparaît
 @media (max-width: 1024px) {
   .burger-btn {
     display: flex;
@@ -209,7 +203,6 @@
     overflow-x: hidden;
   }
 
-  // Sur tablette/mobile, la search prend toute la place dispo
   .search-container {
     max-width: none;
   }
@@ -218,7 +211,6 @@
     padding: 8px 12px;
   }
 
-  // Notif dropdown : position fixe sous la topbar (échappe au flux)
   .notif-dropdown {
     position: fixed;
     top: 54px;
@@ -230,7 +222,6 @@
     border-radius: 12px;
   }
 
-  // Bottom nav
   .bottom-nav {
     display: flex;
     position: fixed;
@@ -288,14 +279,11 @@
   }
 }
 
-// ─── Petits écrans (≤ 768px) ────────────────────────────────────────────────
-// Ajustements supplémentaires pour téléphone
 @media (max-width: 768px) {
   .content {
     padding: 0 0 40px;
   }
 
-  // Reset des marges négatives (le padding du .content est 0 côtés sur mobile)
   .topbar {
     margin-left: 0;
     margin-right: 0;
@@ -304,7 +292,6 @@
   }
 }
 
-// ─── Très petits écrans (≤ 480px) ───────────────────────────────────────────
 @media (max-width: 480px) {
   .topbar {
     gap: 8px;

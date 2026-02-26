@@ -80,7 +80,6 @@
   }
 }
 
-/* Menu déroulant profil */
 .user-greeting {
   display: flex;
   align-items: center;
@@ -190,8 +189,6 @@
   }
 }
 
-// ─── Tablette + Mobile (≤ 1024px) ───────────────────────────────────────────
-// Hero pleine largeur : marges négatives pour sortir du padding du .content
 @media (max-width: 1024px) {
   .hero {
     margin: 0 -28px;
@@ -201,7 +198,6 @@
   }
 }
 
-// ─── Mobile (≤ 768px) ────────────────────────────────────────────────────────
 @media (max-width: 768px) {
   .section-header {
     flex-direction: column;
@@ -214,7 +210,6 @@
     margin-top: 20px;
   }
 
-  // Hero : après la règle section pour avoir la priorité (même spécificité, dernière gagne)
   main.content > section.hero {
     margin: 0;
     padding: 0;

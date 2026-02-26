@@ -72,7 +72,6 @@
   }
 }
 
-// Overlay mobile
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -86,7 +85,6 @@
   }
 }
 
-// Responsive tablette + mobile
 @media (max-width: 1024px) {
   .page {
     grid-template-columns: 1fr;

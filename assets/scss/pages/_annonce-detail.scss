@@ -71,7 +71,6 @@
   }
 }
 
-// Galerie
 .annonce-gallery {
   margin-bottom: 40px;
 
@@ -136,7 +135,6 @@
   }
 }
 
-// Content
 .annonce-content {
   display: grid;
   grid-template-columns: 1fr 400px;
@@ -202,7 +200,6 @@
   }
 }
 
-// Sidebar réservation
 .annonce-sidebar {
   position: sticky;
   top: 20px;
@@ -343,7 +340,6 @@
   }
 }
 
-// Responsive
 @media (max-width: 1024px) {
   .annonce-content {
     grid-template-columns: 1fr;
