@@ -7,6 +7,127 @@
   gap: 14px;
   justify-content: flex-end;
 }
+
+// Notifications
+.notif-wrapper {
+  position: relative;
+}
+
+.notif-btn {
+  position: relative;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #e0245e;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  pointer-events: none;
+}
+
+.notif-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 340px;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 1000;
+  overflow: hidden;
+
+  &.active { display: block; }
+
+  .notif-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid $color-border;
+    font-weight: 600;
+    font-size: 14px;
+
+    .notif-mark-read {
+      font-size: 12px;
+      font-weight: 500;
+      color: $color-muted;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+
+      &:hover { color: $color-text; }
+    }
+  }
+
+  .notif-list {
+    max-height: 360px;
+    overflow-y: auto;
+  }
+
+  .notif-empty {
+    padding: 32px 16px;
+    text-align: center;
+    color: $color-muted;
+    font-size: 14px;
+  }
+
+  .notif-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: $color-text;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background 0.15s;
+
+    &:last-child { border-bottom: none; }
+
+    &:hover { background: #f9f9f9; }
+
+    &.is-unread {
+      background: #fef6f9;
+
+      .notif-msg { font-weight: 600; }
+    }
+
+    .notif-icon {
+      font-size: 18px;
+      color: $color-muted;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .notif-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .notif-msg {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .notif-time {
+      font-size: 11px;
+      color: $color-muted;
+    }
+  }
+}
 .search {
   margin-right: auto;
   display: flex;

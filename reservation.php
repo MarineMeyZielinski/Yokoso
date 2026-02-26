@@ -91,6 +91,13 @@ if (!$errors) {
         ');
         $stmt->execute([$id_annonce, $id_voyageur, $date_debut, $date_fin, $nb_voyageurs, $prix_total]);
 
+        // Notifier le propriétaire
+        $voyageur_nom = $_SESSION['user_prenom'] . ' ' . $_SESSION['user_nom'];
+        $msg = htmlspecialchars($voyageur_nom) . ' a réservé "' . htmlspecialchars($annonce['titre'])
+             . '" du ' . $d1->format('d/m/Y') . ' au ' . $d2->format('d/m/Y') . '.';
+        $pdo->prepare('INSERT INTO notifications (id_user, type, message, lien) VALUES (?, "reservation_recue", ?, "my-listings.php")')
+            ->execute([$annonce['id_proprietaire'], $msg]);
+
         header('Location: my-bookings.php?success=1');
         exit;
     } catch (PDOException $e) {

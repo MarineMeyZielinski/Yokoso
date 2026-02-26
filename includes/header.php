@@ -7,6 +7,8 @@ if (session_status() === PHP_SESSION_NONE) {
 // Vérifier si l'utilisateur est connecté
 $is_logged_in = isset($_SESSION['user_id']);
 $user_data = null;
+$notif_count = 0;
+$notifications_recentes = [];
 
 if ($is_logged_in) {
     // Récupérer les données de l'utilisateur si pas déjà en session
@@ -33,6 +35,17 @@ if ($is_logged_in) {
         'nom' => $_SESSION['user_nom'] ?? '',
         'email' => $_SESSION['user_email'] ?? ''
     ];
+
+    // Notifications
+    try {
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM notifications WHERE id_user = ? AND lu = 0');
+        $stmt->execute([$_SESSION['user_id']]);
+        $notif_count = (int)$stmt->fetchColumn();
+
+        $stmt = $pdo->prepare('SELECT * FROM notifications WHERE id_user = ? ORDER BY date_creation DESC LIMIT 8');
+        $stmt->execute([$_SESSION['user_id']]);
+        $notifications_recentes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {}
 }
 ?>
 
@@ -47,7 +60,42 @@ if ($is_logged_in) {
     <!-- Dropdown des résultats -->
     <div class="search-dropdown" id="searchDropdown"></div>
   </div>
-  <button class="icon-btn" title="Notifications"><i class="fa-solid fa-bell" style="color: #000000;"></i></button>
+  <div class="notif-wrapper">
+    <button class="icon-btn notif-btn" title="Notifications" onclick="toggleNotifDropdown(event)">
+      <i class="fa-solid fa-bell" style="color: #000000;"></i>
+      <?php if ($notif_count > 0): ?>
+        <span class="notif-badge"><?= $notif_count > 9 ? '9+' : $notif_count ?></span>
+      <?php endif; ?>
+    </button>
+    <?php if ($is_logged_in): ?>
+    <div class="notif-dropdown" id="notifDropdown">
+      <div class="notif-dropdown-header">
+        <span>Notifications</span>
+        <?php if ($notif_count > 0): ?>
+          <button class="notif-mark-read" onclick="markAllRead()">Tout marquer lu</button>
+        <?php endif; ?>
+      </div>
+      <div class="notif-list">
+        <?php if (empty($notifications_recentes)): ?>
+          <div class="notif-empty">Aucune notification</div>
+        <?php else: ?>
+          <?php foreach ($notifications_recentes as $notif): ?>
+            <a href="<?= htmlspecialchars($notif['lien'] ?? '#') ?>"
+               class="notif-item <?= $notif['lu'] ? '' : 'is-unread' ?>">
+              <span class="notif-icon">
+                <?= $notif['type'] === 'reservation_annulee' ? '<i class="fa-solid fa-calendar-xmark"></i>' : '<i class="fa-solid fa-calendar-check"></i>' ?>
+              </span>
+              <span class="notif-content">
+                <span class="notif-msg"><?= htmlspecialchars($notif['message']) ?></span>
+                <span class="notif-time"><?= (new DateTime($notif['date_creation']))->format('d/m/Y à H:i') ?></span>
+              </span>
+            </a>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </div>
+    </div>
+    <?php endif; ?>
+  </div>
   <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
   <a href="my-favoris.php" class="icon-btn" title="Mes favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></a>
 
@@ -201,6 +249,33 @@ if ($is_logged_in) {
     searchDropdown.innerHTML = html;
     searchDropdown.classList.add('active');
   }
+
+  // Notifications
+  function toggleNotifDropdown(event) {
+    event.stopPropagation();
+    const dd = document.getElementById('notifDropdown');
+    if (!dd) return;
+    const isOpen = dd.classList.toggle('active');
+    if (isOpen) {
+      document.getElementById('profileDropdown')?.classList.remove('active');
+      markAllRead();
+    }
+  }
+
+  function markAllRead() {
+    fetch('mark-notif-read.php', { method: 'POST' }).then(() => {
+      document.querySelectorAll('.notif-item.is-unread').forEach(el => el.classList.remove('is-unread'));
+      const badge = document.querySelector('.notif-badge');
+      if (badge) badge.remove();
+    });
+  }
+
+  document.addEventListener('click', function(e) {
+    const wrapper = document.querySelector('.notif-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+      document.getElementById('notifDropdown')?.classList.remove('active');
+    }
+  });
 
   function toggleFavoris(btn, event) {
     event.stopPropagation();

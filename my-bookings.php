@@ -12,11 +12,35 @@ $id_voyageur = $_SESSION['user_id'];
 // Annuler une réservation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_id'])) {
     $cancel_id = (int)$_POST['cancel_id'];
+
+    // Récupérer infos avant annulation pour la notification
+    $stmt = $pdo->prepare('
+        SELECT r.date_debut, r.date_fin, a.titre, a.id_proprietaire
+        FROM reservations r
+        JOIN annonces a ON r.id_annonce = a.id_annonce
+        WHERE r.id_reservation = ? AND r.id_voyageur = ? AND r.date_debut > NOW()
+    ');
+    $stmt->execute([$cancel_id, $id_voyageur]);
+    $resa = $stmt->fetch(PDO::FETCH_ASSOC);
+
     $stmt = $pdo->prepare('
         UPDATE reservations SET statut = "annulee"
         WHERE id_reservation = ? AND id_voyageur = ? AND date_debut > NOW()
     ');
     $stmt->execute([$cancel_id, $id_voyageur]);
+
+    // Notifier le propriétaire
+    if ($resa) {
+        $voyageur_nom = $_SESSION['user_prenom'] . ' ' . $_SESSION['user_nom'];
+        $d1 = new DateTime($resa['date_debut']);
+        $d2 = new DateTime($resa['date_fin']);
+        $msg = htmlspecialchars($voyageur_nom) . ' a annulé sa réservation pour "'
+             . htmlspecialchars($resa['titre']) . '" du '
+             . $d1->format('d/m/Y') . ' au ' . $d2->format('d/m/Y') . '.';
+        $pdo->prepare('INSERT INTO notifications (id_user, type, message, lien) VALUES (?, "reservation_annulee", ?, "my-listings.php")')
+            ->execute([$resa['id_proprietaire'], $msg]);
+    }
+
     header('Location: my-bookings.php?cancelled=1');
     exit;
 }
