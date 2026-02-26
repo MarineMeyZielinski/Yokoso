@@ -53,7 +53,7 @@ if ($annonce['parking']) $equipements[] = ['icon' => 'square-parking', 'label' =
 if ($annonce['climatisation']) $equipements[] = ['icon' => 'snowflake', 'label' => 'Climatisation'];
 if ($annonce['lave_linge']) $equipements[] = ['icon' => 'shirt', 'label' => 'Lave-linge'];
 if ($annonce['television']) $equipements[] = ['icon' => 'tv', 'label' => 'Télévision'];
-if ($annonce['cuisine_equipee']) $equipements[] = ['icon' => 'kitchen-set', 'label' => 'Cuisine équipée'];
+if ($annonce['cuisine_equipee']) $equipements[] = ['icon' => 'utensils', 'label' => 'Cuisine équipée'];
 if ($annonce['seche_cheveux']) $equipements[] = ['icon' => 'wind', 'label' => 'Sèche-cheveux'];
 if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => 'Animaux acceptés'];
 ?>
@@ -166,7 +166,7 @@ if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => '
                                 <div class="annonce-equipements">
                                     <?php foreach ($equipements as $equip): ?>
                                         <div class="equipement-item">
-                                            <i class="fa-solid fa-<?= $equip['icon'] ?>"></i>
+                                            <i class="fa-solid fa-fw fa-<?= $equip['icon'] ?>"></i>
                                             <span><?= $equip['label'] ?></span>
                                         </div>
                                     <?php endforeach; ?>
