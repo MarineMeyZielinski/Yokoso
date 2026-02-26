@@ -46,6 +46,19 @@ if ($is_logged_in) {
         $stmt->execute([$_SESSION['user_id']]);
         $notifications_recentes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {}
+
+    // Messages non lus
+    $msg_count = 0;
+    try {
+        $stmt = $pdo->prepare('
+            SELECT COUNT(*) FROM messages m
+            JOIN conversations c ON c.id_conversation = m.id_conversation
+            WHERE m.id_expediteur != ? AND m.lu = 0
+              AND (c.id_user1 = ? OR c.id_user2 = ?)
+        ');
+        $stmt->execute([$_SESSION['user_id'], $_SESSION['user_id'], $_SESSION['user_id']]);
+        $msg_count = (int)$stmt->fetchColumn();
+    } catch (PDOException $e) {}
 }
 ?>
 
@@ -96,7 +109,14 @@ if ($is_logged_in) {
     </div>
     <?php endif; ?>
   </div>
-  <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
+  <div class="notif-wrapper">
+    <a href="messages.php" class="icon-btn" title="Messages">
+      <i class="fa-solid fa-envelope" style="color: #000000;"></i>
+      <?php if (!empty($msg_count) && $msg_count > 0): ?>
+        <span class="notif-badge"><?= $msg_count > 9 ? '9+' : $msg_count ?></span>
+      <?php endif; ?>
+    </a>
+  </div>
   <a href="my-favoris.php" class="icon-btn" title="Mes favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></a>
 
   <?php if ($is_logged_in): ?>

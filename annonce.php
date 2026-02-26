@@ -232,7 +232,7 @@ if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => '
                                         <?= htmlspecialchars($annonce['proprietaire_prenom']) ?> <?= htmlspecialchars($annonce['proprietaire_nom']) ?>
                                     </div>
                                 </div>
-                                <a href="contact.php?id=<?= $annonce['id_proprietaire'] ?>" class="btn-contact">
+                                <a href="contact.php?user=<?= $annonce['id_proprietaire'] ?>&annonce=<?= $annonce['id_annonce'] ?>" class="btn-contact">
                                     <i class="fa-solid fa-envelope"></i> Contacter l'hôte
                                 </a>
                             </div>
