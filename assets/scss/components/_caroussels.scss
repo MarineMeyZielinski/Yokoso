@@ -1,5 +1,7 @@
 .carousel {
   position: relative;
+  overflow: hidden;
+  width: 100%;
 }
 .carousel .slides {
   display: flex;
@@ -8,6 +10,13 @@
 }
 .carousel .slide {
   min-width: 100%;
+  width: 100%;
+  flex-shrink: 0;
+
+  img {
+    display: block;
+    width: 100%;
+  }
 }
 .dots {
   position: absolute;

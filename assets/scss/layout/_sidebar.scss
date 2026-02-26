@@ -79,6 +79,11 @@
     z-index: 300;
     transition: left 0.3s ease;
     overflow-y: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     &.open {
       left: 0;
