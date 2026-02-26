@@ -2,31 +2,64 @@
 session_start();
 require_once 'includes/config.php';
 
-// Récupérer tous les logements disponibles avec leur photo principale
-try {
-    $sql = "SELECT
-                a.id_annonce,
-                a.titre,
-                a.description,
-                a.ville,
-                a.pays,
-                a.prix_nuit,
-                a.capacite_max,
-                a.type_logement,
-                p.nom_fichier as photo_principale
-            FROM annonces a
-            LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
-            WHERE a.disponible = 1
-            GROUP BY a.id_annonce
-            ORDER BY a.date_creation DESC";
+// --- Récupération des filtres ---
+$search      = trim($_GET['search'] ?? '');
+$type        = $_GET['type'] ?? '';
+$prix_max    = isset($_GET['prix_max']) && $_GET['prix_max'] !== '' ? (int)$_GET['prix_max'] : null;
+$capacite    = isset($_GET['capacite']) && $_GET['capacite'] !== '' ? (int)$_GET['capacite'] : null;
+$wifi        = isset($_GET['wifi']);
+$parking     = isset($_GET['parking']);
+$clim        = isset($_GET['clim']);
+$animaux     = isset($_GET['animaux']);
 
-    $stmt = $pdo->query($sql);
+$types_valides = ['appartement', 'maison', 'villa', 'chambre'];
+
+// --- Construction de la requête dynamique ---
+$where  = ['a.disponible = 1'];
+$params = [];
+
+if ($search !== '') {
+    $like = '%' . strtolower($search) . '%';
+    $where[]  = '(LOWER(a.titre) LIKE ? OR LOWER(a.description) LIKE ? OR LOWER(a.ville) LIKE ? OR LOWER(a.pays) LIKE ?)';
+    $params   = array_merge($params, [$like, $like, $like, $like]);
+}
+if ($type !== '' && in_array($type, $types_valides)) {
+    $where[]  = 'a.type_logement = ?';
+    $params[] = $type;
+}
+if ($prix_max !== null) {
+    $where[]  = 'a.prix_nuit <= ?';
+    $params[] = $prix_max;
+}
+if ($capacite !== null) {
+    $where[]  = 'a.capacite_max >= ?';
+    $params[] = $capacite;
+}
+if ($wifi)    { $where[] = 'a.wifi = 1'; }
+if ($parking) { $where[] = 'a.parking = 1'; }
+if ($clim)    { $where[] = 'a.climatisation = 1'; }
+if ($animaux) { $where[] = 'a.animaux_accepte = 1'; }
+
+$sql = "SELECT
+            a.id_annonce, a.titre, a.description, a.ville, a.pays,
+            a.prix_nuit, a.capacite_max, a.type_logement,
+            p.nom_fichier as photo_principale
+        FROM annonces a
+        LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
+        WHERE " . implode(' AND ', $where) . "
+        GROUP BY a.id_annonce
+        ORDER BY a.date_creation DESC";
+
+try {
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
     $annonces = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $annonces = [];
 }
-?>
 
+$has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite !== null || $wifi || $parking || $clim || $animaux;
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -60,23 +93,94 @@ try {
         <main class="content">
             <?php include 'includes/header.php'; ?>
 
-            <section>
-                <h3 class="section-title">Nos logements (<?= count($annonces) ?>) :</h3>
-                
+            <section class="logement-section">
+
+                <!-- Panneau de filtres -->
+                <form method="get" action="logement.php" class="filters-panel">
+                    <div class="filters-row">
+                        <div class="filter-group">
+                            <label>Type</label>
+                            <div class="select-wrap">
+                                <select name="type">
+                                    <option value="">Tous</option>
+                                    <option value="appartement" <?= $type === 'appartement' ? 'selected' : '' ?>>Appartement</option>
+                                    <option value="maison"      <?= $type === 'maison'      ? 'selected' : '' ?>>Maison</option>
+                                    <option value="villa"       <?= $type === 'villa'       ? 'selected' : '' ?>>Villa</option>
+                                    <option value="chambre"     <?= $type === 'chambre'     ? 'selected' : '' ?>>Chambre</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Prix max / nuit</label>
+                            <div class="price-input-wrap">
+                                <input type="number" name="prix_max" min="1" placeholder="ex: 200"
+                                       value="<?= htmlspecialchars($prix_max ?? '') ?>">
+                                <span class="price-currency">€</span>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Voyageurs min</label>
+                            <div class="select-wrap">
+                                <select name="capacite">
+                                    <option value="">Peu importe</option>
+                                    <?php foreach ([1,2,3,4,5,6,8,10] as $n): ?>
+                                        <option value="<?= $n ?>" <?= $capacite == $n ? 'selected' : '' ?>><?= $n ?>+</option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-group filter-group--checks">
+                            <label>Équipements</label>
+                            <div class="checks-row">
+                                <label class="check-label"><input type="checkbox" name="wifi"    <?= $wifi    ? 'checked' : '' ?>> Wifi</label>
+                                <label class="check-label"><input type="checkbox" name="parking" <?= $parking ? 'checked' : '' ?>> Parking</label>
+                                <label class="check-label"><input type="checkbox" name="clim"    <?= $clim    ? 'checked' : '' ?>> Clim</label>
+                                <label class="check-label"><input type="checkbox" name="animaux" <?= $animaux ? 'checked' : '' ?>> Animaux</label>
+                            </div>
+                        </div>
+
+                        <div class="filter-actions">
+                            <button type="submit" class="btn-filter">
+                                <i class="fa-solid fa-filter"></i> Filtrer
+                            </button>
+                            <?php if ($has_filters): ?>
+                                <a href="logement.php" class="btn-reset">
+                                    <i class="fa-solid fa-xmark"></i> Réinitialiser
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <?php if ($search !== ''): ?>
+                        <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+                    <?php endif; ?>
+                </form>
+
+                <!-- Titre + compteur -->
+                <h3 class="section-title">
+                    <?php if ($has_filters): ?>
+                        <?= count($annonces) ?> logement<?= count($annonces) > 1 ? 's' : '' ?> trouvé<?= count($annonces) > 1 ? 's' : '' ?>
+                        <?= $search !== '' ? ' pour "' . htmlspecialchars($search) . '"' : '' ?>
+                    <?php else: ?>
+                        Nos logements (<?= count($annonces) ?>) :
+                    <?php endif; ?>
+                </h3>
+
                 <?php if (empty($annonces)): ?>
-                    <p style="text-align: center; padding: 40px; color: #666;">
-                        Aucun logement disponible pour le moment.
-                    </p>
+                    <div class="empty-state" style="text-align:center;padding:60px 20px;color:#666;">
+                        <i class="fa-solid fa-house-circle-xmark" style="font-size:48px;color:#ccc;margin-bottom:16px;display:block;"></i>
+                        <p>Aucun logement ne correspond à vos critères.</p>
+                        <a href="logement.php" style="color:#000;font-weight:600;">Voir tous les logements</a>
+                    </div>
                 <?php else: ?>
                     <div class="cards">
                         <?php foreach ($annonces as $annonce):
-                            // Déterminer le chemin de la photo
-                            if (!empty($annonce['photo_principale'])) {
-                                $photo = 'uploads/annonces/' . $annonce['photo_principale'];
-                            } else {
-                                $photo = 'images/placeholder.jpg';
-                            }
-
+                            $photo = !empty($annonce['photo_principale'])
+                                ? 'uploads/annonces/' . $annonce['photo_principale']
+                                : 'images/placeholder.jpg';
                             $description = strlen($annonce['description']) > 150
                                 ? substr($annonce['description'], 0, 150) . '...'
                                 : $annonce['description'];
@@ -85,7 +189,6 @@ try {
                                 <img src="<?= htmlspecialchars($photo) ?>"
                                      alt="<?= htmlspecialchars($annonce['titre']) ?>"
                                      class="thumb">
-                                
                                 <div class="card-header">
                                     <div class="name"><?= htmlspecialchars($annonce['titre']) ?></div>
                                     <div class="card-location">
@@ -93,14 +196,10 @@ try {
                                         <?= htmlspecialchars($annonce['ville']) ?>, <?= htmlspecialchars($annonce['pays']) ?>
                                     </div>
                                 </div>
-                                
                                 <p class="desc"><?= htmlspecialchars($description) ?></p>
-                                
                                 <div class="card-footer">
                                     <span class="price"><?= number_format($annonce['prix_nuit'], 0, ',', ' ') ?>€<small>/nuit</small></span>
-                                    <span class="capacity">
-                                        <i class="fa-solid fa-user"></i> <?= $annonce['capacite_max'] ?> pers.
-                                    </span>
+                                    <span class="capacity"><i class="fa-solid fa-user"></i> <?= $annonce['capacite_max'] ?> pers.</span>
                                     <span class="type"><?= ucfirst($annonce['type_logement']) ?></span>
                                 </div>
                             </article>

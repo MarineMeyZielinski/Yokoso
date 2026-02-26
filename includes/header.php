@@ -203,7 +203,12 @@ if ($is_logged_in) {
   }
 
   function openFiltersModal() {
-    // TODO: Ouvrir la modale de filtres
-    window.location.href = 'logement.php';
+    const panel = document.querySelector('.filters-panel');
+    if (panel) {
+      panel.scrollIntoView({ behavior: 'smooth' });
+      panel.querySelector('select, input')?.focus();
+    } else {
+      window.location.href = 'logement.php';
+    }
   }
 </script>
