@@ -1,33 +1,25 @@
 //Abstracts
 @import 'abstracts/variables';
-@import 'abstracts/mixins';
-@import 'abstracts/functions';
 
 //Base
 @import 'base/reset';
 @import 'base/typography';
-@import 'base/global';
 @import 'base/animations';
 
-//Layout 
-@import 'layout/grid';
-@import 'layout/header';
-@import'layout/footer';
+//Layout
+@import 'layout/footer';
 @import 'layout/sidebar';
 
 //Components
 @import 'components/buttons';
 @import 'components/cards';
-@import 'components/forms';
 @import 'components/navbar';
 @import 'components/caroussels';
 @import 'components/search';
-@import 'components/cards';
 
 //Pages
 @import 'pages/home';
 @import 'pages/logement';
-@import 'pages/contact';
 @import 'pages/forgot-password';
 @import 'pages/reset-password';
 @import 'pages/login';
