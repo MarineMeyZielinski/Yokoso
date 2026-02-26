@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valid) {
             $stmt->execute([$token]);
 
             // Redirection vers login avec message de succès
-            header('Location: login.php?password_reset-password=1');
+            header('Location: login.php?password_reset=1');
             exit;
         } catch (PDOException $e) {
             $errors[] = "Erreur lors de la mise à jour : " . $e->getMessage();

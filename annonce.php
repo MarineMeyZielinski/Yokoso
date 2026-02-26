@@ -182,7 +182,16 @@ if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => '
                                 <span class="amount"><?= number_format($annonce['prix_nuit'], 0, ',', ' ') ?>€</span>
                                 <span class="label">/nuit</span>
                             </div>
-                            
+
+                            <?php if (isset($_GET['booking_error']) && !empty($_SESSION['reservation_errors'])): ?>
+                                <div class="booking-errors">
+                                    <?php foreach ($_SESSION['reservation_errors'] as $err): ?>
+                                        <p><?= htmlspecialchars($err) ?></p>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php unset($_SESSION['reservation_errors']); ?>
+                            <?php endif; ?>
+
                             <form action="reservation.php" method="post" class="booking-form">
                                 <input type="hidden" name="id_annonce" value="<?= $annonce['id_annonce'] ?>">
                                 
