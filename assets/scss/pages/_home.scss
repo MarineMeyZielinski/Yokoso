@@ -190,7 +190,18 @@
   }
 }
 
-// Responsive home mobile
+// ─── Tablette + Mobile (≤ 1024px) ───────────────────────────────────────────
+// Hero pleine largeur : marges négatives pour sortir du padding du .content
+@media (max-width: 1024px) {
+  .hero {
+    margin: 0 -28px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+// ─── Mobile (≤ 768px) ────────────────────────────────────────────────────────
 @media (max-width: 768px) {
   .section-header {
     flex-direction: column;
@@ -198,28 +209,25 @@
     gap: 6px;
   }
 
-  .hero {
+  main.content > section {
+    padding: 0 16px;
+    margin-top: 20px;
+  }
+
+  // Hero : après la règle section pour avoir la priorité (même spécificité, dernière gagne)
+  main.content > section.hero {
     margin: 0;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
+    padding: 0;
 
     img {
       height: 220px;
     }
-
     .title {
       font-size: 40px;
     }
-
     .subtitle {
       font-size: 18px;
     }
-  }
-
-  main.content > section {
-    padding: 0 16px;
-    margin-top: 20px;
   }
 
   .footer {
