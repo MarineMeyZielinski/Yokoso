@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valid) {
             $stmt->execute([$hash, $email]);
 
             // Supprimer le token utilisé
-            $stmt = $pdo->prepare('DELETE FROM password_reset-passwords WHERE token = ?');
+            $stmt = $pdo->prepare('DELETE FROM password_resets WHERE token = ?');
             $stmt->execute([$token]);
 
             // Redirection vers login avec message de succès
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valid) {
       <?php endif; ?>
 
       <?php if ($token_valid && !$errors): ?>
-        <form action="reset-password-password.php?token=<?= htmlspecialchars($token) ?>" method="post" autocomplete="off">
+        <form action="reset-password.php?token=<?= htmlspecialchars($token) ?>" method="post" autocomplete="off">
           <div>
             <label for="mot_de_passe">Nouveau mot de passe</label>
             <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Minimum 8 caractères" minlength="8" required>
