@@ -50,13 +50,14 @@
   }
 
   .sidebar-logout-sep {
+    display: none;
     height: 1px;
     background: rgba(255, 255, 255, 0.12);
     margin: 4px 0;
   }
 
   .sidebar-logout {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
@@ -109,5 +110,13 @@
     &.open {
       left: 0;
     }
+  }
+
+  .page .sidebar-logout-sep {
+    display: block;
+  }
+
+  .page .sidebar-logout {
+    display: flex;
   }
 }
