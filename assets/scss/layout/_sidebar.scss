@@ -48,6 +48,27 @@
       }
     }
   }
+
+  .sidebar-logout-sep {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 4px 0;
+  }
+
+  .sidebar-logout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #ff6b6b !important;
+    text-decoration: none;
+    font-size: 14px;
+
+    &:hover {
+      background: rgba(255, 80, 80, 0.15) !important;
+    }
+  }
 }
 
 // Overlay mobile
@@ -64,8 +85,8 @@
   }
 }
 
-// Responsive mobile
-@media (max-width: 768px) {
+// Responsive tablette + mobile
+@media (max-width: 1024px) {
   .page {
     grid-template-columns: 1fr;
   }

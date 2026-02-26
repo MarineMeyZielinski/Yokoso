@@ -112,7 +112,7 @@ if ($is_logged_in) {
     </div>
     <?php endif; ?>
   </div>
-  <div class="notif-wrapper">
+  <div class="notif-wrapper topbar-desktop-only">
     <a href="messages.php" class="icon-btn" title="Messages">
       <i class="fa-solid fa-envelope" style="color: #000000;"></i>
       <?php if (!empty($msg_count) && $msg_count > 0): ?>
@@ -120,13 +120,13 @@ if ($is_logged_in) {
       <?php endif; ?>
     </a>
   </div>
-  <a href="my-favoris.php" class="icon-btn" title="Mes favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></a>
+  <a href="my-favoris.php" class="icon-btn topbar-desktop-only" title="Mes favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></a>
 
   <?php if ($is_logged_in): ?>
-    <div class="user-greeting">
+    <div class="user-greeting topbar-desktop-only">
       Bonjour, <?= htmlspecialchars($user_data['prenom']) ?>
     </div>
-    <div class="profile-menu-wrapper">
+    <div class="profile-menu-wrapper topbar-desktop-only">
       <button class="icon-btn" title="Mon profil" onclick="toggleProfileMenu(event)">
         <i class="fa-solid fa-user" style="color: #000000;"></i>
       </button>
@@ -177,10 +177,48 @@ if ($is_logged_in) {
       </div>
     </div>
   <?php else: ?>
-    <a href="register.php" class="connexion">S'inscrire</a>
-    <a href="login.php" class="connexion">Connexion</a>
+    <a href="register.php" class="connexion topbar-desktop-only">S'inscrire</a>
+    <a href="login.php" class="connexion topbar-desktop-only">Connexion</a>
   <?php endif; ?>
 </div>
+
+<!-- Bottom nav (mobile only) -->
+<nav class="bottom-nav">
+  <a href="home.php" class="bottom-nav-item">
+    <i class="fa-solid fa-house"></i>
+    <span>Accueil</span>
+  </a>
+  <a href="logement.php" class="bottom-nav-item">
+    <i class="fa-solid fa-building"></i>
+    <span>Logements</span>
+  </a>
+  <?php if ($is_logged_in): ?>
+    <a href="my-favoris.php" class="bottom-nav-item">
+      <i class="fa-solid fa-heart"></i>
+      <span>Favoris</span>
+    </a>
+    <a href="messages.php" class="bottom-nav-item">
+      <i class="fa-solid fa-envelope"></i>
+      <?php if (!empty($msg_count) && $msg_count > 0): ?>
+        <span class="bottom-badge"><?= $msg_count > 9 ? '9+' : $msg_count ?></span>
+      <?php endif; ?>
+      <span>Messages</span>
+    </a>
+    <a href="edit-profile.php" class="bottom-nav-item">
+      <i class="fa-solid fa-user"></i>
+      <span>Profil</span>
+    </a>
+  <?php else: ?>
+    <a href="login.php" class="bottom-nav-item">
+      <i class="fa-solid fa-right-to-bracket"></i>
+      <span>Connexion</span>
+    </a>
+    <a href="register.php" class="bottom-nav-item">
+      <i class="fa-solid fa-user-plus"></i>
+      <span>S'inscrire</span>
+    </a>
+  <?php endif; ?>
+</nav>
 
 <!-- Script pour le menu déroulant -->
 <script>
@@ -328,8 +366,10 @@ if ($is_logged_in) {
   function openFiltersModal() {
     const panel = document.querySelector('.filters-panel');
     if (panel) {
-      panel.scrollIntoView({ behavior: 'smooth' });
-      panel.querySelector('select, input')?.focus();
+      panel.classList.toggle('is-collapsed');
+      if (!panel.classList.contains('is-collapsed')) {
+        setTimeout(() => panel.scrollIntoView({ behavior: 'smooth' }), 50);
+      }
     } else {
       window.location.href = 'logement.php';
     }
@@ -366,7 +406,23 @@ if ($is_logged_in) {
 
     // Fermer si on resize vers desktop
     window.addEventListener('resize', function() {
-      if (window.innerWidth > 768) closeSidebar();
+      if (window.innerWidth > 1024) closeSidebar();
     });
   })();
+
+  <?php if ($is_logged_in): ?>
+  // Injecter le lien déconnexion en bas de la sidebar (accessible sur mobile)
+  (function() {
+    const menu = document.querySelector('.sidebar .menu');
+    if (!menu) return;
+    const sep = document.createElement('div');
+    sep.className = 'sidebar-logout-sep';
+    const link = document.createElement('a');
+    link.href = 'logout.php';
+    link.className = 'sidebar-logout';
+    link.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Se déconnecter';
+    menu.appendChild(sep);
+    menu.appendChild(link);
+  })();
+  <?php endif; ?>
 </script>

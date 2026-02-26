@@ -1,6 +1,7 @@
 .content {
   padding: 22px 28px 40px;
 }
+
 .topbar {
   display: flex;
   align-items: center;
@@ -8,10 +9,12 @@
   justify-content: flex-end;
 }
 
-@media (max-width: 768px) {
-  .content {
-    padding: 0 0 40px;
-  }
+// Search container : toujours flexible, capé à 520px sur desktop
+.search-container {
+  flex: 1;
+  min-width: 0;
+  max-width: 520px;
+  position: relative;
 }
 
 // Notifications
@@ -41,6 +44,11 @@
   pointer-events: none;
 }
 
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .notif-dropdown {
   display: none;
   position: absolute;
@@ -54,7 +62,10 @@
   z-index: 1000;
   overflow: hidden;
 
-  &.active { display: block; }
+  &.active {
+    display: block;
+    animation: dropdownIn 0.18s ease;
+  }
 
   .notif-dropdown-header {
     display: flex;
@@ -101,12 +112,10 @@
     transition: background 0.15s;
 
     &:last-child { border-bottom: none; }
-
     &:hover { background: #f9f9f9; }
 
     &.is-unread {
       background: #fef6f9;
-
       .notif-msg { font-weight: 600; }
     }
 
@@ -123,19 +132,13 @@
       gap: 3px;
     }
 
-    .notif-msg {
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .notif-time {
-      font-size: 11px;
-      color: $color-muted;
-    }
+    .notif-msg { font-size: 13px; line-height: 1.4; }
+    .notif-time { font-size: 11px; color: $color-muted; }
   }
 }
+
+// Barre de recherche : width 100% du container, pas de largeur fixe
 .search {
-  margin-right: auto;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -143,18 +146,18 @@
   border: 1px solid #ddd;
   border-radius: 22px;
   padding: 10px 14px;
-  width: 520px;
-  max-width: 58vw;
+  width: 100%;
 
   input {
     border: none;
     outline: none;
     background: transparent;
     width: 100%;
+    min-width: 0;
   }
 }
 
-// Burger button (caché par défaut sur desktop)
+// Burger button (caché sur desktop)
 .burger-btn {
   display: none;
   align-items: center;
@@ -174,10 +177,20 @@
   }
 }
 
-// Responsive topbar mobile
-@media (max-width: 768px) {
+// Bottom nav (caché sur desktop)
+.bottom-nav {
+  display: none;
+}
+
+// ─── Tablette + Mobile (≤ 1024px) ───────────────────────────────────────────
+// Sidebar devient un drawer, burger visible, bottom nav apparaît
+@media (max-width: 1024px) {
   .burger-btn {
     display: flex;
+  }
+
+  .topbar-desktop-only {
+    display: none !important;
   }
 
   .topbar {
@@ -191,39 +204,104 @@
     gap: 10px;
   }
 
+  // Sur tablette/mobile, la search prend toute la place dispo
   .search-container {
-    flex: 1;
-    min-width: 0;
+    max-width: none;
   }
 
   .search {
-    width: 100%;
-    max-width: none;
     padding: 8px 12px;
   }
 
-  .user-greeting {
-    display: none;
+  // Notif dropdown : position fixe sous la topbar (échappe au flux)
+  .notif-dropdown {
+    position: fixed;
+    top: 54px;
+    left: 14px;
+    right: 14px;
+    width: auto;
+    max-height: 60vh;
+    overflow-y: auto;
+    border-radius: 12px;
   }
 
-  .notif-dropdown {
-    width: 280px;
-    right: -60px;
+  // Bottom nav
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid $color-border;
+    z-index: 200;
+    height: 58px;
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: #666;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 500;
+    position: relative;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: color 0.15s;
+
+    i { font-size: 19px; }
+
+    &:hover, &.active { color: #000; }
+  }
+
+  .bottom-badge {
+    position: absolute;
+    top: 6px;
+    left: calc(50% + 4px);
+    background: #e0245e;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    min-width: 15px;
+    height: 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    pointer-events: none;
+  }
+
+  body {
+    padding-bottom: 58px;
   }
 }
 
+// ─── Petits écrans (≤ 768px) ────────────────────────────────────────────────
+// Ajustements supplémentaires pour téléphone
+@media (max-width: 768px) {
+  .content {
+    padding: 0 0 40px;
+  }
+
+}
+
+// ─── Très petits écrans (≤ 480px) ───────────────────────────────────────────
 @media (max-width: 480px) {
   .topbar {
     gap: 8px;
     padding: 8px 12px;
   }
 
-  // Masquer certaines icônes sur très petit écran pour éviter l'overflow
   .search {
     padding: 7px 10px;
 
-    input {
-      font-size: 14px;
-    }
+    input { font-size: 14px; }
   }
 }

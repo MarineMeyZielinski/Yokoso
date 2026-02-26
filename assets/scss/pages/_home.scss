@@ -199,8 +199,10 @@
   }
 
   .hero {
-    margin: 16px 16px 0;
-    border-radius: 6px;
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
 
     img {
       height: 220px;
@@ -229,8 +231,6 @@
 
 @media (max-width: 480px) {
   .hero {
-    margin: 12px 12px 0;
-
     img {
       height: 180px;
     }
