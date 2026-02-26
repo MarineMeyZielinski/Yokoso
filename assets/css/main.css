@@ -16,6 +16,42 @@ a {
   color: inherit;
 }
 
+@keyframes pageFadeIn {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 1;
+  }
+}
+body {
+  animation: pageFadeIn 0.2s ease;
+}
+
+body.is-leaving {
+  opacity: 0 !important;
+  transition: opacity 0.18s ease !important;
+  animation: none !important;
+}
+
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.anim-ready {
+  opacity: 0;
+}
+
+.anim-ready.anim-visible {
+  animation: cardSlideUp 0.38s ease both;
+}
+
 .footer {
   margin-top: 34px;
   padding: 16px 0;

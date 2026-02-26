@@ -425,4 +425,50 @@ if ($is_logged_in) {
     menu.appendChild(link);
   })();
   <?php endif; ?>
+
+  // ── Transitions de pages ────────────────────────────────────────────────────
+  (function() {
+    let isLeaving = false;
+    document.addEventListener('click', function(e) {
+      if (isLeaving) return;
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('javascript') ||
+          href.startsWith('mailto') || href.startsWith('tel') ||
+          link.target === '_blank' || link.hasAttribute('download') ||
+          !link.href.startsWith(window.location.origin)) return;
+      isLeaving = true;
+      e.preventDefault();
+      const dest = link.href;
+      document.body.classList.add('is-leaving');
+      setTimeout(function() { window.location.href = dest; }, 200);
+    });
+  })();
+
+  // ── Animation d'apparition des cards au scroll ──────────────────────────────
+  (function() {
+    if (!('IntersectionObserver' in window)) return;
+    const els = document.querySelectorAll('.card, .listing-item, .booking-item, .conv-item');
+    if (!els.length) return;
+    const observer = new IntersectionObserver(function(entries) {
+      let batch = 0;
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        el.style.animationDelay = Math.min(batch * 70, 350) + 'ms';
+        el.classList.add('anim-visible');
+        observer.unobserve(el);
+        batch++;
+        el.addEventListener('animationend', function() {
+          el.classList.remove('anim-ready', 'anim-visible');
+          el.style.animationDelay = '';
+        }, { once: true });
+      });
+    }, { threshold: 0.07 });
+    els.forEach(function(el) {
+      el.classList.add('anim-ready');
+      observer.observe(el);
+    });
+  })();
 </script>

@@ -139,9 +139,7 @@ try {
             <i class="fa-solid fa-house-circle-xmark"></i>
             <h2>Aucune annonce</h2>
             <p>Vous n'avez pas encore publié d'annonce.</p>
-            <a href="publier-annonce.php" class="btn-add-listing">
-              <i class="fa-solid fa-plus"></i> Publier une annonce
-            </a>
+            <a href="publier-annonce.php" class="btn-add-listing"> Publier une annonce </a>
           </div>
         <?php else: ?>
           <!-- Liste des annonces -->

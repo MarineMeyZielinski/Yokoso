@@ -3,10 +3,11 @@
 @import 'abstracts/mixins';
 @import 'abstracts/functions';
 
-//Base 
+//Base
 @import 'base/reset';
 @import 'base/typography';
 @import 'base/global';
+@import 'base/animations';
 
 //Layout 
 @import 'layout/grid';
