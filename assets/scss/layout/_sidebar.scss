@@ -40,12 +40,48 @@
     a {
       padding: 10px 14px;
       border-radius: 8px;
-      color: $color-a;       
+      color: $color-a;
       text-decoration: none;
 
       &:hover {
-        background:$color-bg-hover;  
+        background:$color-bg-hover;
       }
+    }
+  }
+}
+
+// Overlay mobile
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 299;
+  backdrop-filter: blur(2px);
+
+  &.active {
+    display: block;
+  }
+}
+
+// Responsive mobile
+@media (max-width: 768px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .page .sidebar {
+    position: fixed;
+    left: -260px;
+    top: 0;
+    height: 100vh;
+    width: 260px;
+    z-index: 300;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+
+    &.open {
+      left: 0;
     }
   }
 }

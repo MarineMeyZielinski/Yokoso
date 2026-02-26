@@ -64,6 +64,9 @@ if ($is_logged_in) {
 
 <!-- Topbar -->
 <div class="topbar">
+  <button class="burger-btn" id="burgerBtn" aria-label="Menu">
+    <i class="fa-solid fa-bars"></i>
+  </button>
   <div class="search-container">
     <div class="search">
       <span><i class="fa-solid fa-magnifying-glass" style="color: #000000;"></i></span>
@@ -331,4 +334,39 @@ if ($is_logged_in) {
       window.location.href = 'logement.php';
     }
   }
+
+  // Burger menu mobile
+  (function() {
+    const burgerBtn = document.getElementById('burgerBtn');
+    if (!burgerBtn) return;
+
+    // Créer l'overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'sidebar-overlay';
+    document.body.appendChild(overlay);
+
+    function openSidebar() {
+      document.querySelector('.sidebar')?.classList.add('open');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      document.querySelector('.sidebar')?.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    burgerBtn.addEventListener('click', function() {
+      const isOpen = document.querySelector('.sidebar')?.classList.contains('open');
+      isOpen ? closeSidebar() : openSidebar();
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+
+    // Fermer si on resize vers desktop
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 768) closeSidebar();
+    });
+  })();
 </script>
