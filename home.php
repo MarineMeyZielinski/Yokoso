@@ -26,6 +26,16 @@ try {
 } catch (PDOException $e) {
     $annonces_featured = [];
 }
+
+// Favoris de l'utilisateur connecté
+$favoris_ids = [];
+if (isset($_SESSION['user_id'])) {
+    try {
+        $stmt = $pdo->prepare('SELECT id_annonce FROM favoris WHERE id_user = ?');
+        $stmt->execute([$_SESSION['user_id']]);
+        $favoris_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    } catch (PDOException $e) {}
+}
 ?>
 
 <!DOCTYPE html>
@@ -112,9 +122,18 @@ try {
                   : $annonce['description'];
             ?>
               <article class="card" onclick="window.location.href='annonce.php?id=<?= $annonce['id_annonce'] ?>'">
-                <img src="<?= htmlspecialchars($photo) ?>"
-                     alt="<?= htmlspecialchars($annonce['titre']) ?>"
-                     class="thumb">
+                <div class="card-thumb-wrap">
+                  <img src="<?= htmlspecialchars($photo) ?>"
+                       alt="<?= htmlspecialchars($annonce['titre']) ?>"
+                       class="thumb">
+                  <?php if (isset($_SESSION['user_id'])): ?>
+                    <button class="card-favorite <?= in_array($annonce['id_annonce'], $favoris_ids) ? 'is-favorite' : '' ?>"
+                            data-id="<?= $annonce['id_annonce'] ?>"
+                            onclick="toggleFavoris(this, event)">
+                      <i class="fa-<?= in_array($annonce['id_annonce'], $favoris_ids) ? 'solid' : 'regular' ?> fa-heart"></i>
+                    </button>
+                  <?php endif; ?>
+                </div>
                 
                 <div class="card-header">
                   <div class="name"><?= htmlspecialchars($annonce['titre']) ?></div>

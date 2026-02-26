@@ -49,7 +49,7 @@ if ($is_logged_in) {
   </div>
   <button class="icon-btn" title="Notifications"><i class="fa-solid fa-bell" style="color: #000000;"></i></button>
   <button class="icon-btn" title="Messages"><i class="fa-solid fa-envelope" style="color: #000000;"></i></button>
-  <button class="icon-btn" title="Favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></button>
+  <a href="my-favoris.php" class="icon-btn" title="Mes favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></a>
 
   <?php if ($is_logged_in): ?>
     <div class="user-greeting">
@@ -200,6 +200,31 @@ if ($is_logged_in) {
 
     searchDropdown.innerHTML = html;
     searchDropdown.classList.add('active');
+  }
+
+  function toggleFavoris(btn, event) {
+    event.stopPropagation();
+    const id = btn.dataset.id;
+    const icon = btn.querySelector('i');
+    const isFav = btn.classList.contains('is-favorite');
+
+    fetch('toggle-favoris.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'id_annonce=' + id
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        if (data.action === 'added') {
+          btn.classList.add('is-favorite');
+          icon.className = 'fa-solid fa-heart';
+        } else {
+          btn.classList.remove('is-favorite');
+          icon.className = 'fa-regular fa-heart';
+        }
+      }
+    });
   }
 
   function openFiltersModal() {
