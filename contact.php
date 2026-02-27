@@ -16,14 +16,14 @@ if (!$id_destinataire || $id_destinataire === $id_expediteur) {
     exit;
 }
 
-// Chercher une conversation existante
+// Chercher une conversation existante entre ces deux utilisateurs (peu importe l'annonce)
 $stmt = $pdo->prepare('
     SELECT id_conversation FROM conversations
-    WHERE id_annonce <=> ?
-      AND ((id_user1 = ? AND id_user2 = ?) OR (id_user1 = ? AND id_user2 = ?))
+    WHERE (id_user1 = ? AND id_user2 = ?) OR (id_user1 = ? AND id_user2 = ?)
+    ORDER BY id_conversation ASC
     LIMIT 1
 ');
-$stmt->execute([$id_annonce, $id_expediteur, $id_destinataire, $id_destinataire, $id_expediteur]);
+$stmt->execute([$id_expediteur, $id_destinataire, $id_destinataire, $id_expediteur]);
 $conv = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($conv) {

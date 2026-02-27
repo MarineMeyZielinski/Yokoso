@@ -363,8 +363,17 @@ if ($is_logged_in) {
     if (panel) {
       panel.classList.toggle('is-collapsed');
     } else {
-      window.location.href = 'logement.php';
+      window.location.href = 'logement.php#open-filters';
     }
+  }
+
+  // Auto-ouvrir les filtres si on arrive depuis une autre page via le bouton filtre
+  if (window.location.hash === '#open-filters') {
+    history.replaceState(null, null, window.location.pathname + window.location.search);
+    window.addEventListener('DOMContentLoaded', function() {
+      const panel = document.querySelector('.filters-panel');
+      if (panel) panel.classList.remove('is-collapsed');
+    });
   }
 
   // Burger menu mobile
