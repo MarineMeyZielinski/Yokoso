@@ -362,9 +362,6 @@ if ($is_logged_in) {
     const panel = document.querySelector('.filters-panel');
     if (panel) {
       panel.classList.toggle('is-collapsed');
-      if (!panel.classList.contains('is-collapsed')) {
-        setTimeout(() => panel.scrollIntoView({ behavior: 'smooth' }), 50);
-      }
     } else {
       window.location.href = 'logement.php';
     }

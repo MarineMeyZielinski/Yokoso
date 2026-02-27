@@ -106,7 +106,7 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
             <section class="logement-section">
 
                 <!-- Panneau de filtres -->
-                <form method="get" action="logement.php" class="filters-panel">
+                <form method="get" action="logement.php" class="filters-panel<?= $has_filters ? '' : ' is-collapsed' ?>">
                     <div class="filters-row">
                         <div class="filter-group">
                             <label>Type</label>
