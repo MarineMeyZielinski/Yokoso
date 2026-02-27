@@ -199,7 +199,8 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
                                 <div class="card-thumb-wrap">
                                   <img src="<?= htmlspecialchars($photo) ?>"
                                        alt="<?= htmlspecialchars($annonce['titre']) ?>"
-                                       class="thumb">
+                                       class="thumb"
+                                       loading="lazy">
                                   <?php if (isset($_SESSION['user_id'])): ?>
                                     <button class="card-favorite <?= in_array($annonce['id_annonce'], $favoris_ids) ? 'is-favorite' : '' ?>"
                                             data-id="<?= $annonce['id_annonce'] ?>"

@@ -132,6 +132,7 @@ $is_owner     = $is_logged_in && $_SESSION['user_id'] == $annonce['id_proprietai
                                     <img src="uploads/annonces/<?= htmlspecialchars($photo['nom_fichier']) ?>"
                                          alt="Photo <?= $index + 1 ?>"
                                          class="thumbnail <?= $index === 0 ? 'active' : '' ?>"
+                                         loading="lazy"
                                          onclick="changeMainImage('uploads/annonces/<?= htmlspecialchars($photo['nom_fichier']) ?>', this)">
                                 <?php endforeach; ?>
                             </div>

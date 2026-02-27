@@ -83,6 +83,7 @@ $favoris_ids = array_column($favoris, 'id_annonce');
               <article class="card" onclick="window.location.href='annonce.php?id=<?= $annonce['id_annonce'] ?>'">
                 <div class="card-thumb-wrap">
                   <img src="<?= htmlspecialchars($photo) ?>"
+                       loading="lazy"
                        alt="<?= htmlspecialchars($annonce['titre']) ?>"
                        class="thumb">
                   <button class="card-favorite is-favorite"
