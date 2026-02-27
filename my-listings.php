@@ -12,38 +12,25 @@ $user_id = $_SESSION['user_id'];
 try {
     $sql = "SELECT
                 a.id_annonce,
-                a.id_proprietaire,
                 a.titre,
                 a.description,
-                a.adresse,
                 a.ville,
-                a.code_postal,
                 a.pays,
                 a.prix_nuit,
-                a.nb_chambres,
-                a.nb_lits,
-                a.nb_sdb,
                 a.capacite_max,
                 a.type_logement,
-                a.wifi,
-                a.parking,
-                a.climatisation,
-                a.lave_linge,
-                a.television,
-                a.cuisine_equipee,
-                a.seche_cheveux,
-                a.animaux_accepte,
                 a.disponible,
                 a.date_creation,
-                p.nom_fichier as photo_principale
+                p.nom_fichier as photo_principale,
+                ROUND(AVG(av.note), 1)        as note_moy,
+                COUNT(DISTINCT av.id_avis)     as nb_avis,
+                COUNT(DISTINCT r.id_reservation) as nb_reservations
             FROM annonces a
             LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
+            LEFT JOIN avis av ON av.id_annonce = a.id_annonce
+            LEFT JOIN reservations r ON r.id_annonce = a.id_annonce AND r.statut != 'annulee'
             WHERE a.id_proprietaire = ?
-            GROUP BY a.id_annonce, a.id_proprietaire, a.titre, a.description, a.adresse, a.ville,
-                     a.code_postal, a.pays, a.prix_nuit, a.nb_chambres, a.nb_lits, a.nb_sdb,
-                     a.capacite_max, a.type_logement, a.wifi, a.parking, a.climatisation,
-                     a.lave_linge, a.television, a.cuisine_equipee, a.seche_cheveux,
-                     a.animaux_accepte, a.disponible, a.date_creation, p.nom_fichier
+            GROUP BY a.id_annonce
             ORDER BY a.date_creation DESC";
 
     $stmt = $pdo->prepare($sql);
@@ -153,39 +140,65 @@ try {
                   ? substr($annonce['description'], 0, 200) . '...'
                   : $annonce['description'];
             ?>
-              <div class="listing-item-card">
-                <img src="<?= htmlspecialchars($photo) ?>"
-                     alt="<?= htmlspecialchars($annonce['titre']) ?>"
-                     class="listing-image">
-                
+              <div class="listing-item" data-id="<?= $annonce['id_annonce'] ?>">
+                <div class="listing-thumb-wrap">
+                  <img src="<?= htmlspecialchars($photo) ?>"
+                       alt="<?= htmlspecialchars($annonce['titre']) ?>"
+                       class="listing-image"
+                       loading="lazy">
+                  <span class="listing-badge <?= $annonce['disponible'] ? 'badge-active' : 'badge-inactive' ?>">
+                    <?= $annonce['disponible'] ? 'Active' : 'Inactive' ?>
+                  </span>
+                </div>
+
                 <div class="listing-content">
                   <div class="listing-header">
                     <h3><?= htmlspecialchars($annonce['titre']) ?></h3>
                     <span class="listing-date">Publiée le <?= date('d/m/Y', strtotime($annonce['date_creation'])) ?></span>
                   </div>
-                  
-                  <p class="listing-description"><?= htmlspecialchars($description_courte) ?></p>
-                  
+
                   <div class="listing-meta">
                     <span><i class="fa-solid fa-location-dot"></i> <?= htmlspecialchars($annonce['ville']) ?>, <?= htmlspecialchars($annonce['pays']) ?></span>
                     <span><i class="fa-solid fa-euro-sign"></i> <?= number_format($annonce['prix_nuit'], 0, ',', ' ') ?>€/nuit</span>
                     <span><i class="fa-solid fa-user"></i> <?= $annonce['capacite_max'] ?> pers.</span>
                   </div>
+
+                  <div class="listing-stats">
+                    <span class="stat">
+                      <i class="fa-solid fa-calendar-check"></i>
+                      <?= $annonce['nb_reservations'] ?> réservation<?= $annonce['nb_reservations'] != 1 ? 's' : '' ?>
+                    </span>
+                    <?php if ($annonce['nb_avis'] > 0): ?>
+                      <span class="stat">
+                        <i class="fa-solid fa-star"></i>
+                        <?= $annonce['note_moy'] ?> (<?= $annonce['nb_avis'] ?> avis)
+                      </span>
+                    <?php else: ?>
+                      <span class="stat stat--muted">
+                        <i class="fa-regular fa-star"></i> Aucun avis
+                      </span>
+                    <?php endif; ?>
+                  </div>
                 </div>
 
                 <div class="listing-actions">
-                  <a href="annonce.php?id=<?= $annonce['id_annonce'] ?>" 
-                     class="action-btn" 
+                  <button class="action-btn toggle-dispo <?= $annonce['disponible'] ? 'is-active' : '' ?>"
+                          onclick="toggleDispo(this, <?= $annonce['id_annonce'] ?>)"
+                          title="<?= $annonce['disponible'] ? 'Désactiver' : 'Activer' ?>">
+                    <i class="fa-solid <?= $annonce['disponible'] ? 'fa-toggle-on' : 'fa-toggle-off' ?>"></i>
+                  </button>
+                  <a href="annonce.php?id=<?= $annonce['id_annonce'] ?>"
+                     class="action-btn"
                      title="Voir l'annonce">
                     <i class="fa-solid fa-eye"></i>
                   </a>
-                  <a href="modifier-annonce.php?id=<?= $annonce['id_annonce'] ?>" 
-                     class="action-btn" 
+                  <a href="modifier-annonce.php?id=<?= $annonce['id_annonce'] ?>"
+                     class="action-btn"
                      title="Modifier">
                     <i class="fa-solid fa-pen"></i>
                   </a>
-                  <button onclick="confirmDelete(<?= $annonce['id_annonce'] ?>, '<?= htmlspecialchars($annonce['titre'], ENT_QUOTES) ?>')" 
-                          class="action-btn delete" 
+                  <button onclick="confirmDelete(<?= $annonce['id_annonce'] ?>, '<?= htmlspecialchars($annonce['titre'], ENT_QUOTES) ?>')"
+                          class="action-btn delete"
                           title="Supprimer">
                     <i class="fa-solid fa-trash"></i>
                   </button>
@@ -211,6 +224,31 @@ try {
       if (confirm(`Êtes-vous sûr de vouloir supprimer l'annonce "${titre}" ?\n\nCette action est irréversible.`)) {
         window.location.href = `my-listings.php?delete=${id}`;
       }
+    }
+
+    async function toggleDispo(btn, id) {
+      btn.disabled = true;
+      try {
+        const res = await fetch('toggle-disponible.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `id=${id}`
+        });
+        const data = await res.json();
+        if (data.success) {
+          const isActive = data.disponible === 1;
+          const card = btn.closest('.listing-item');
+          const badge = card.querySelector('.listing-badge');
+
+          btn.classList.toggle('is-active', isActive);
+          btn.title = isActive ? 'Désactiver' : 'Activer';
+          btn.querySelector('i').className = `fa-solid ${isActive ? 'fa-toggle-on' : 'fa-toggle-off'}`;
+
+          badge.className = `listing-badge ${isActive ? 'badge-active' : 'badge-inactive'}`;
+          badge.textContent = isActive ? 'Active' : 'Inactive';
+        }
+      } catch (e) {}
+      btn.disabled = false;
     }
   </script>
 </body>
