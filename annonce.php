@@ -104,6 +104,7 @@ if ($is_logged_in && !$is_owner) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
     <div class="page">
@@ -350,6 +351,20 @@ if ($is_logged_in && !$is_owner) {
                         </div>
                     </aside>
                 </div>
+
+                <!-- Section carte -->
+                <div class="annonce-map-section">
+                    <h2>Où se situe ce logement</h2>
+                    <p class="map-location-label">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <?= htmlspecialchars($annonce['ville']) ?>, <?= htmlspecialchars($annonce['pays']) ?>
+                    </p>
+                    <div id="annonce-map"></div>
+                    <p class="map-note">
+                        <i class="fa-solid fa-circle-info"></i>
+                        L'emplacement exact vous sera communiqué après confirmation de la réservation.
+                    </p>
+                </div>
             </div>
 
             <!-- Section avis -->
@@ -530,6 +545,50 @@ if ($is_logged_in && !$is_owner) {
             if (e.key === 'ArrowLeft')  lightboxNav(-1);
             if (e.key === 'ArrowRight') lightboxNav(1);
         });
+
+    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // ---- Carte Leaflet ----
+        (function() {
+            const ville = <?= json_encode($annonce['ville']) ?>;
+            const pays  = <?= json_encode($annonce['pays']) ?>;
+            const mapEl = document.getElementById('annonce-map');
+            if (!mapEl) return;
+
+            fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(ville + ', ' + pays) + '&format=json&limit=1', {
+                headers: { 'Accept-Language': 'fr' }
+            })
+            .then(r => r.json())
+            .then(function(data) {
+                if (!data.length) return;
+                const lat = parseFloat(data[0].lat);
+                const lng = parseFloat(data[0].lon);
+
+                const map = L.map('annonce-map', { scrollWheelZoom: false }).setView([lat, lng], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+
+                // Cercle flou — emplacement approximatif style Airbnb
+                L.circle([lat, lng], {
+                    radius: 600,
+                    color: '#1a1a1a',
+                    weight: 2,
+                    fillColor: '#333',
+                    fillOpacity: 0.14
+                }).addTo(map);
+
+                // Activer le zoom à la molette au clic sur la carte
+                map.on('click', function() { map.scrollWheelZoom.enable(); });
+                map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
+            })
+            .catch(function() {
+                const section = mapEl.closest('.annonce-map-section');
+                if (section) section.style.display = 'none';
+            });
+        })();
     </script>
 </body>
 </html>
