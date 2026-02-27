@@ -45,11 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_id'])) {
     exit;
 }
 
-// Récupérer les réservations de l'utilisateur
+// Récupérer les réservations + si l'utilisateur a déjà laissé un avis
 $stmt = $pdo->prepare('
     SELECT r.*,
            a.titre, a.ville, a.pays, a.prix_nuit,
-           p.nom_fichier as photo
+           p.nom_fichier as photo,
+           (SELECT id_avis FROM avis WHERE id_annonce = r.id_annonce AND id_auteur = r.id_voyageur LIMIT 1) as id_avis_existant
     FROM reservations r
     JOIN annonces a ON r.id_annonce = a.id_annonce
     LEFT JOIN photos p ON p.id_annonce = a.id_annonce AND p.photo_principale = 1
@@ -173,6 +174,14 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       <input type="hidden" name="cancel_id" value="<?= $r['id_reservation'] ?>">
                       <button type="submit" class="btn-cancel-booking">Annuler</button>
                     </form>
+                  <?php elseif ($past && $r['statut'] !== 'annulee'): ?>
+                    <?php if (empty($r['id_avis_existant'])): ?>
+                      <a href="annonce.php?id=<?= $r['id_annonce'] ?>#avis" class="btn-leave-review">
+                        <i class="fa-regular fa-star"></i> Laisser un avis
+                      </a>
+                    <?php else: ?>
+                      <span class="review-done"><i class="fa-solid fa-star"></i> Avis publié</span>
+                    <?php endif; ?>
                   <?php endif; ?>
                 </div>
               </div>

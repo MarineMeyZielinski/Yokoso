@@ -2564,6 +2564,35 @@ input {
   background: #ff4444;
   color: #fff;
 }
+.profile-container .btn-leave-review {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid #f5a623;
+  color: #f5a623;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.profile-container .btn-leave-review:hover {
+  background: #f5a623;
+  color: #fff;
+}
+.profile-container .review-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #f5a623;
+  font-weight: 600;
+}
+.profile-container .review-done i {
+  font-size: 12px;
+}
 .profile-container .empty-state {
   text-align: center;
   padding: 80px 20px;
@@ -3437,6 +3466,28 @@ main.content.chat-layout .topbar {
 .annonce-header .annonce-location i {
   color: #999;
 }
+.annonce-header .annonce-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.annonce-header .annonce-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+}
+.annonce-header .annonce-rating i {
+  color: #f5a623;
+}
+.annonce-header .annonce-rating .rating-value {
+  font-weight: 700;
+}
+.annonce-header .annonce-rating .rating-count {
+  color: #666;
+  font-size: 13px;
+}
 .annonce-header .annonce-price {
   text-align: right;
 }
@@ -3448,6 +3499,179 @@ main.content.chat-layout .topbar {
 .annonce-header .annonce-price .price-label {
   font-size: 16px;
   color: #666;
+}
+
+.avis-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid #e8e8e8;
+}
+.avis-section .avis-header {
+  margin-bottom: 24px;
+}
+.avis-section .avis-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.avis-section .avis-header h2 i {
+  color: #f5a623;
+}
+.avis-section .avis-flash {
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.avis-section .avis-flash--success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+.avis-section .avis-flash--error {
+  background: #fdecea;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+.avis-section .avis-form {
+  background: #f8f8f8;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.avis-section .avis-form .star-picker {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.avis-section .avis-form .star-picker input[type=radio] {
+  display: none;
+}
+.avis-section .avis-form .star-picker label {
+  font-size: 28px;
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.avis-section .avis-form .star-picker label i {
+  pointer-events: none;
+}
+.avis-section .avis-form .star-picker input:checked ~ label,
+.avis-section .avis-form .star-picker label:hover,
+.avis-section .avis-form .star-picker label:hover ~ label {
+  color: #f5a623;
+}
+.avis-section .avis-form textarea {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+  resize: vertical;
+  outline: none;
+  background: #fff;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+.avis-section .avis-form textarea:focus {
+  border-color: #aaa;
+}
+.avis-section .btn-submit-avis {
+  padding: 12px 32px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.avis-section .btn-submit-avis:hover {
+  background: #333;
+}
+.avis-section .avis-empty {
+  color: #888;
+  font-style: italic;
+  font-size: 15px;
+}
+.avis-section .avis-already {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+.avis-section .avis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.avis-section .avis-card {
+  background: #fff;
+  border: 1px solid #ebebeb;
+  border-radius: 16px;
+  padding: 20px;
+}
+.avis-section .avis-card .avis-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.avis-section .avis-card .avis-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.avis-section .avis-card .avis-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.avis-section .avis-card .avis-avatar i {
+  color: #999;
+  font-size: 18px;
+}
+.avis-section .avis-card .avis-author {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111;
+}
+.avis-section .avis-card .avis-date {
+  font-size: 13px;
+  color: #888;
+  text-transform: capitalize;
+}
+.avis-section .avis-card .avis-stars {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+}
+.avis-section .avis-card .avis-stars i {
+  font-size: 13px;
+  color: #f5a623;
+}
+.avis-section .avis-card .avis-stars i.fa-regular {
+  color: #ddd;
+}
+.avis-section .avis-card .avis-commentaire {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.6;
+}
+@media (max-width: 768px) {
+  .avis-section .avis-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .annonce-gallery {

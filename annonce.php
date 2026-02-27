@@ -57,6 +57,39 @@ if ($annonce['animaux_accepte']) $equipements[] = ['icon' => 'paw', 'label' => '
 
 $is_logged_in = isset($_SESSION['user_id']);
 $is_owner     = $is_logged_in && $_SESSION['user_id'] == $annonce['id_proprietaire'];
+
+// --- Avis ---
+$avis_list = $pdo->prepare('
+    SELECT av.note, av.commentaire, av.date_avis,
+           u.prenom, u.nom, u.photo_profil
+    FROM avis av
+    JOIN users u ON av.id_auteur = u.id_user
+    WHERE av.id_annonce = ?
+    ORDER BY av.date_avis DESC
+');
+$avis_list->execute([$id_annonce]);
+$avis_list = $avis_list->fetchAll(PDO::FETCH_ASSOC);
+
+$nb_avis    = count($avis_list);
+$note_moy   = $nb_avis > 0 ? array_sum(array_column($avis_list, 'note')) / $nb_avis : null;
+
+// L'utilisateur peut-il laisser un avis ?
+$can_review = false;
+if ($is_logged_in && !$is_owner) {
+    $stmt = $pdo->prepare('
+        SELECT id_reservation FROM reservations
+        WHERE id_annonce = ? AND id_voyageur = ? AND date_fin < NOW() AND statut != "annulee"
+        LIMIT 1
+    ');
+    $stmt->execute([$id_annonce, $_SESSION['user_id']]);
+    $has_stayed = $stmt->fetch();
+
+    $stmt = $pdo->prepare('SELECT id_avis FROM avis WHERE id_annonce = ? AND id_auteur = ? LIMIT 1');
+    $stmt->execute([$id_annonce, $_SESSION['user_id']]);
+    $already_reviewed = $stmt->fetch();
+
+    $can_review = $has_stayed && !$already_reviewed;
+}
 ?>
 
 <!DOCTYPE html>
@@ -111,9 +144,18 @@ $is_owner     = $is_logged_in && $_SESSION['user_id'] == $annonce['id_proprietai
                             <?= htmlspecialchars($annonce['adresse']) ?>, <?= htmlspecialchars($annonce['ville']) ?>, <?= htmlspecialchars($annonce['pays']) ?>
                         </div>
                     </div>
-                    <div class="annonce-price">
-                        <span class="price-amount"><?= number_format($annonce['prix_nuit'], 0, ',', ' ') ?>€</span>
-                        <span class="price-label">/nuit</span>
+                    <div class="annonce-header-right">
+                        <?php if ($note_moy !== null): ?>
+                            <div class="annonce-rating">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="rating-value"><?= number_format($note_moy, 1) ?></span>
+                                <span class="rating-count">(<?= $nb_avis ?> avis)</span>
+                            </div>
+                        <?php endif; ?>
+                        <div class="annonce-price">
+                            <span class="price-amount"><?= number_format($annonce['prix_nuit'], 0, ',', ' ') ?>€</span>
+                            <span class="price-label">/nuit</span>
+                        </div>
                     </div>
                 </div>
 
@@ -260,6 +302,79 @@ $is_owner     = $is_logged_in && $_SESSION['user_id'] == $annonce['id_proprietai
                         </div>
                     </aside>
                 </div>
+            </div>
+
+            <!-- Section avis -->
+            <div class="avis-section" id="avis">
+                <div class="avis-header">
+                    <h2>
+                        <?php if ($note_moy !== null): ?>
+                            <i class="fa-solid fa-star"></i>
+                            <?= number_format($note_moy, 1) ?> · <?= $nb_avis ?> avis
+                        <?php else: ?>
+                            Avis
+                        <?php endif; ?>
+                    </h2>
+                </div>
+
+                <?php if (isset($_GET['avis_ok'])): ?>
+                    <div class="avis-flash avis-flash--success">Votre avis a été publié, merci !</div>
+                <?php elseif (isset($_GET['avis_error'])): ?>
+                    <div class="avis-flash avis-flash--error">
+                        <?php
+                        $codes = ['1' => 'Note invalide.', '2' => 'Vous devez avoir séjourné dans ce logement pour laisser un avis.', '3' => 'Vous avez déjà laissé un avis pour ce logement.'];
+                        echo $codes[$_GET['avis_error']] ?? 'Une erreur est survenue.';
+                        ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($can_review): ?>
+                    <form action="submit-avis.php" method="post" class="avis-form">
+                        <input type="hidden" name="id_annonce" value="<?= $id_annonce ?>">
+                        <div class="star-picker">
+                            <?php for ($i = 5; $i >= 1; $i--): ?>
+                                <input type="radio" name="note" id="star<?= $i ?>" value="<?= $i ?>" required>
+                                <label for="star<?= $i ?>"><i class="fa-solid fa-star"></i></label>
+                            <?php endfor; ?>
+                        </div>
+                        <textarea name="commentaire" placeholder="Partagez votre expérience (optionnel)" rows="3"></textarea>
+                        <button type="submit" class="btn-submit-avis">Publier mon avis</button>
+                    </form>
+                <?php elseif ($is_logged_in && !$is_owner && !$can_review && $already_reviewed ?? false): ?>
+                    <p class="avis-already">Vous avez déjà laissé un avis pour ce logement.</p>
+                <?php endif; ?>
+
+                <?php if (empty($avis_list)): ?>
+                    <p class="avis-empty">Aucun avis pour le moment. Soyez le premier à partager votre expérience !</p>
+                <?php else: ?>
+                    <div class="avis-grid">
+                        <?php foreach ($avis_list as $avis): ?>
+                            <div class="avis-card">
+                                <div class="avis-card-header">
+                                    <div class="avis-avatar">
+                                        <?php if (!empty($avis['photo_profil']) && file_exists($avis['photo_profil'])): ?>
+                                            <img src="<?= htmlspecialchars($avis['photo_profil']) ?>" alt="<?= htmlspecialchars($avis['prenom']) ?>">
+                                        <?php else: ?>
+                                            <i class="fa-solid fa-user"></i>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div>
+                                        <div class="avis-author"><?= htmlspecialchars($avis['prenom'] . ' ' . mb_substr($avis['nom'], 0, 1) . '.') ?></div>
+                                        <div class="avis-date"><?= (new DateTime($avis['date_avis']))->format('F Y') ?></div>
+                                    </div>
+                                    <div class="avis-stars">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <i class="fa-<?= $i <= $avis['note'] ? 'solid' : 'regular' ?> fa-star"></i>
+                                        <?php endfor; ?>
+                                    </div>
+                                </div>
+                                <?php if (!empty($avis['commentaire'])): ?>
+                                    <p class="avis-commentaire"><?= nl2br(htmlspecialchars($avis['commentaire'])) ?></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>

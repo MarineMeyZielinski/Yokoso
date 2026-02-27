@@ -194,6 +194,37 @@
     }
   }
 
+  .btn-leave-review {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid #f5a623;
+    color: #f5a623;
+    border-radius: $border-radius;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: $transition;
+
+    &:hover {
+      background: #f5a623;
+      color: #fff;
+    }
+  }
+
+  .review-done {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #f5a623;
+    font-weight: 600;
+
+    i { font-size: 12px; }
+  }
+
   .empty-state {
     text-align: center;
     padding: 80px 20px;
