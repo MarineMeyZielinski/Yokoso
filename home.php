@@ -13,9 +13,12 @@ try {
                 a.prix_nuit,
                 a.capacite_max,
                 a.type_logement,
-                p.nom_fichier as photo_principale
+                p.nom_fichier as photo_principale,
+                ROUND(AVG(av.note), 1) as note_moy,
+                COUNT(av.id_avis) as nb_avis
             FROM annonces a
             LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
+            LEFT JOIN avis av ON av.id_annonce = a.id_annonce
             WHERE a.disponible = 1
             GROUP BY a.id_annonce
             ORDER BY a.date_creation DESC
@@ -151,7 +154,11 @@ if (isset($_SESSION['user_id'])) {
                   <span class="capacity">
                     <i class="fa-solid fa-user"></i> <?= $annonce['capacite_max'] ?> pers.
                   </span>
-                  <span class="type"><?= ucfirst($annonce['type_logement']) ?></span>
+                  <?php if (!empty($annonce['note_moy'])): ?>
+                    <span class="card-rating"><i class="fa-solid fa-star"></i> <?= $annonce['note_moy'] ?></span>
+                  <?php else: ?>
+                    <span class="type"><?= ucfirst($annonce['type_logement']) ?></span>
+                  <?php endif; ?>
                 </div>
               </article>
             <?php endforeach; ?>

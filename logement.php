@@ -43,9 +43,12 @@ if ($animaux) { $where[] = 'a.animaux_accepte = 1'; }
 $sql = "SELECT
             a.id_annonce, a.titre, a.description, a.ville, a.pays,
             a.prix_nuit, a.capacite_max, a.type_logement,
-            p.nom_fichier as photo_principale
+            p.nom_fichier as photo_principale,
+            ROUND(AVG(av.note), 1) as note_moy,
+            COUNT(av.id_avis) as nb_avis
         FROM annonces a
         LEFT JOIN photos p ON a.id_annonce = p.id_annonce AND p.photo_principale = 1
+        LEFT JOIN avis av ON av.id_annonce = a.id_annonce
         WHERE " . implode(' AND ', $where) . "
         GROUP BY a.id_annonce
         ORDER BY a.date_creation DESC";
@@ -220,7 +223,11 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
                                 <div class="card-footer">
                                     <span class="price"><?= number_format($annonce['prix_nuit'], 0, ',', ' ') ?>€<small>/nuit</small></span>
                                     <span class="capacity"><i class="fa-solid fa-user"></i> <?= $annonce['capacite_max'] ?> pers.</span>
-                                    <span class="type"><?= ucfirst($annonce['type_logement']) ?></span>
+                                    <?php if (!empty($annonce['note_moy'])): ?>
+                                        <span class="card-rating"><i class="fa-solid fa-star"></i> <?= $annonce['note_moy'] ?></span>
+                                    <?php else: ?>
+                                        <span class="type"><?= ucfirst($annonce['type_logement']) ?></span>
+                                    <?php endif; ?>
                                 </div>
                             </article>
                         <?php endforeach; ?>
