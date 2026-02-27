@@ -2333,11 +2333,15 @@ input {
   font-size: 16px;
 }
 @media (max-width: 768px) {
+  .profile-container {
+    padding: 16px 16px 0;
+  }
   .profile-container .profile-tabs {
     overflow-x: auto;
     justify-content: flex-start;
     gap: 10px;
-    padding-bottom: 4px;
+    margin: 0 -16px;
+    padding: 0 16px 4px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
@@ -2350,9 +2354,18 @@ input {
     font-size: 14px;
     flex-shrink: 0;
   }
+  .profile-container .profile-header {
+    margin-bottom: 28px;
+  }
+  .profile-container .profile-header .profile-info h1 {
+    font-size: 24px;
+  }
   .profile-container .profile-form,
   .profile-container .password-section .password-fields {
     grid-template-columns: 1fr;
+  }
+  .profile-container form {
+    max-width: 100%;
   }
 }
 
