@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once 'includes/config.php';
 
@@ -11,6 +11,10 @@ $wifi        = isset($_GET['wifi']);
 $parking     = isset($_GET['parking']);
 $clim        = isset($_GET['clim']);
 $animaux     = isset($_GET['animaux']);
+$lave_linge  = isset($_GET['lave_linge']);
+$television  = isset($_GET['television']);
+$cuisine     = isset($_GET['cuisine']);
+$seche       = isset($_GET['seche']);
 
 $types_valides = ['appartement', 'maison', 'villa', 'chambre'];
 
@@ -46,10 +50,14 @@ if ($capacite !== null) {
     $where[]  = 'a.capacite_max >= ?';
     $params[] = $capacite;
 }
-if ($wifi)    { $where[] = 'a.wifi = 1'; }
-if ($parking) { $where[] = 'a.parking = 1'; }
-if ($clim)    { $where[] = 'a.climatisation = 1'; }
-if ($animaux) { $where[] = 'a.animaux_accepte = 1'; }
+if ($wifi)       { $where[] = 'a.wifi = 1'; }
+if ($parking)    { $where[] = 'a.parking = 1'; }
+if ($clim)       { $where[] = 'a.climatisation = 1'; }
+if ($animaux)    { $where[] = 'a.animaux_accepte = 1'; }
+if ($lave_linge) { $where[] = 'a.lave_linge = 1'; }
+if ($television) { $where[] = 'a.television = 1'; }
+if ($cuisine)    { $where[] = 'a.cuisine_equipee = 1'; }
+if ($seche)      { $where[] = 'a.seche_cheveux = 1'; }
 
 // --- Pagination ---
 $par_page = 12;
@@ -102,7 +110,7 @@ if (isset($_SESSION['user_id'])) {
     } catch (PDOException $e) {}
 }
 
-$has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite !== null || $wifi || $parking || $clim || $animaux;
+$has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite !== null || $wifi || $parking || $clim || $animaux || $lave_linge || $television || $cuisine || $seche;
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -179,10 +187,14 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
                         <div class="filter-group filter-group--checks">
                             <label>Équipements</label>
                             <div class="checks-row">
-                                <label class="check-label"><input type="checkbox" name="wifi"    <?= $wifi    ? 'checked' : '' ?>> Wifi</label>
-                                <label class="check-label"><input type="checkbox" name="parking" <?= $parking ? 'checked' : '' ?>> Parking</label>
-                                <label class="check-label"><input type="checkbox" name="clim"    <?= $clim    ? 'checked' : '' ?>> Clim</label>
-                                <label class="check-label"><input type="checkbox" name="animaux" <?= $animaux ? 'checked' : '' ?>> Animaux</label>
+                                <label class="check-label"><input type="checkbox" name="wifi"       <?= $wifi       ? 'checked' : '' ?>> Wifi</label>
+                                <label class="check-label"><input type="checkbox" name="parking"    <?= $parking    ? 'checked' : '' ?>> Parking</label>
+                                <label class="check-label"><input type="checkbox" name="clim"       <?= $clim       ? 'checked' : '' ?>> Clim</label>
+                                <label class="check-label"><input type="checkbox" name="animaux"    <?= $animaux    ? 'checked' : '' ?>> Animaux</label>
+                                <label class="check-label"><input type="checkbox" name="lave_linge" <?= $lave_linge ? 'checked' : '' ?>> Lave-linge</label>
+                                <label class="check-label"><input type="checkbox" name="television" <?= $television ? 'checked' : '' ?>> TV</label>
+                                <label class="check-label"><input type="checkbox" name="cuisine"    <?= $cuisine    ? 'checked' : '' ?>> Cuisine</label>
+                                <label class="check-label"><input type="checkbox" name="seche"      <?= $seche      ? 'checked' : '' ?>> Sèche-cheveux</label>
                             </div>
                         </div>
 
@@ -283,15 +295,19 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
                 <?php if ($total_pages > 1):
                     // Construire les params d'URL en conservant les filtres + tri
                     $qp = array_filter([
-                        'search'   => $search   ?: null,
-                        'type'     => $type     ?: null,
-                        'prix_max' => $prix_max,
-                        'capacite' => $capacite,
-                        'wifi'     => $wifi     ? '1' : null,
-                        'parking'  => $parking  ? '1' : null,
-                        'clim'     => $clim     ? '1' : null,
-                        'animaux'  => $animaux  ? '1' : null,
-                        'tri'      => $tri !== 'recent' ? $tri : null,
+                        'search'     => $search     ?: null,
+                        'type'       => $type       ?: null,
+                        'prix_max'   => $prix_max,
+                        'capacite'   => $capacite,
+                        'wifi'       => $wifi       ? '1' : null,
+                        'parking'    => $parking    ? '1' : null,
+                        'clim'       => $clim       ? '1' : null,
+                        'animaux'    => $animaux    ? '1' : null,
+                        'lave_linge' => $lave_linge ? '1' : null,
+                        'television' => $television ? '1' : null,
+                        'cuisine'    => $cuisine    ? '1' : null,
+                        'seche'      => $seche      ? '1' : null,
+                        'tri'        => $tri !== 'recent' ? $tri : null,
                     ], fn($v) => $v !== null);
 
                     function paginUrl(array $qp, int $p): string {
@@ -336,7 +352,7 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
                 <?php endif; ?>
             </section>
 
-            <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés.<br><span class="footer-links">Mentions légales | Politique de confidentialité</span></div>
+            <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés.<br><span class="footer-links"><a href="mentions-legales.php">Mentions légales</a> | <a href="politique-confidentialite.php">Politique de confidentialité</a></span></div>
         </main>
     </div>
     <script>

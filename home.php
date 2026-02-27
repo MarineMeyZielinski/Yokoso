@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once 'includes/config.php';
 
@@ -166,7 +166,7 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
       </section>
 
-      <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés.<br><span class="footer-links">Mentions légales | Politique de confidentialité</span></div>
+      <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés.<br><span class="footer-links"><a href="mentions-legales.php">Mentions légales</a> | <a href="politique-confidentialite.php">Politique de confidentialité</a></span></div>
     </main>
   </div>
 

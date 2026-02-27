@@ -131,8 +131,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      flex-wrap: nowrap;
-      height: 37px;
+      flex-wrap: wrap;
     }
 
     .check-label {
