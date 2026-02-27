@@ -52,7 +52,7 @@ body.is-leaving {
 }
 
 .footer {
-  margin-top: 34px;
+  margin-top: auto;
   padding: 16px 0;
   border-top: 1px solid #e3c3e7;
   color: #555;
@@ -509,6 +509,8 @@ body.is-leaving {
 
 .content {
   padding: 22px 28px 40px;
+  display: flex;
+  flex-direction: column;
 }
 
 .topbar {
