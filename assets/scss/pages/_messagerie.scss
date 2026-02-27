@@ -1,7 +1,7 @@
 // ── LISTE DES CONVERSATIONS ──────────────────────────────────────────────────
 
 .messagerie-page {
-  padding: 32px 28px 0;
+  padding-top: 24px;
   max-width: 720px;
 
   .messagerie-header {
@@ -511,7 +511,7 @@ main.content.chat-layout {
 // ── RESPONSIVE ────────────────────────────────────────────────────────────────
 
 @media (max-width: 768px) {
-  .messagerie-page { padding: 20px 16px 0; }
+  .messagerie-page { padding-top: 16px; }
 
   .chat-messages { padding: 16px; }
   .chat-input-wrap { padding: 10px 16px; }
