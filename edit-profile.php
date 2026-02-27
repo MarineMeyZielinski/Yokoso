@@ -32,6 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telephone = trim($_POST['telephone'] ?? '');
     $date_naissance = trim($_POST['date_naissance'] ?? '');
 
+    $new_password = $_POST['new_password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+    $change_password = $new_password !== '';
+
     if (empty($prenom) || empty($nom)) {
         $errors[] = "Le prénom et le nom sont requis.";
     }
@@ -40,20 +44,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "L'adresse email n'est pas valide.";
     }
 
+    if ($change_password) {
+        if (strlen($new_password) < 8) {
+            $errors[] = "Le nouveau mot de passe doit contenir au moins 8 caractères.";
+        } elseif ($new_password !== $confirm_password) {
+            $errors[] = "Les mots de passe ne correspondent pas.";
+        }
+    }
+
     if (!$errors) {
         try {
             $stmt = $pdo->prepare('SELECT id_user FROM users WHERE email = ? AND id_user != ? LIMIT 1');
             $stmt->execute([$email, $user_id]);
-            
+
             if ($stmt->fetch()) {
                 $errors[] = "Cet email est déjà utilisé par un autre compte.";
             } else {
                 $stmt = $pdo->prepare('
-                    UPDATE users 
+                    UPDATE users
                     SET prenom = ?, nom = ?, email = ?, telephone = ?, date_naissance = ?
                     WHERE id_user = ?
                 ');
                 $stmt->execute([$prenom, $nom, $email, $telephone, $date_naissance ?: null, $user_id]);
+
+                if ($change_password) {
+                    $stmt = $pdo->prepare('UPDATE users SET mot_de_passe = ? WHERE id_user = ?');
+                    $stmt->execute([password_hash($new_password, PASSWORD_DEFAULT), $user_id]);
+                }
 
                 $_SESSION['user_prenom'] = $prenom;
                 $_SESSION['user_nom'] = $nom;
@@ -174,18 +191,32 @@ $annee_inscription = date('Y', strtotime($user['date_inscription']));
             </div>
 
             <div class="form-field">
-              <label>Numéro de téléphone:</label>
+              <label>Téléphone:</label>
               <input type="tel" name="telephone" placeholder="Optionnel" value="<?= htmlspecialchars($user['telephone'] ?? '') ?>">
             </div>
 
-            <div class="form-field password">
-              <label>Mot de passe:</label>
-              <input type="password" value="••••••••••" readonly>
-            </div>
-
             <div class="form-field">
-              <label>Date de naissance:</label>
+              <label>Naissance:</label>
               <input type="date" name="date_naissance" value="<?= htmlspecialchars($user['date_naissance'] ?? '') ?>">
+            </div>
+          </div>
+
+          <!-- Changer le mot de passe -->
+          <div class="password-section">
+            <button type="button" class="password-toggle" id="passwordToggle">
+              <i class="fa-solid fa-lock"></i>
+              Changer le mot de passe
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="password-fields" id="passwordFields">
+              <div class="form-field">
+                <label>Nouveau mot de passe:</label>
+                <input type="password" name="new_password" placeholder="Min. 8 caractères" autocomplete="new-password">
+              </div>
+              <div class="form-field">
+                <label>Confirmer:</label>
+                <input type="password" name="confirm_password" placeholder="Répéter le mot de passe" autocomplete="new-password">
+              </div>
             </div>
           </div>
 
@@ -198,6 +229,25 @@ $annee_inscription = date('Y', strtotime($user['date_inscription']));
   </div>
 
   <script>
+    // Password section toggle
+    const passwordToggle = document.getElementById('passwordToggle');
+    const passwordFields = document.getElementById('passwordFields');
+
+    passwordToggle.addEventListener('click', function() {
+      this.classList.toggle('open');
+      passwordFields.classList.toggle('open');
+      // Clear fields when closing
+      if (!passwordFields.classList.contains('open')) {
+        passwordFields.querySelectorAll('input').forEach(i => i.value = '');
+      }
+    });
+
+    <?php if ($errors && ($new_password ?? '') !== ''): ?>
+    // Re-open password section if there were password errors
+    passwordToggle.classList.add('open');
+    passwordFields.classList.add('open');
+    <?php endif; ?>
+
     const photoInput = document.getElementById('photoInput');
     const avatarPreview = document.getElementById('avatarPreview');
     const avatarIcon = document.getElementById('avatarIcon');
