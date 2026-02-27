@@ -468,6 +468,38 @@
     }
   }
 
+  .price-summary {
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+
+    .price-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      color: #444;
+    }
+
+    .price-summary-per-person {
+      color: #888;
+      font-size: 13px;
+    }
+
+    .price-summary-divider {
+      border-top: 1px solid #e0e0e0;
+      margin: 10px 0 6px;
+    }
+
+    .price-summary-grand {
+      font-weight: 700;
+      font-size: 15px;
+      color: #111;
+    }
+  }
+
   .btn-reserve {
     width: 100%;
     padding: 14px;

@@ -254,7 +254,8 @@ if ($is_logged_in && !$is_owner) {
                                     <?php unset($_SESSION['reservation_errors']); ?>
                                 <?php endif; ?>
 
-                                <form action="reservation.php" method="post" class="booking-form">
+                                <form action="reservation.php" method="post" class="booking-form"
+                                      data-prix-nuit="<?= (int)$annonce['prix_nuit'] ?>">
                                     <input type="hidden" name="id_annonce" value="<?= $annonce['id_annonce'] ?>">
 
                                     <div class="form-group">
@@ -269,11 +270,28 @@ if ($is_logged_in && !$is_owner) {
 
                                     <div class="form-group">
                                         <label>Voyageurs</label>
-                                        <select name="nb_voyageurs" required>
+                                        <select name="nb_voyageurs" id="nbVoyageurs" required>
                                             <?php for ($i = 1; $i <= $annonce['capacite_max']; $i++): ?>
                                                 <option value="<?= $i ?>"><?= $i ?> voyageur<?= $i > 1 ? 's' : '' ?></option>
                                             <?php endfor; ?>
                                         </select>
+                                    </div>
+
+                                    <!-- Récapitulatif prix dynamique -->
+                                    <div class="price-summary" id="priceSummary" style="display:none">
+                                        <div class="price-summary-row">
+                                            <span id="priceSummaryLabel"></span>
+                                            <span id="priceSummaryTotal"></span>
+                                        </div>
+                                        <div class="price-summary-row price-summary-per-person" id="pricePerPersonRow" style="display:none">
+                                            <span>Par personne</span>
+                                            <span id="pricePerPerson"></span>
+                                        </div>
+                                        <div class="price-summary-divider"></div>
+                                        <div class="price-summary-row price-summary-grand">
+                                            <span>Total</span>
+                                            <span id="priceSummaryGrand"></span>
+                                        </div>
                                     </div>
 
                                     <button type="submit" class="btn-reserve">Réserver</button>
@@ -382,9 +400,47 @@ if ($is_logged_in && !$is_owner) {
     </div>
 
     <script>
-        // Date départ liée dynamiquement à l'arrivée
-        const dateDebut = document.getElementById('dateDebut');
-        const dateFin   = document.getElementById('dateFin');
+        // Date départ liée dynamiquement à l'arrivée + calcul prix
+        const dateDebut     = document.getElementById('dateDebut');
+        const dateFin       = document.getElementById('dateFin');
+        const nbVoyageurs   = document.getElementById('nbVoyageurs');
+        const priceSummary  = document.getElementById('priceSummary');
+        const bookingForm   = document.querySelector('.booking-form');
+        const prixNuit      = bookingForm ? parseInt(bookingForm.dataset.prixNuit, 10) : 0;
+
+        function formatEur(n) {
+            return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+        }
+
+        function updatePrice() {
+            if (!dateDebut || !dateFin || !dateDebut.value || !dateFin.value) {
+                if (priceSummary) priceSummary.style.display = 'none';
+                return;
+            }
+            const d1    = new Date(dateDebut.value);
+            const d2    = new Date(dateFin.value);
+            const nuits = Math.round((d2 - d1) / 86400000);
+            if (nuits <= 0) { priceSummary.style.display = 'none'; return; }
+
+            const total      = nuits * prixNuit;
+            const voyageurs  = nbVoyageurs ? parseInt(nbVoyageurs.value, 10) : 1;
+            const parPersonne = Math.ceil(total / voyageurs);
+
+            document.getElementById('priceSummaryLabel').textContent = `${nuits} nuit${nuits > 1 ? 's' : ''} × ${formatEur(prixNuit)}`;
+            document.getElementById('priceSummaryTotal').textContent  = formatEur(total);
+            document.getElementById('priceSummaryGrand').textContent  = formatEur(total);
+
+            const perPersonRow = document.getElementById('pricePerPersonRow');
+            if (voyageurs > 1) {
+                document.getElementById('pricePerPerson').textContent = formatEur(parPersonne) + ' / pers.';
+                perPersonRow.style.display = 'flex';
+            } else {
+                perPersonRow.style.display = 'none';
+            }
+
+            priceSummary.style.display = 'block';
+        }
+
         if (dateDebut && dateFin) {
             dateDebut.addEventListener('change', function() {
                 const d = new Date(this.value);
@@ -394,8 +450,11 @@ if ($is_logged_in && !$is_owner) {
                 if (dateFin.value && dateFin.value <= this.value) {
                     dateFin.value = minFin;
                 }
+                updatePrice();
             });
+            dateFin.addEventListener('change', updatePrice);
         }
+        if (nbVoyageurs) nbVoyageurs.addEventListener('change', updatePrice);
 
         function changeMainImage(src, thumbnail) {
             // Changer l'image principale
