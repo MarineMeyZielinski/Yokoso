@@ -51,6 +51,25 @@ if ($parking) { $where[] = 'a.parking = 1'; }
 if ($clim)    { $where[] = 'a.climatisation = 1'; }
 if ($animaux) { $where[] = 'a.animaux_accepte = 1'; }
 
+// --- Pagination ---
+$par_page = 12;
+$page     = max(1, (int)($_GET['page'] ?? 1));
+$offset   = ($page - 1) * $par_page;
+
+// Compter le total
+$sql_count = "SELECT COUNT(DISTINCT a.id_annonce)
+              FROM annonces a
+              WHERE " . implode(' AND ', $where);
+try {
+    $stmt_c = $pdo->prepare($sql_count);
+    $stmt_c->execute($params);
+    $total_annonces = (int)$stmt_c->fetchColumn();
+} catch (PDOException $e) {
+    $total_annonces = 0;
+}
+$total_pages = $total_annonces > 0 ? (int)ceil($total_annonces / $par_page) : 1;
+$page = min($page, $total_pages);
+
 $sql = "SELECT
             a.id_annonce, a.titre, a.description, a.ville, a.pays,
             a.prix_nuit, a.capacite_max, a.type_logement,
@@ -62,7 +81,8 @@ $sql = "SELECT
         LEFT JOIN avis av ON av.id_annonce = a.id_annonce
         WHERE " . implode(' AND ', $where) . "
         GROUP BY a.id_annonce
-        ORDER BY $order_by";
+        ORDER BY $order_by
+        LIMIT $par_page OFFSET $offset";
 
 try {
     $stmt = $pdo->prepare($sql);
@@ -258,9 +278,65 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
+
+                <!-- Pagination -->
+                <?php if ($total_pages > 1):
+                    // Construire les params d'URL en conservant les filtres + tri
+                    $qp = array_filter([
+                        'search'   => $search   ?: null,
+                        'type'     => $type     ?: null,
+                        'prix_max' => $prix_max,
+                        'capacite' => $capacite,
+                        'wifi'     => $wifi     ? '1' : null,
+                        'parking'  => $parking  ? '1' : null,
+                        'clim'     => $clim     ? '1' : null,
+                        'animaux'  => $animaux  ? '1' : null,
+                        'tri'      => $tri !== 'recent' ? $tri : null,
+                    ], fn($v) => $v !== null);
+
+                    function paginUrl(array $qp, int $p): string {
+                        $qp['page'] = $p;
+                        return 'logement.php?' . http_build_query($qp);
+                    }
+                ?>
+                <nav class="pagination" aria-label="Pagination">
+                    <?php if ($page > 1): ?>
+                        <a href="<?= paginUrl($qp, $page - 1) ?>" class="pagin-btn pagin-prev">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php
+                    $window = 2;
+                    $start  = max(1, $page - $window);
+                    $end    = min($total_pages, $page + $window);
+                    if ($start > 1): ?>
+                        <a href="<?= paginUrl($qp, 1) ?>" class="pagin-btn">1</a>
+                        <?php if ($start > 2): ?><span class="pagin-dots">…</span><?php endif; ?>
+                    <?php endif; ?>
+
+                    <?php for ($p = $start; $p <= $end; $p++): ?>
+                        <a href="<?= paginUrl($qp, $p) ?>"
+                           class="pagin-btn <?= $p === $page ? 'is-active' : '' ?>">
+                            <?= $p ?>
+                        </a>
+                    <?php endfor; ?>
+
+                    <?php if ($end < $total_pages): ?>
+                        <?php if ($end < $total_pages - 1): ?><span class="pagin-dots">…</span><?php endif; ?>
+                        <a href="<?= paginUrl($qp, $total_pages) ?>" class="pagin-btn"><?= $total_pages ?></a>
+                    <?php endif; ?>
+
+                    <?php if ($page < $total_pages): ?>
+                        <a href="<?= paginUrl($qp, $page + 1) ?>" class="pagin-btn pagin-next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    <?php endif; ?>
+                </nav>
+                <?php endif; ?>
             </section>
 
-            <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>
+            <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés.<br><span class="footer-links">Mentions légales | Politique de confidentialité</span></div>
         </main>
     </div>
     <script>

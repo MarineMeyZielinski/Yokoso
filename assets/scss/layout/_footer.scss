@@ -1,8 +1,14 @@
-.footer{
-    margin-top:34px;
-    padding: 16px 0;
-    border-top: 1px solid #e3c3e7;
-    color: #555;
-    font-size: 12px;
-    text-align: center;
+.footer {
+  margin-top: 34px;
+  padding: 16px 0;
+  border-top: 1px solid #e3c3e7;
+  color: #555;
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.8;
+
+  .footer-links {
+    color: #888;
+    font-size: 11px;
+  }
 }

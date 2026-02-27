@@ -225,7 +225,7 @@ $annee_inscription = date('Y', strtotime($user['date_inscription']));
         </form>
       </div>
 
-      <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>
+      <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés.<br><span class="footer-links">Mentions légales | Politique de confidentialité</span></div>
     </main>
   </div>
 

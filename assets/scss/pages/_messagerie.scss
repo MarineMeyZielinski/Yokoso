@@ -511,7 +511,7 @@ main.content.chat-layout {
 // ── RESPONSIVE ────────────────────────────────────────────────────────────────
 
 @media (max-width: 768px) {
-  .messagerie-page { padding-top: 16px; }
+  .messagerie-page { padding: 16px 16px 0; }
 
   .chat-messages { padding: 16px; }
   .chat-input-wrap { padding: 10px 16px; }

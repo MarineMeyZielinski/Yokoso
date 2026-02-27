@@ -160,30 +160,60 @@ if ($is_logged_in && !$is_owner) {
                 </div>
 
                 <!-- Galerie photos -->
+                <?php $total_photos = count($photos); ?>
                 <div class="annonce-gallery">
-                    <?php if (!empty($photos)): ?>
-                        <div class="gallery-main">
-                            <img id="mainImage"
-                                 src="uploads/annonces/<?= htmlspecialchars($photos[0]['nom_fichier']) ?>"
-                                 alt="Photo principale">
-                        </div>
-
-                        <?php if (count($photos) > 1): ?>
-                            <div class="gallery-thumbnails">
-                                <?php foreach ($photos as $index => $photo): ?>
-                                    <img src="uploads/annonces/<?= htmlspecialchars($photo['nom_fichier']) ?>"
-                                         alt="Photo <?= $index + 1 ?>"
-                                         class="thumbnail <?= $index === 0 ? 'active' : '' ?>"
-                                         loading="lazy"
-                                         onclick="changeMainImage('uploads/annonces/<?= htmlspecialchars($photo['nom_fichier']) ?>', this)">
-                                <?php endforeach; ?>
+                    <?php if ($total_photos > 0): ?>
+                        <div class="gallery-grid <?= $total_photos === 1 ? 'gallery-grid--single' : '' ?>">
+                            <div class="gallery-cell gallery-cell--main" onclick="openLightbox(0)">
+                                <img src="uploads/annonces/<?= htmlspecialchars($photos[0]['nom_fichier']) ?>"
+                                     alt="Photo principale" loading="lazy">
                             </div>
-                        <?php endif; ?>
+                            <?php if ($total_photos > 1): ?>
+                                <div class="gallery-secondary">
+                                    <?php for ($i = 1; $i <= min(4, $total_photos - 1); $i++):
+                                        $show_more = ($i === 4 && $total_photos > 5);
+                                    ?>
+                                        <div class="gallery-cell <?= $show_more ? 'gallery-cell--more' : '' ?>"
+                                             onclick="openLightbox(<?= $i ?>)">
+                                            <img src="uploads/annonces/<?= htmlspecialchars($photos[$i]['nom_fichier']) ?>"
+                                                 alt="Photo <?= $i + 1 ?>" loading="lazy">
+                                            <?php if ($show_more): ?>
+                                                <div class="gallery-more-overlay">
+                                                    +<?= $total_photos - 4 ?> photos
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endfor; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <button class="gallery-all-btn" onclick="openLightbox(0)">
+                            <i class="fa-solid fa-images"></i> Voir toutes les photos (<?= $total_photos ?>)
+                        </button>
                     <?php else: ?>
-                        <div class="gallery-main">
-                            <img src="images/placeholder.jpg" alt="Pas de photo disponible">
+                        <div class="gallery-grid gallery-grid--single">
+                            <div class="gallery-cell gallery-cell--main">
+                                <img src="images/placeholder.jpg" alt="Pas de photo disponible">
+                            </div>
                         </div>
                     <?php endif; ?>
+                </div>
+
+                <!-- Lightbox -->
+                <div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+                    <button class="lightbox-close" onclick="closeLightbox()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <button class="lightbox-prev" onclick="lightboxNav(-1); event.stopPropagation()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button class="lightbox-next" onclick="lightboxNav(1); event.stopPropagation()">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                    <div class="lightbox-img-wrap" onclick="event.stopPropagation()">
+                        <img id="lightboxImg" src="" alt="">
+                    </div>
+                    <div class="lightbox-counter" id="lightboxCounter"></div>
                 </div>
 
                 <div class="annonce-content">
@@ -395,7 +425,7 @@ if ($is_logged_in && !$is_owner) {
                 <?php endif; ?>
             </div>
 
-            <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>
+            <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés.<br><span class="footer-links">Mentions légales | Politique de confidentialité</span></div>
         </main>
     </div>
 
@@ -456,18 +486,50 @@ if ($is_logged_in && !$is_owner) {
         }
         if (nbVoyageurs) nbVoyageurs.addEventListener('change', updatePrice);
 
-        function changeMainImage(src, thumbnail) {
-            // Changer l'image principale
-            document.getElementById('mainImage').src = src;
+        // ---- Lightbox ----
+        const galleryPhotos = [
+            <?php foreach ($photos as $p): ?>
+            '<?= addslashes('uploads/annonces/' . $p['nom_fichier']) ?>',
+            <?php endforeach; ?>
+        ];
+        let lbIndex = 0;
 
-            // Retirer la classe active de toutes les miniatures
-            document.querySelectorAll('.thumbnail').forEach(thumb => {
-                thumb.classList.remove('active');
-            });
-
-            // Ajouter la classe active à la miniature cliquée
-            thumbnail.classList.add('active');
+        function openLightbox(index) {
+            if (galleryPhotos.length === 0) return;
+            lbIndex = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('is-open');
+            document.body.style.overflow = 'hidden';
         }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        function closeLightboxOutside(e) {
+            if (e.target === document.getElementById('lightbox')) closeLightbox();
+        }
+
+        function lightboxNav(dir) {
+            lbIndex = (lbIndex + dir + galleryPhotos.length) % galleryPhotos.length;
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            document.getElementById('lightboxImg').src = galleryPhotos[lbIndex];
+            document.getElementById('lightboxCounter').textContent = `${lbIndex + 1} / ${galleryPhotos.length}`;
+            const single = galleryPhotos.length <= 1;
+            document.querySelector('.lightbox-prev').style.display = single ? 'none' : '';
+            document.querySelector('.lightbox-next').style.display = single ? 'none' : '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (!document.getElementById('lightbox').classList.contains('is-open')) return;
+            if (e.key === 'Escape')      closeLightbox();
+            if (e.key === 'ArrowLeft')  lightboxNav(-1);
+            if (e.key === 'ArrowRight') lightboxNav(1);
+        });
     </script>
 </body>
 </html>
