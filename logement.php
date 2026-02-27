@@ -14,6 +14,17 @@ $animaux     = isset($_GET['animaux']);
 
 $types_valides = ['appartement', 'maison', 'villa', 'chambre'];
 
+// --- Tri ---
+$tris_valides = ['recent', 'prix_asc', 'prix_desc', 'note'];
+$tri = in_array($_GET['tri'] ?? '', $tris_valides) ? $_GET['tri'] : 'recent';
+
+$order_by = match($tri) {
+    'prix_asc'  => 'a.prix_nuit ASC',
+    'prix_desc' => 'a.prix_nuit DESC',
+    'note'      => 'note_moy DESC, a.date_creation DESC',
+    default     => 'a.date_creation DESC',
+};
+
 // --- Construction de la requête dynamique ---
 $where  = ['a.disponible = 1'];
 $params = [];
@@ -51,7 +62,7 @@ $sql = "SELECT
         LEFT JOIN avis av ON av.id_annonce = a.id_annonce
         WHERE " . implode(' AND ', $where) . "
         GROUP BY a.id_annonce
-        ORDER BY a.date_creation DESC";
+        ORDER BY $order_by";
 
 try {
     $stmt = $pdo->prepare($sql);
@@ -170,17 +181,31 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
                     <?php if ($search !== ''): ?>
                         <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
                     <?php endif; ?>
+                    <?php if ($tri !== 'recent'): ?>
+                        <input type="hidden" name="tri" value="<?= htmlspecialchars($tri) ?>">
+                    <?php endif; ?>
                 </form>
 
-                <!-- Titre + compteur -->
-                <h3 class="section-title">
-                    <?php if ($has_filters): ?>
-                        <?= count($annonces) ?> logement<?= count($annonces) > 1 ? 's' : '' ?> trouvé<?= count($annonces) > 1 ? 's' : '' ?>
-                        <?= $search !== '' ? ' pour "' . htmlspecialchars($search) . '"' : '' ?>
-                    <?php else: ?>
-                        Nos logements (<?= count($annonces) ?>) :
-                    <?php endif; ?>
-                </h3>
+                <!-- Titre + compteur + tri -->
+                <div class="section-toolbar">
+                    <h3 class="section-title">
+                        <?php if ($has_filters): ?>
+                            <?= count($annonces) ?> logement<?= count($annonces) > 1 ? 's' : '' ?> trouvé<?= count($annonces) > 1 ? 's' : '' ?>
+                            <?= $search !== '' ? ' pour "' . htmlspecialchars($search) . '"' : '' ?>
+                        <?php else: ?>
+                            Nos logements (<?= count($annonces) ?>) :
+                        <?php endif; ?>
+                    </h3>
+                    <div class="sort-wrap">
+                        <label for="triSelect"><i class="fa-solid fa-arrow-down-wide-short"></i></label>
+                        <select id="triSelect" name="tri" onchange="applySort(this.value)">
+                            <option value="recent"    <?= $tri === 'recent'    ? 'selected' : '' ?>>Plus récents</option>
+                            <option value="prix_asc"  <?= $tri === 'prix_asc'  ? 'selected' : '' ?>>Prix croissant</option>
+                            <option value="prix_desc" <?= $tri === 'prix_desc' ? 'selected' : '' ?>>Prix décroissant</option>
+                            <option value="note"      <?= $tri === 'note'      ? 'selected' : '' ?>>Meilleures notes</option>
+                        </select>
+                    </div>
+                </div>
 
                 <?php if (empty($annonces)): ?>
                     <div class="empty-state" style="text-align:center;padding:60px 20px;color:#666;">
@@ -238,5 +263,16 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
             <div class="footer">© 2025 YOKOSO Corp. Tous droits réservés. | Mentions légales | Politique de confidentialité</div>
         </main>
     </div>
+    <script>
+    function applySort(value) {
+        const url = new URL(window.location.href);
+        if (value === 'recent') {
+            url.searchParams.delete('tri');
+        } else {
+            url.searchParams.set('tri', value);
+        }
+        window.location.href = url.toString();
+    }
+    </script>
 </body>
 </html>

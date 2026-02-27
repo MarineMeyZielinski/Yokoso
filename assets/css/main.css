@@ -1405,7 +1405,57 @@ body.is-leaving {
   color: #111;
 }
 
+.section-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.section-toolbar .section-title {
+  margin-bottom: 0;
+}
+.section-toolbar .sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.section-toolbar .sort-wrap label {
+  color: #666;
+  font-size: 15px;
+  cursor: default;
+}
+.section-toolbar .sort-wrap select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 6px 32px 6px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #f5f5f7 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E") no-repeat right 10px center;
+  color: #111;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.section-toolbar .sort-wrap select:focus {
+  outline: none;
+  border-color: #999;
+}
+
 @media (max-width: 768px) {
+  .section-toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .section-toolbar .section-title {
+    font-size: 16px;
+  }
+  .section-toolbar .sort-wrap select {
+    font-size: 12px;
+    padding: 5px 28px 5px 10px;
+  }
   .logement-section {
     padding: 16px;
   }
