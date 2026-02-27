@@ -56,13 +56,13 @@ body.is-leaving {
   padding: 16px 0;
   border-top: 1px solid #e3c3e7;
   color: #555;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   line-height: 1.8;
 }
 .footer .footer-links {
   color: #888;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .page {
@@ -1199,7 +1199,7 @@ body.is-leaving {
   }
   .footer {
     padding: 16px 16px 28px;
-    font-size: 12px;
+    font-size: 14px;
     text-align: center;
     line-height: 1.9;
   }
