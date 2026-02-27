@@ -332,7 +332,7 @@ if ($is_logged_in && !$is_owner) {
                             <!-- Propriétaire -->
                             <div class="owner-info">
                                 <h3>Hôte</h3>
-                                <div class="owner-card">
+                                <a href="profil.php?id=<?= $annonce['id_proprietaire'] ?>" class="owner-card">
                                     <?php if (!empty($annonce['proprietaire_photo'])): ?>
                                         <img src="<?= htmlspecialchars($annonce['proprietaire_photo']) ?>" alt="Hôte">
                                     <?php else: ?>
@@ -343,10 +343,12 @@ if ($is_logged_in && !$is_owner) {
                                     <div class="owner-name">
                                         <?= htmlspecialchars($annonce['proprietaire_prenom']) ?> <?= htmlspecialchars($annonce['proprietaire_nom']) ?>
                                     </div>
-                                </div>
-                                <a href="contact.php?user=<?= $annonce['id_proprietaire'] ?>&annonce=<?= $annonce['id_annonce'] ?>" class="btn-contact">
-                                    <i class="fa-solid fa-envelope"></i> Contacter l'hôte
                                 </a>
+                                <?php if (!$is_owner): ?>
+                                    <a href="contact.php?user=<?= $annonce['id_proprietaire'] ?>&annonce=<?= $annonce['id_annonce'] ?>" class="btn-contact">
+                                        <i class="fa-solid fa-envelope"></i> Contacter l'hôte
+                                    </a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </aside>
