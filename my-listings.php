@@ -119,7 +119,7 @@ try {
       <div class="profile-container">
         <!-- Onglets -->
         <div class="profile-tabs">
-          <a href="edit-profile.php" class="profile-tab">Compléter le profil</a>
+          <a href="edit-profile.php" class="profile-tab">Modifier le profil</a>
           <a href="my-bookings.php" class="profile-tab">Mes réservations</a>
           <a href="my-listings.php" class="profile-tab active">Mes annonces</a>
         </div>
