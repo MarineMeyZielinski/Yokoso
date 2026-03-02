@@ -1,7 +1,11 @@
 .page {
-  display: grid;
-  grid-template-columns: 260px 1fr;
+  display: flex;
   min-height: 100vh;
+
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+  }
 
   .sidebar {
     background: $color-sidebar;
@@ -86,10 +90,6 @@
 }
 
 @media (max-width: 1024px) {
-  .page {
-    grid-template-columns: 1fr;
-  }
-
   .page .sidebar {
     position: fixed;
     left: -260px;

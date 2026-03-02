@@ -540,9 +540,7 @@ if ($is_logged_in && !$is_owner) {
             const mapEl = document.getElementById('annonce-map');
             if (!mapEl) return;
 
-            fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(ville + ', ' + pays) + '&format=json&limit=1', {
-                headers: { 'Accept-Language': 'fr' }
-            })
+            fetch('geocode.php?q=' + encodeURIComponent(ville + ', ' + pays))
             .then(r => r.json())
             .then(function(data) {
                 if (!data.length) return;
