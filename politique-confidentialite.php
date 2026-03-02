@@ -9,6 +9,7 @@ $user_id = $_SESSION['user_id'] ?? null;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YOKOSO - Politique de confidentialité</title>
+  <meta name="description" content="Politique de confidentialité de YOKOSO concernant la gestion de vos données personnelles.">
   <?php include 'includes/head.php'; ?>
 </head>
 <body>

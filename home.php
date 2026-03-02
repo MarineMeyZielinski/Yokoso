@@ -47,6 +47,7 @@ if (isset($_SESSION['user_id'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YOKOSO - Accueil</title>
+  <meta name="description" content="Découvrez les meilleurs logements à louer au Japon, en France et ailleurs. Réservez facilement avec YOKOSO.">
   <?php include 'includes/head.php'; ?>
 </head>
 <body>
@@ -69,7 +70,7 @@ if (isset($_SESSION['user_id'])) {
           </div>
           <button class="prev-btn carousel-btn" aria-label="Précédent"><i class="fas fa-chevron-left"></i></button>
           <button class="next-btn carousel-btn" aria-label="Suivant"><i class="fas fa-chevron-right"></i></button>
-          <div class="dots" role="tablist">
+          <div class="dots" role="presentation">
             <button class="dot active" aria-label="Aller à Tokyo" data-to="0"></button>
             <button class="dot" aria-label="Aller à Paris" data-to="1"></button>
           </div>
@@ -115,7 +116,8 @@ if (isset($_SESSION['user_id'])) {
                   <?php if (isset($_SESSION['user_id'])): ?>
                     <button class="card-favorite <?= in_array($annonce['id_annonce'], $favoris_ids) ? 'is-favorite' : '' ?>"
                             data-id="<?= $annonce['id_annonce'] ?>"
-                            onclick="toggleFavoris(this, event)">
+                            onclick="toggleFavoris(this, event)"
+                            aria-label="<?= in_array($annonce['id_annonce'], $favoris_ids) ? 'Retirer des favoris' : 'Ajouter aux favoris' ?>">
                       <i class="fa-<?= in_array($annonce['id_annonce'], $favoris_ids) ? 'solid' : 'regular' ?> fa-heart"></i>
                     </button>
                   <?php endif; ?>

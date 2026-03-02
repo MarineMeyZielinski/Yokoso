@@ -30,6 +30,7 @@ $favoris_ids = array_column($favoris, 'id_annonce');
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YOKOSO - Mes favoris</title>
+  <meta name="description" content="Retrouvez tous vos logements favoris sauvegardés sur YOKOSO.">
   <?php include 'includes/head.php'; ?>
 </head>
 <body>
@@ -70,7 +71,8 @@ $favoris_ids = array_column($favoris, 'id_annonce');
                        class="thumb">
                   <button class="card-favorite is-favorite"
                           data-id="<?= $annonce['id_annonce'] ?>"
-                          onclick="toggleFavoris(this, event)">
+                          onclick="toggleFavoris(this, event)"
+                          aria-label="Retirer des favoris">
                     <i class="fa-solid fa-heart"></i>
                   </button>
                 </div>

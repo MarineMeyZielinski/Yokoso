@@ -53,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YOKOSO - Inscription</title>
+  <meta name="description" content="Créez votre compte YOKOSO et commencez à réserver des logements ou à publier vos annonces.">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="assets/css/main.css">
 </head>

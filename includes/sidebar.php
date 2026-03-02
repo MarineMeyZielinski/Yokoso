@@ -1,6 +1,6 @@
     <aside class="sidebar">
       <div class="logo">
-        <a href="home.php"><img src="images/logo-blanc-seul.png" class="logo-blanc"></a>
+        <a href="home.php" aria-label="YOKOSO - Accueil"><img src="images/logo-blanc-seul.png" class="logo-blanc" alt="YOKOSO"></a>
         <img src="images/yokoso-blanc.png" alt="Yokoso" class="logo-yokoso">
       </div>
       <nav class="menu">

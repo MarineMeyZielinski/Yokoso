@@ -42,6 +42,7 @@ $total_non_lus = array_sum(array_column($conversations, 'non_lus'));
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YOKOSO - Messages</title>
+  <meta name="description" content="Accédez à vos conversations avec les hôtes et voyageurs sur YOKOSO.">
   <?php include 'includes/head.php'; ?>
 </head>
 <body>

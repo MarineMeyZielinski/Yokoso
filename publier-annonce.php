@@ -106,6 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YOKOSO - Publier une annonce</title>
+    <meta name="description" content="Publiez votre logement sur YOKOSO et commencez à accueillir des voyageurs du monde entier.">
   <?php include 'includes/head.php'; ?>
 </head>
 <body>

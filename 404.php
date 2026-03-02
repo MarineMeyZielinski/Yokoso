@@ -7,6 +7,7 @@ http_response_code(404);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YOKOSO - Page introuvable</title>
+  <meta name="description" content="La page que vous recherchez est introuvable. Retournez à l'accueil YOKOSO.">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

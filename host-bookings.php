@@ -69,6 +69,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YOKOSO - Réservations reçues</title>
+  <meta name="description" content="Consultez et gérez les réservations reçues pour vos logements sur YOKOSO.">
   <?php include 'includes/head.php'; ?>
 </head>
 <body>

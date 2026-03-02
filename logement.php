@@ -118,6 +118,7 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YOKOSO - Nos logements</title>
+    <meta name="description" content="Parcourez tous nos logements disponibles à Tokyo, Paris et dans le monde entier. Filtrez par équipements, prix et capacité.">
   <?php include 'includes/head.php'; ?>
 </head>
 <body>
@@ -246,7 +247,8 @@ $has_filters = $search !== '' || $type !== '' || $prix_max !== null || $capacite
                                   <?php if (isset($_SESSION['user_id'])): ?>
                                     <button class="card-favorite <?= in_array($annonce['id_annonce'], $favoris_ids) ? 'is-favorite' : '' ?>"
                                             data-id="<?= $annonce['id_annonce'] ?>"
-                                            onclick="toggleFavoris(this, event)">
+                                            onclick="toggleFavoris(this, event)"
+                                            aria-label="<?= in_array($annonce['id_annonce'], $favoris_ids) ? 'Retirer des favoris' : 'Ajouter aux favoris' ?>">
                                       <i class="fa-<?= in_array($annonce['id_annonce'], $favoris_ids) ? 'solid' : 'regular' ?> fa-heart"></i>
                                     </button>
                                   <?php endif; ?>

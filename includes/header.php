@@ -66,13 +66,13 @@ if ($is_logged_in) {
     <div class="search">
       <span><i class="fa-solid fa-magnifying-glass" style="color: #000000;"></i></span>
       <input type="text" id="searchInput" placeholder="Rechercher un logement..." autocomplete="off">
-      <button class="icon-btn" title="Filtres" onclick="openFiltersModal()"><i class="fa-solid fa-filter" style="color: #000000;"></i></button>
+      <button class="icon-btn" title="Filtres" aria-label="Filtres" onclick="openFiltersModal()"><i class="fa-solid fa-filter" style="color: #000000;"></i></button>
     </div>
     <!-- Dropdown des résultats -->
     <div class="search-dropdown" id="searchDropdown"></div>
   </div>
   <div class="notif-wrapper">
-    <button class="icon-btn notif-btn" title="Notifications" onclick="toggleNotifDropdown(event)">
+    <button class="icon-btn notif-btn" title="Notifications" aria-label="Notifications" onclick="toggleNotifDropdown(event)">
       <i class="fa-solid fa-bell" style="color: #000000;"></i>
       <?php if ($notif_count > 0): ?>
         <span class="notif-badge"><?= $notif_count > 9 ? '9+' : $notif_count ?></span>
@@ -108,21 +108,21 @@ if ($is_logged_in) {
     <?php endif; ?>
   </div>
   <div class="notif-wrapper topbar-desktop-only">
-    <a href="messages.php" class="icon-btn" title="Messages">
+    <a href="messages.php" class="icon-btn" title="Messages" aria-label="Messages">
       <i class="fa-solid fa-envelope" style="color: #000000;"></i>
       <?php if (!empty($msg_count) && $msg_count > 0): ?>
         <span class="notif-badge"><?= $msg_count > 9 ? '9+' : $msg_count ?></span>
       <?php endif; ?>
     </a>
   </div>
-  <a href="my-favoris.php" class="icon-btn topbar-desktop-only" title="Mes favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></a>
+  <a href="my-favoris.php" class="icon-btn topbar-desktop-only" title="Mes favoris" aria-label="Mes favoris"><i class="fa-solid fa-heart" style="color: #000000;"></i></a>
 
   <?php if ($is_logged_in): ?>
     <div class="user-greeting topbar-desktop-only">
       Bonjour, <?= htmlspecialchars($user_data['prenom']) ?>
     </div>
     <div class="profile-menu-wrapper topbar-desktop-only">
-      <button class="icon-btn" title="Mon profil" onclick="toggleProfileMenu(event)">
+      <button class="icon-btn" title="Mon profil" aria-label="Mon profil" onclick="toggleProfileMenu(event)">
         <i class="fa-solid fa-user" style="color: #000000;"></i>
       </button>
       
